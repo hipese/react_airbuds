@@ -12,12 +12,8 @@ import Admin from "../Admin/Admin";
 import BottomMusic from "../Navigator/BottomMusic/BottomMusic";
 import TopNavigator from "../Navigator/TopNavigator/TopNavigator";
 import "bootstrap/dist/css/bootstrap.min.css";
-<<<<<<< HEAD
-import { Container, Row, Col } from "reactstrap";
-import Upload_Main from "../Upload/Upload_Main";
-=======
 import { Container } from "reactstrap";
->>>>>>> b0d8c7f34b8f0d161ba88e8db40da033dab1aa92
+import Upload_Main from "../Upload/Upload_Main";
 
 const Groovy = () => {
     return (

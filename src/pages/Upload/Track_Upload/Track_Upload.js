@@ -14,6 +14,7 @@ const Track_Upload = () => {
     const [tracks, setTracks] = useState([]);
 
     const [imageview, setImageview] = useState({});
+    const [albumview, setAlbumview] = useState({});
 
     // 이미지를 바꾸기 위한 것들
     // =====================================================
@@ -34,6 +35,8 @@ const Track_Upload = () => {
         files.forEach((fileData) => {
             formData.append(`file`, fileData.file);
             formData.append('duration', fileData.duration)
+            formData.append('image_path', fileData.image_path)
+
             console.log(formData);
         });
 
