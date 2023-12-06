@@ -12,19 +12,19 @@ import Admin from "../Admin/Admin";
 import BottomMusic from "../Navigator/BottomMusic/BottomMusic";
 import TopNavigator from "../Navigator/TopNavigator/TopNavigator";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col } from "reactstrap";
 import Upload_Main from "../Upload/Upload_Main";
+import { Container } from "reactstrap";
+
 
 const Groovy = () => {
     return (
-        <Container fluid>
-            <Row>
-                <Col className={styles.topNavi}>
+        <Container className={styles.Container} fluid>
+            <div>
+                <div className={styles.topNavi}>
                     <TopNavigator />
-                </Col>
-            </Row>
-            <Container className={`${styles.container} ${styles.MainContainer}`} fluid>
-                <Row>
+                </div>
+            </div>
+            <Container className={styles.MainContainer} fluid>
                     <Routes>
                         <Route path="/" element={<Main />} />
                         <Route path="Feed/*" element={<Feed />} />
@@ -37,11 +37,10 @@ const Groovy = () => {
                         <Route path="Report/*" element={<Report />} />
                         <Route path="Admin/*" element={<Admin />} />
                     </Routes>
-                </Row>
             </Container>
-            <Row className={styles.botMusic}>
+            <div className={styles.botMusic}>
                 <BottomMusic />
-            </Row>
+            </div>
         </Container>
 
     );
