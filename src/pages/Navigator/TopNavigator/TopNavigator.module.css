@@ -76,6 +76,7 @@
 
 .search {
     max-width: 500px;
+    min-width: 300px;
     height: 35px;
     background-color: rgb(220, 220, 220);
     padding: 0px;
