@@ -5,7 +5,7 @@ import Feed from "../Feed/Feed";
 import Library from "../Library/Library";
 import Playlist from "../Playlist/Playlist";
 import Music from "../Music/Music";
-import Register from "../Register/Register";
+import RegisterRoute from "../Register/Register_Router";
 import Login from "../Login/Login";
 import Report from "../Report/Report";
 import Admin from "../Admin/Admin";
@@ -31,7 +31,7 @@ const Groovy = () => {
                         <Route path="Library/*" element={<Library />} />
                         <Route path="Playlist/*" element={<Playlist />} />
                         <Route path="Music/*" element={<Music />} />
-                        <Route path="Register/*" element={<Register />} />
+                        <Route path="Register/*" element={<RegisterRoute />} />
                         <Route path="Login/*" element={<Login />} />
                         <Route path="Upload/*" element={<Upload />} />
                         <Route path="Report/*" element={<Report />} />

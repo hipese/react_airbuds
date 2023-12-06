@@ -1,10 +1,13 @@
-import react from "react";
+import react, { useState } from "react";
+import { Col, Input, Row } from "reactstrap";
+import style from "./Register.module.css";
 
 const Register = () => {
+
     return (
-        <div>
-            <h1>Register</h1>
-        </div>
+        <>
+        asdf
+        </>
     );
 }
 

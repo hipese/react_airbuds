@@ -1,0 +1,17 @@
+.row_center {
+    justify-content: center;
+    align-items: center;
+}
+
+.row_header {
+    margin-top: 50px;
+}
+
+.social_image:hover {
+    cursor: pointer;
+}
+
+.contents {
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
