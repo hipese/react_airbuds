@@ -1,0 +1,63 @@
+/* Customize progress bar color */
+
+.rhap_container {
+    background-color: #1e1e1e;
+    width: 80%;
+}
+
+.rhap_progress-container {
+    background-color: #1e1e1e;
+}
+
+.rhap_progress-filled {
+    background-color: #4CAF50;
+}
+
+.rhap_download-progress {
+    background-color: #616161;
+}
+
+.rhap_time {
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+/* Customize play button color */
+.rhap_play-pause-button {
+    color: #4CAF50;
+}
+
+.rhap_main-controls button {
+    color: #4CAF50;
+}
+
+/* 이전 및 다음 버튼에 호버 효과 적용 (선택 사항) */
+.rhap_main-controls button:hover {
+    color: #FF4081;
+}
+
+/* Customize volume bar colors */
+.rhap_volume-container {
+    background-color: #1e1e1e;
+}
+
+.rhap_volume-bar-background {
+    background-color: #616161;
+    /* Dark Gray */
+}
+
+.rhap_volume-bar{
+    color: #4CAF50;
+}
+
+.rhap_progress-indicator:hover{
+    background-color: #FF4081;
+}
+
+.rhap_volume-indicator:hover{
+    background-color: #FF4081;
+}
+
+.rhap_additional-controls{
+    width: 0px;
+}
