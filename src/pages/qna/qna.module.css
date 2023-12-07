@@ -20,12 +20,20 @@
     align-items: center;
 }
 
+.marginT30{
+    margin-top: 30px;
+}
+
 .marginT40{
     margin-top: 40px;
 }
 
 .marginT70{
     margin-top: 70px;
+}
+
+.marginB20{
+    margin-bottom: 20px;
 }
 
 .ma{
@@ -38,7 +46,9 @@
 .pad10{
     padding: 10px;
 }
-
+.padingT10{
+    padding-top: 10px;
+}
 .center{
     display: flex;
     align-items: center;
@@ -71,7 +81,7 @@
     margin:auto;
     width: 100%;
     height: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     max-height: 800px;
     min-width: 300px;
 }

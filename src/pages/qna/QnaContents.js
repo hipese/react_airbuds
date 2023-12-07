@@ -1,6 +1,9 @@
-import { Avatar, Box, Grid, Typography } from '@mui/material';
+import { Avatar, Box, Button, Divider, Grid, Typography } from '@mui/material';
 import style from './qna.module.css'
 const QnaContents = () => {
+
+    //관리자 및 글 작성자 외에는 못들어오도록 하기
+
     return(
         <div className={`${style.wrap}`}>
             <div className={`${style.qnaContents} ${style.ma} ${style.border}`}>
@@ -18,7 +21,7 @@ const QnaContents = () => {
                             <Typography fontSize={12}>
                                 분류  : Category
                             </Typography>
-                        </Grid>
+                        </Grid>                        
                         <Grid item xs={12} sm={6}>
                             <Typography fontSize={{xs:"12px",sm:"14px"}} className={`${style.rightAlign}`}>
                             작성자 : kwon
@@ -29,9 +32,14 @@ const QnaContents = () => {
                     <div className={`${style.qnaDetail} ${style.border} ${style.borderRad} ${style.ma}`}>
                         asd
                     </div>
+                    <div className={`${style.pad10} ${style.rightAlign}`}>
+                        <button>목록으로</button>
+                    </div>
                 </div>
-                <div className={` ${style.marginT40} ${style.border} `}>
-                    <Grid container className={`${style.qnaReply} ${style.center} ${style.border} ${style.ma} ${style.pad10}`}>
+
+                {/* Reply */}
+                <div>
+                    <Grid container className={`${style.qnaReply} ${style.center} ${style.border} ${style.pad10} ${style.ma}`}>
                         <Grid item xs={12} sm={3}>
                                 <Grid container>
                                     <Grid item xs={12} className={`${style.center}`}>
@@ -52,9 +60,14 @@ const QnaContents = () => {
                             <div className={`${style.border} ${style.replyContents} ${style.pad10}`}>
                             replyreplyr
                             </div>
-                            <div className={`${style.replyBtnEven}`}>
-                                <button>Delete</button>
-                                <button>Update</button>
+                            <div className={`${style.replyBtnEven} ${style.padingT10}`}>
+                                <Button variant="outlined" size="small">
+                                    Delete
+                                </Button>
+                                {/* isUpdate state 추가, true면 update btn out, submit button in */}
+                                <Button variant="outlined" size="small">
+                                    Update
+                                </Button>
                             </div>
                         </Grid>
                     </Grid>

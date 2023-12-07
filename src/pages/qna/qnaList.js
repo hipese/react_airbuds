@@ -15,23 +15,23 @@ const QnaList =() => {
     }
     return(
         <div className={`${style.container}`}>
-            <Grid container className={`${style.borderTB} ${style.boardLine}`}>
-                <Grid xs={1}>
+            <Grid container className={`${style.marginT70} ${style.borderTB} ${style.boardLine} ${style.pad10} `}>
+                <Grid xs={1} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     No
                     </Typography>
                 </Grid>
-                <Grid xs={2}>
+                <Grid xs={2} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     분류
                     </Typography>
                 </Grid>
-                <Grid xs={5}>
+                <Grid xs={5} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     제목
                     </Typography>
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={3} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     작성자
                     </Typography>
@@ -41,30 +41,31 @@ const QnaList =() => {
                     item
                     xs={1}
                     display={{ xs: "none", sm: "flex" }}
+                    className={`${style.center}`}
                 >                    
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     답변상태
                     </Typography>
                 </Box>
             </Grid>
-            <Grid container className={`${style.announceLine}`} onClick={handleMove}>
-                <Grid xs={1}>
+            <Grid container className={`${style.announceLine} ${style.pad10}`} onClick={handleMove}>
+                <Grid xs={1} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     <LockIcon fontSize="small"/>
                     1
                     </Typography>
                 </Grid>
-                <Grid xs={2}>
+                <Grid xs={2} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                         서비스점검
                     </Typography>
                 </Grid>
-                <Grid xs={5}>
+                <Grid xs={5} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     12월 6일 서버 점검
                     </Typography>
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={3} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     운영자
                     </Typography>
@@ -74,6 +75,7 @@ const QnaList =() => {
                     item
                     xs={1}
                     display={{ xs: "none", sm: "flex" }}
+                    className={`${style.center}`}
                 >                    
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     1

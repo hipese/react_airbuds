@@ -30,12 +30,16 @@ const QnaWriteMain = () =>{
                             </Grid>
                         </Grid>
                     </div>
-
                     <div className={`${style.qnaTitle} ${style.borderWrite}`}>
                         <Grid container className={`${style.pl10} ${style.center}`} spacing={1}>
                             <Grid item xs={12}>
                                 <Typography fontSize={18} fontWeight="bold">
                                     분류
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography fontSize={12}>
+                                    관리자에게 물어보고 싶은 분야를 선택해주세요.
                                 </Typography>
                             </Grid>
                             <Grid item xs={12}>
@@ -51,6 +55,31 @@ const QnaWriteMain = () =>{
                                     <MenuItem value="system">시스템</MenuItem>
                                     <MenuItem value={20}>Twenty</MenuItem>
                                     <MenuItem value={30}>Thirty</MenuItem>
+                                </Select>
+                            </Grid>
+                        </Grid>
+                    </div>
+                    <div className={`${style.qnaTitle} ${style.borderWrite}`}>
+                        <Grid container className={`${style.pl10} ${style.center}`} spacing={1}>
+                            <Grid item xs={12}>
+                                <Typography fontSize={18} fontWeight="bold">
+                                    공개여부
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography fontSize={12}>
+                                    질문의 공개여부를 선택할 수 있습니다.
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Select
+                                    labelId="demo-simple-select-required-label"
+                                    id="demo-simple-select-required"
+                                    value="public"
+                                    fullWidth
+                                    >
+                                    <MenuItem value="public">공개</MenuItem>
+                                    <MenuItem value="private">비공개</MenuItem>
                                 </Select>
                             </Grid>
                         </Grid>
