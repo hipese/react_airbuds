@@ -91,14 +91,6 @@ const Track_Upload = () => {
     }
 
 
-    // 태그 선택 변경 시 호출될 콜백 함수
-    const handleTagSelection = (selectedTag) => {
-        
-        if (!selectTag.includes(selectedTag)) {
-            setSelectTag([...selectTag, selectedTag]);
-        }
-        console.log(selectTag);
-    };
 
 
     const onDrop = (acceptedFiles) => {
@@ -179,6 +171,19 @@ const Track_Upload = () => {
         });
     };
 
+    // 태그 선택 변경 시 호출될 콜백 함수
+    const handleTagSelection = (selectedTag) => {
+
+        if (!selectTag.includes(selectedTag)) {
+            setSelectTag([...selectTag, selectedTag]);
+        }
+        console.log(selectTag);
+    };
+
+    const handleTagDelete = (tagToDelete) => {
+        setSelectTag((tags) => tags.filter((tag) => tag !== tagToDelete));
+    };
+
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
@@ -245,19 +250,15 @@ const Track_Upload = () => {
                                         <MusicTagList onSelectTag={handleTagSelection} />
                                     </Col>
                                     <Col sm='8' style={{ marginBottom: '10px' }}>
-                                        <input
-                                            className={style.detail_input}
-                                            type="text"
-                                            placeholder="다중일 경우 ,로 구분"
-                                            value={files[0].tag || ''} // 초기값 설정
-                                            onChange={(e) => handleTagChange(0, e.target.value)}
-                                            style={{ display: 'none' }}
-                                        />
                                         <Stack direction="row" spacing={1}>
-                                            <Chip label="되어라" onDelete={handleDelete} />
-                                            <Chip label="Deletable" onDelete={handleDelete} />
+                                            {selectTag.map((tag, index) => (
+                                                <Chip
+                                                    key={index}
+                                                    label={tag}
+                                                    onDelete={() => handleTagDelete(tag)}
+                                                />
+                                            ))}
                                         </Stack>
-
                                     </Col>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>writer</Col>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>
