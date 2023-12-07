@@ -6,7 +6,7 @@ import { createContext, useState } from "react";
 import { CookiesProvider } from "react-cookie";
 
 
-const LoginContext = createContext();
+export const LoginContext = createContext();
 function App() {
   const [loginID, setLoginID] = useState("");
   
