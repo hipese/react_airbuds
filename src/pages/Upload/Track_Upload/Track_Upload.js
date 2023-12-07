@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react"
 import { useDropzone } from 'react-dropzone';
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, Input, Button } from "reactstrap";
 import style from "./Track_Upload.module.css"
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
@@ -44,12 +44,16 @@ const Track_Upload = () => {
                 formData.append('imagefile', fileData.imageFile);
             }
             formData.append('writer', fileData.writer);
-            formData.append('tag', fileData.tag);
+            formData.append('tag', selectTag);
 
             console.log(fileData.imageFile);
             console.log(formData);
         });
 
+        if(selectTag.length===0){
+            alert("태그를 하나라도 선택해주세요");
+            return;
+        }
 
         axios.post("/api/track", formData, {
             headers: {
@@ -205,13 +209,13 @@ const Track_Upload = () => {
                             음악 파일을 드래그 앤 드롭하거나 클릭하여 파일을 선택하세요.
                         </div>
                         <div>
-                            <button>파일을 선택하세요</button>
+                            <Button color="primary">파일을 선택하세요</Button>
                         </div>
                     </div>
                 ) : files.length === 1 ? (
                     <div className={style.uploadDetail}>
                         <Row style={{ marginBottom: '10px' }}>
-                            <Col sm='4' style={{ marginBottom: '10px' }}>
+                            <Col sm='4' style={{ marginBottom: '10px',padding: '0' }}>
                                 {files[0].image_path === "/assets/groovy2.png" ? <div className={style.imageContainer}>
                                     <img src={files[0].image_path} onClick={handleClickImage} />
                                     <input
@@ -233,11 +237,11 @@ const Track_Upload = () => {
                                 </div>}
 
                             </Col>
-                            <Col sm='8' style={{ marginBottom: '10px' }}>
+                            <Col sm='8' style={{ marginBottom: '10px',padding: '0' }}>
                                 <Row>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>제목</Col>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>
-                                        <input
+                                        <Input
                                             placeholder="제목을 입력하세요"
                                             className={style.detail_input}
                                             type="text"
@@ -250,8 +254,8 @@ const Track_Upload = () => {
                                         <MusicTagList onSelectTag={handleTagSelection} />
                                     </Col>
                                     <Col sm='8' style={{ marginBottom: '10px' }}>
-                                        <Row>
-                                            <Stack direction="column" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                        <Row className={style.chipRow}>
+                                            <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
                                                 {selectTag.map((tag, index) => (
                                                     <Chip
                                                         key={index}
@@ -264,7 +268,7 @@ const Track_Upload = () => {
                                     </Col>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>writer</Col>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>
-                                        <input
+                                        <Input
                                             className={style.detail_input}
                                             type="text"
                                             placeholder="제작자를 입력해주세요"
@@ -276,8 +280,8 @@ const Track_Upload = () => {
                             </Col>
                         </Row>
                         <Row style={{ marginBottom: '10px' }} y>
-                            <Col><button onClick={handleCancle}>취소</button></Col>
-                            <Col><button onClick={handleSave}>저장하기</button></Col>
+                            <Col><Button color="primary" onClick={handleCancle}>취소</Button></Col>
+                            <Col><Button color="primary" onClick={handleSave}>저장하기</Button></Col>
                         </Row>
                     </div>
                 ) :

@@ -37,3 +37,8 @@
 .detail_input_tag{
     width: 80%;
 }
+.chipRow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
