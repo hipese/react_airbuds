@@ -1,11 +1,52 @@
-import react from "react";
+import react, { useContext } from "react";
 import styles from "./TopNavigator.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import SVGComponent from "./SVGComponent";
+import { LoginContext } from "../../../App";
+import React from "react";
+import Swal from "sweetalert2";
 
 const TopNavigator = () => {
+
+    const {loginID, setLoginID} = useContext(LoginContext)
+
+    const handleLoginClick = async () => {
+        const { value: formValues } = await Swal.fire({
+            title: 'Welcome Back',
+            html: `
+            <input type="text" id="username" class="swal2-input" placeholder="Username">
+            <input type="password" id="password" class="swal2-input" placeholder="Password">
+            <hr></hr>
+            나중에 소셜 로그인 추가 예정
+          `,
+            confirmButtonText: "Login",
+            focusConfirm: false,
+            didOpen: () => {
+                const popup = Swal.getPopup();
+                let usernameInput = popup.querySelector('#username')
+                let passwordInput = popup.querySelector('#password')
+                usernameInput.onkeyup = (event) => event.key === 'Enter' && Swal.clickConfirm()
+                passwordInput.onkeyup = (event) => event.key === 'Enter' && Swal.clickConfirm()
+            },
+            preConfirm: () => {
+                const id = document.getElementById("username").value;
+                const password = document.getElementById("password").value;
+                if (!id || !password) {
+                    Swal.showValidationMessage(`Please enter username and password`)
+                }
+                return { id, password }
+            },
+        })
+
+        if (formValues) {
+            console.log(formValues);
+            // 로그인 axios
+            // axios.post("/auth/login")
+        }
+    }
+
     return (
         <Container className={`${styles.container} ${styles.containerFluid}`} fluid>
             <Row>
@@ -35,15 +76,29 @@ const TopNavigator = () => {
                 </Col>
                 <Col className={styles.header_right}>
                     <Row>
-                        <Col>
-                            <Link className={styles.linkurl} to="/Playlist"><div>Playlist</div></Link>
-                        </Col>
-                        <Col>
-                            <Link className={styles.linkurl} to="/Upload"><div>Upload</div></Link>
-                        </Col>
-                        <Col>
-                        <Link className={styles.linkurl} to="/Music"><div>프로필</div></Link>
-                        </Col>
+                        {
+                            loginID ?
+                                <>
+                                    <Col>
+                                        <Link className={styles.linkurl} to="/Playlist"><div>Playlist</div></Link>
+                                    </Col>
+                                    <Col>
+                                        <Link className={styles.linkurl} to="/Upload"><div>Upload</div></Link>
+                                    </Col>
+                                    <Col>
+                                        Profile
+                                    </Col>
+                                </>
+                                :
+                                <>
+                                    <Col>
+                                        <div onClick={handleLoginClick}>Login</div>
+                                    </Col>
+                                    <Col>
+                                        <Link className={styles.linkurl} to="/Register"><div>Sign Up</div></Link>
+                                    </Col>
+                                </>
+                        }
                         <Col>
                             ...
                         </Col>
