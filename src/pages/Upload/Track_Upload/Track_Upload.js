@@ -117,7 +117,7 @@ const Track_Upload = () => {
                     imageFile: null,
                     image_path: image_path, // 여기에 이미지 경로 추가
                     writer: "익명의 제작자",// 작사 추가
-                    tag: "의미불명" // 테그 필드 추가
+                    tag: selectTag // 테그 필드 추가
                 };
 
                 setFiles(prevFiles => [...prevFiles, newFile]);
@@ -158,14 +158,6 @@ const Track_Upload = () => {
         }
     };
 
-
-    const handleTagChange = (index, newTags) => {
-        setFiles(currentFiles => {
-            const updatedFiles = [...currentFiles];
-            updatedFiles[index] = { ...updatedFiles[index], tag: newTags };
-            return updatedFiles;
-        });
-    };
 
     const handleWriterChange = (index, newWriter) => {
         setFiles(currentFiles => {
@@ -214,11 +206,11 @@ const Track_Upload = () => {
                     </div>
                 ) : files.length === 1 ? (
                     <div className={style.uploadDetail}>
-                        <Row style={{ marginBottom: '10px' }}>
-                            <Col sm='4' style={{ marginBottom: '10px',padding: '0' }}>
+                        <Row style={{ marginBottom: '10px',width: '100%', marginLeft:'0px',marginRight:'0px'}}>
+                            <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
                                 {files[0].image_path === "/assets/groovy2.png" ? <div className={style.imageContainer}>
                                     <img src={files[0].image_path} onClick={handleClickImage} />
-                                    <input
+                                    <Input
                                         type="file"
                                         ref={hiddenFileInput}
                                         onChange={handleImageChange}
@@ -227,7 +219,7 @@ const Track_Upload = () => {
                                     />
                                 </div> : <div className={style.imageContainer}>
                                     <img src={imageview} onClick={handleClickImage} />
-                                    <input
+                                    <Input
                                         type="file"
                                         ref={hiddenFileInput}
                                         onChange={handleImageChange}
@@ -237,8 +229,8 @@ const Track_Upload = () => {
                                 </div>}
 
                             </Col>
-                            <Col sm='8' style={{ marginBottom: '10px',padding: '0' }}>
-                                <Row>
+                            <Col sm='12' md='8'style={{ marginBottom: '10px',padding: '0' }}>
+                                <Row style={{ marginBottom: '10px',width: '100%' }}>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>제목</Col>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>
                                         <Input
@@ -250,10 +242,10 @@ const Track_Upload = () => {
                                         />
                                     </Col>
                                     <Col sm='12 ' style={{ marginBottom: '10px' }}>tag </Col>
-                                    <Col sm='4' style={{ marginBottom: '10px' }}>
+                                    <Col sm='12'md='4' style={{ marginBottom: '10px' }}>
                                         <MusicTagList onSelectTag={handleTagSelection} />
                                     </Col>
-                                    <Col sm='8' style={{ marginBottom: '10px' }}>
+                                    <Col sm='12' md='8'  style={{ marginBottom: '10px'}}>
                                         <Row className={style.chipRow}>
                                             <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
                                                 {selectTag.map((tag, index) => (
@@ -279,7 +271,7 @@ const Track_Upload = () => {
                                 </Row>
                             </Col>
                         </Row>
-                        <Row style={{ marginBottom: '10px' }} y>
+                        <Row style={{ marginBottom: '10px'}}>
                             <Col><Button color="primary" onClick={handleCancle}>취소</Button></Col>
                             <Col><Button color="primary" onClick={handleSave}>저장하기</Button></Col>
                         </Row>

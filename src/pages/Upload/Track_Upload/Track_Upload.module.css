@@ -1,3 +1,5 @@
+*{box-sizing: border-box;}
+
 .uploadBox{
     width: 100%;
     background-color: bisque;
@@ -32,7 +34,7 @@
     cursor: pointer;
 }
 .detail_input{
-    width: 90%;
+    width: 100%;
 }
 .detail_input_tag{
     width: 80%;
