@@ -9,7 +9,7 @@
     width: 100%;
     background-color: #333;
     height: 50px;
-    z-index: 1;
+    z-index: 99999;
 }
 
 .MainContainer {
@@ -24,4 +24,5 @@
     width: 100%;
     height: 80px;
     background-color: #1e1e1e;
+    z-index: 99999;
 }
