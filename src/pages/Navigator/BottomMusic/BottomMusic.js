@@ -8,6 +8,7 @@ const BottomMusic = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [loading, setLoading] = useState(false);
     const audioRef = useRef(null);
+    const [currentTrack, setCurrentTrack] = useState(0);
 
     const audioFiles = [
         'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/2.mp3',
@@ -17,7 +18,11 @@ const BottomMusic = () => {
         // Add more audio URLs as needed
     ];
 
-    const [currentTrack, setCurrentTrack] = useState(0);
+    if (audioFiles.length === 0) {
+        return null; // If empty, don't render anything
+    };
+
+
 
     const handlePlay = () => {
         setIsPlaying(true);
