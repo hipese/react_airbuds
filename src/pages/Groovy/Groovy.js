@@ -14,6 +14,8 @@ import BottomMusic from "../Navigator/BottomMusic/BottomMusic";
 import TopNavigator from "../Navigator/TopNavigator/TopNavigator";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col } from "reactstrap";
+import AnnounceList from "../Announce/AnnounceList";
+import QnaList from "../qna/qnaList";
 
 const Groovy = () => {
     return (
@@ -36,6 +38,8 @@ const Groovy = () => {
                         <Route path="Upload/*" element={<Upload />} />
                         <Route path="Report/*" element={<Report />} />
                         <Route path="Admin/*" element={<Admin />} />
+                        <Route path="Announce/*" element={<AnnounceList />} />
+                        <Route path="QnA/*" element={<QnaList />} />
                     </Routes>
                 </Row>
             </Container>

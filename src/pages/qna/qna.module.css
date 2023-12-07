@@ -1,14 +1,6 @@
 *{
     box-sizing: border-box;
 }
-.container{
-    margin:auto;
-    width: 100%;
-    height: 100%;
-    max-width: 1200px;
-    max-height: 800px;
-    min-width: 300px;
-}
 
 .border{
     border: 1px solid black;
@@ -28,6 +20,62 @@
     align-items: center;
 }
 
+.marginT40{
+    margin-top: 40px;
+}
+
+.marginT70{
+    margin-top: 70px;
+}
+
+.ma{
+    margin: auto;
+}
+
+.pl10{
+    padding-left: 10px;
+}
+.pad10{
+    padding: 10px;
+}
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vcenter{
+    display: flex;
+    align-items: center;
+}
+
+.hcenter{
+    display: flex;
+    justify-content: center;
+}
+
+.rightAlign{
+    display: flex;
+    justify-content: right;
+    padding-right: 10px;
+}
+
+.wrap{
+    width: 100%;
+    height: 2000px;
+}
+/* QnA List CSS */
+
+.container{
+    margin:auto;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    max-height: 800px;
+    min-width: 300px;
+}
+
 .announceLine{
     height: 60px;
     justify-content: center;
@@ -40,6 +88,73 @@
     cursor: pointer;
 }
 
-.ma{
-    margin: auto;
+/* QnA Contents CSS */
+
+.qnaContents{
+    width: 100%;
+    height: 100%;
+    max-width: 1000px;
+    min-width: 300px;
+}
+
+.qnaDetail{
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    max-width: 950px;
+    min-width: 300px;
+    min-height: 300px;
+    overflow: hidden;
+    word-break: break-all;
+}
+
+.qnaReply{
+    width: 100%;
+    height: 100%;
+    max-width: 750px;
+    min-width: 300px;
+}
+
+.replyContents{
+    width: 100%;
+    height: 100%;
+    min-height: 100px;
+    overflow: hidden;
+    word-break: break-all;
+}
+
+.replyBtnEven{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+/* QnA Write CSS */
+
+.borderWrite{
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+
+.qnaWrite{
+    width: 100%;
+    height: 100%;
+    max-width: 1000px;
+    min-width: 300px;
+}
+
+.qnaTitle{
+    padding: 10px;
+    margin: 10px;
+}
+
+.btnEven{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.editor {
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+    min-height: 370px;
 }
