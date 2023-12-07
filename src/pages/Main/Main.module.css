@@ -1,0 +1,148 @@
+.container {
+    max-width: 90%;
+    padding-left: 100px;
+    height: 100vh;
+    position: relative;
+    transition: ease-in-out 0.5s;
+}
+
+@Media (max-width: 1000px) {
+    .container {
+        max-width: 100%;
+        padding-left: 0px;
+        transition: ease-in-out 0.5s;
+    }
+}
+
+.contentContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.leftSide {
+    max-width: 1150px;
+    width: 65%;
+    min-width: 800px;
+    height: 100%;
+    padding-right: 40px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.rightSide {
+    width: 35%;
+    height: 100%;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.RecentTitle {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.RecentMusicBox {
+    max-width: 1100px;
+    width: 100%;
+    height: 245px;
+    margin-top: 20px;
+    border: 1px solid #e0e0e0;
+    padding: 20px 20px 20px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    background-image: linear-gradient(135deg, rgb(163, 163, 163) 0%, rgb(101, 101, 101) 100%);
+}
+
+.RecentImg {
+    width: 200px;
+    height: 100%;
+    border: 1px solid white;
+}
+
+.RecentMusic {
+    width: 80%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.RecentMusicOne {
+    width: 100%;
+    position: relative;
+    margin-left: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    float: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.RecentMusicOne:hover {
+    background-color: #999999;
+}
+
+.RecentSinger {
+    margin-left: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #dbdbdb;
+    float: left;
+}
+
+.RecentMusic span {
+    color: #dbdbdb;
+    float: left;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.RecentSong {
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    float: left;
+}
+
+.Listen {
+    float: left;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+.play {
+    position: absolute;
+    right: 80px;
+    top: 15px;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 12px solid white;
+}
+
+.listenPerson {
+    width: 70px;
+    position: absolute;
+    right: 0px;
+    top: 8px;
+    color: white;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+}
