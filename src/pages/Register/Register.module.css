@@ -1,17 +1,101 @@
+.register_container {
+    position: relative;
+    padding: 0px;
+    overflow-x: hidden;
+    overflow-y: visible;
+    width: 100%;
+    height: 80vh;
+}
+
 .row_center {
     justify-content: center;
     align-items: center;
+}
+
+.contents_container {
+    position: absolute;
+    left : 0vw;
+    width: 300vw;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    
 }
 
 .row_header {
     margin-top: 50px;
 }
 
+.email_contents_container {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.input_email {
+    width: 300px;
+    text-align: center;
+}
+
+.input_email:focus {
+    outline: none;
+}
+
 .social_image:hover {
     cursor: pointer;
 }
 
-.contents {
-    margin-top: 50px;
-    margin-bottom: 30px;
+.single_btn_container {
+    justify-content: center;
+}
+
+.btn_move {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    width: 300px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    height: 45px;
+    text-align:center;
+    border: none;
+    background-size: 300% 100%;
+
+    border-radius: 5px;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.btn_move:hover {
+    background-position: 100% 0;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.btn_next {
+    background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
+    /* box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75); */
+}
+
+.btn_back {
+    background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376);
+    /* box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75); */
+}
+
+.btn_next:focus {
+    outline: none;
+}
+
+.kakao_sign_up_container {
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.double_btn_container {
+    margin-top: 100px;
+    justify-content: space-evenly;
 }
