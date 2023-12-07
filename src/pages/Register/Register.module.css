@@ -35,8 +35,13 @@
     text-align: center;
 }
 
-.input_email:focus {
+.input_email:focus, .input_verify:focus {
     outline: none;
+}
+
+.input_verify {
+    width: 100px;
+    text-align: center;
 }
 
 .social_image:hover {
@@ -47,28 +52,48 @@
     justify-content: center;
 }
 
-.btn_move {
+.hrTag {
+    margin-top: 20px;
+    width: 50vw;
+}
+
+.btn_css {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 
-    width: 300px;
     font-size: 16px;
     font-weight: 600;
     color: #fff;
     cursor: pointer;
-    height: 45px;
     text-align:center;
     border: none;
     background-size: 300% 100%;
-
     border-radius: 5px;
+
     -o-transition: all .4s ease-in-out;
     -webkit-transition: all .4s ease-in-out;
     transition: all .4s ease-in-out;
 }
 
-.btn_move:hover {
+.btn_next, .btn_back {
+    width: 300px;
+    height: 45px;
+}
+
+.btn_send_verify {
+    margin-left: 10px;
+    width: 120px;
+    height: 38px;
+}
+
+.btn_verify {
+    margin-left: 10px;
+    width: 80px;
+    height: 38px;
+}
+
+.btn_css:hover {
     background-position: 100% 0;
     -o-transition: all .4s ease-in-out;
     -webkit-transition: all .4s ease-in-out;
@@ -85,8 +110,18 @@
     /* box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75); */
 }
 
-.btn_next:focus {
+.btn_verify, .btn_send_verify {
+    background-image: linear-gradient(to right, #0ba360, #3cba92, #30dd8a, #2bb673);
+    /* box-shadow: 0 4px 15px 0 rgba(23, 168, 108, 0.75); */
+}
+
+.btn_next:focus, .btn_back:focus, .btn_verify:focus {
     outline: none;
+}
+
+.verify_container {
+    justify-content: center;
+    margin-top: 15px;
 }
 
 .kakao_sign_up_container {
@@ -98,4 +133,10 @@
 .double_btn_container {
     margin-top: 100px;
     justify-content: space-evenly;
+}
+
+input::-webkit-inner-spin-button {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
 }

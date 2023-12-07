@@ -1,10 +1,22 @@
 import react, { useState } from "react";
 import { Col, Container, Input, Row } from "reactstrap";
 import style from "./Register.module.css";
+import Swal from "sweetalert2";
 
 const Register = () => {
 
-    const [leftPosition, setLeftPosition] = useState(0)
+    // 이메일 정규식 ( 99% 거를수 있다함. http://emailregex.com/ 참고 )
+    const emailRegex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+    const [verifyCode, setVerifyCode] = useState(null);
+
+    // 이메일 인증 여부
+    const [verified, setVerified] = useState(false);
+
+    //contents_container 의 left 속성 값, 좌우로 이동할 때 씀
+    const [leftPosition, setLeftPosition] = useState(0);
+
+    // 신규 사용자 유저 정보
     const [userInfo, setUserInfo] = useState({id:"", password:"", name:"", birth:"", contact:"" , email:"", profile_image:"", background_image:""});
 
     const InputChangeHandler = (e) => {
@@ -12,17 +24,55 @@ const Register = () => {
         setUserInfo(prev => ({...prev,[name]:value}));
     }
 
+    const VerifyCodeChangeHandler = (e) => {
+        setVerifyCode(e.target.value);
+    }
+
     const FirstNextBtnHandler = () => {
         setLeftPosition(-100);
     }
     const SecondNextBtnHandler = () => {
-        setLeftPosition(-200);
+        if(verified)
+            setLeftPosition(-200);
+        else {
+            Swal.fire({
+                icon: "error",
+                title: "어이쿠..!",
+                text: "이메일 인증을 먼저 진행해주세요!"
+            })
+        }
+
     }
     const FirstBackBtnHandler = () => {
         setLeftPosition(0);
     }
     const SecondBackBtnHandler = () => {
         setLeftPosition(-100);
+    }
+    const EmailVerifyHandler = () => {
+        if(userInfo.email == "") {
+            Swal.fire({
+                icon: "error",
+                title: "어이쿠..!",
+                text: "이메일을 입력해주세요!"
+            })
+            return;
+        }
+        if(emailRegex.test(userInfo.email)) {
+
+            console.log("True");
+
+            // 이메일 인증 코드 넣어야 함
+            
+
+
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "올바른 이메일 형태가 아닙니다!",
+                text: "이메일을 다시 확인해주세요!"
+            })
+        }
     }
     const SignUpHandler = () => {
         console.log("Done!");
@@ -40,11 +90,13 @@ const Register = () => {
                 <Col xs={4} className={style.email_contents_container}>
 
                     <Row className={style.single_btn_container}>
-                        <button className={`${style.btn_next} ${style.btn_move}`} onClick={FirstNextBtnHandler}>Continue with E-mail</button>
+                        <button className={`${style.btn_next} ${style.btn_css}`} onClick={FirstNextBtnHandler}>이메일로 시작하기</button>
                     </Row>
 
+                    <hr className={style.hrTag}></hr>
+
                     <Row className={style.kakao_sign_up_container}>
-                        <img src="/assets/kakao_sign_up_medium_wide.png" className={style.social_image}></img>
+                        <img src="/assets/kakao_sign_up_medium_wide_kor.png" className={style.social_image}></img>
                     </Row>
 
                     
@@ -53,12 +105,18 @@ const Register = () => {
                 <Col xs={4}>
 
                     <Row className={style.row_center}>
-                        <Input className={style.input_email} name="email" type="text" placeholder="Continue with E-mail" onChange={InputChangeHandler}></Input>
+                        <Input className={style.input_email} name="email" type="text" placeholder="이메일로 계속하기..." onChange={InputChangeHandler}></Input>
+                        <button className={`${style.btn_send_verify} ${style.btn_css}`} onClick={EmailVerifyHandler}>인증번호 발송</button>
+                    </Row>
+
+                    <Row className={style.verify_container}>
+                        <Input className={style.input_verify} type="number" placeholder="인증번호" onChange={VerifyCodeChangeHandler}></Input>
+                        <button className={`${style.btn_verify} ${style.btn_css}`} onClick={EmailVerifyHandler}>인증</button>
                     </Row>
 
                     <Row className={style.double_btn_container}>
-                        <button className={`${style.btn_back} ${style.btn_move}`} onClick={FirstBackBtnHandler}>Back</button>
-                        <button className={`${style.btn_next} ${style.btn_move}`} onClick={SecondNextBtnHandler}>Next</button>
+                        <button className={`${style.btn_back} ${style.btn_css}`} onClick={FirstBackBtnHandler}>뒤로</button>
+                        <button className={`${style.btn_next} ${style.btn_css}`} onClick={SecondNextBtnHandler}>다음</button>
                     </Row>
 
                 </Col>
@@ -70,8 +128,8 @@ const Register = () => {
                     </Row>
 
                     <Row className={style.double_btn_container}>
-                        <button className={`${style.btn_back} ${style.btn_move}`} onClick={SecondBackBtnHandler}>Back</button>
-                        <button className={`${style.btn_next} ${style.btn_move}`} onClick={SignUpHandler}>Done!</button>
+                        <button className={`${style.btn_back} ${style.btn_css}`} onClick={SecondBackBtnHandler}>뒤로</button>
+                        <button className={`${style.btn_next} ${style.btn_css}`} onClick={SignUpHandler}>Done!</button>
                     </Row>
 
                 </Col>

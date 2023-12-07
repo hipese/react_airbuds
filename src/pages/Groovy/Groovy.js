@@ -9,11 +9,11 @@ import Register from "../Register/Register";
 import Login from "../Login/Login";
 import Report from "../Report/Report";
 import Admin from "../Admin/Admin";
-import Upload from "../Upload/Upload";
 import BottomMusic from "../Navigator/BottomMusic/BottomMusic";
 import TopNavigator from "../Navigator/TopNavigator/TopNavigator";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "reactstrap";
+import Upload_Main from "../Upload/Upload_Main";
 
 const Groovy = () => {
     return (
@@ -32,7 +32,7 @@ const Groovy = () => {
                         <Route path="Music/*" element={<Music />} />
                         <Route path="Register/*" element={<Register />} />
                         <Route path="Login/*" element={<Login />} />
-                        <Route path="Upload/*" element={<Upload />} />
+                        <Route path="Upload/*" element={<Upload_Main />} />
                         <Route path="Report/*" element={<Report />} />
                         <Route path="Admin/*" element={<Admin />} />
                     </Routes>
