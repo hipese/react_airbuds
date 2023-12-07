@@ -34,9 +34,15 @@ const Track_Upload = () => {
         // files 배열에 있는 각 파일을 formData에 추가
         files.forEach((fileData) => {
             formData.append(`file`, fileData.file);
-            formData.append('duration', fileData.duration)
-            formData.append('image_path', fileData.image_path)
+            formData.append('duration', fileData.duration);
+            formData.append('image_path', fileData.image_path);
+            if (fileData.imageFile) {
+                formData.append('imagefile', fileData.imageFile);
+            }
+            formData.append('writer', fileData.writer);
+            formData.append('tag', fileData.tag);
 
+            console.log(fileData.imageFile);
             console.log(formData);
         });
 
@@ -96,7 +102,10 @@ const Track_Upload = () => {
                     file: file,
                     name: file.name, // 파일의 원래 이름
                     duration: duration, // 파일의 길이(초)
-                    image_path: image_path // 여기에 이미지 경로 추가
+                    imageFile:null,
+                    image_path: image_path, // 여기에 이미지 경로 추가
+                    writer: "익명의 제작자",// 작사 추가
+                    tag: "의미불명" // 테그 필드 추가
                 };
 
                 setFiles(prevFiles => [...prevFiles, newFile]);
@@ -117,20 +126,41 @@ const Track_Upload = () => {
     };
 
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const newImagePath = URL.createObjectURL(file);
-
-            // 보여주기용 이미지 값 샛팅
-            setImageview(newImagePath)
-
-            // 보여주기용 이미지 값 샛팅 실제 이미지 값 저장
+        const imageFile = e.target.files[0];
+        if (imageFile) {
+            // 선택된 파일의 URL 생성 (렌더링에 사용)
+            const newImagePath = URL.createObjectURL(imageFile);
+    
+            // 보여주기용 이미지 값 설정
+            setImageview(newImagePath);
+    
+            // 실제 이미지 파일을 files 배열에 추가
             setFiles(currentFiles => {
                 const updatedFiles = [...currentFiles];
-                updatedFiles[0] = { ...updatedFiles[0], image_path: file.name };
+                if (updatedFiles.length > 0) {
+                    // 첫 번째 요소에 이미지 파일 추가
+                    updatedFiles[0] = { ...updatedFiles[0], image_path: imageFile.name, imageFile: imageFile };
+                }
                 return updatedFiles;
             });
         }
+    };
+
+
+    const handleTagChange = (index, newTags) => {
+        setFiles(currentFiles => {
+            const updatedFiles = [...currentFiles];
+            updatedFiles[index] = { ...updatedFiles[index], tag: newTags };
+            return updatedFiles;
+        });
+    };
+
+    const handleWriterChange = (index, newWriter) => {
+        setFiles(currentFiles => {
+            const updatedFiles = [...currentFiles];
+            updatedFiles[index] = { ...updatedFiles[index], writer: newWriter };
+            return updatedFiles;
+        });
     };
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -186,16 +216,33 @@ const Track_Upload = () => {
                                     <Col sm='12'>제목</Col>
                                     <Col sm='12'>
                                         <input
+                                            placeholder="제목을 입력하세요"
                                             className={style.detail_input}
                                             type="text"
                                             value={files[0].name} // 파일 객체의 이름 속성 사용
                                             onChange={(e) => handleFileNameChange(0, e.target.value)} // 변경 이벤트 처리
                                         />
                                     </Col>
-                                    <Col sm='12'>Genre</Col>
-                                    <Col sm='12'>드롭박스 있어야함</Col>
-                                    <Col sm='12'>Description</Col>
-                                    <Col sm='12'>입력폼</Col>
+                                    <Col sm='12'>tag </Col>
+                                    <Col sm='12'>
+                                        <input
+                                            className={style.detail_input}
+                                            type="text"
+                                            placeholder="다중일 경우 ,로 구분"
+                                            value={files[0].tag || ''} // 초기값 설정
+                                            onChange={(e) => handleTagChange(0, e.target.value)}
+                                        />
+                                    </Col>
+                                    <Col sm='12'>writer</Col>
+                                    <Col sm='12'>
+                                        <input
+                                            className={style.detail_input}
+                                            type="text"
+                                            placeholder="제작자를 입력해주세요"
+                                            value={files[0].writer || ''} // 초기값 설정
+                                            onChange={(e) => handleWriterChange(0, e.target.value)}
+                                        />
+                                    </Col>
                                 </Row>
                             </Col>
                         </Row>
