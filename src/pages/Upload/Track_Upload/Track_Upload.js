@@ -250,15 +250,17 @@ const Track_Upload = () => {
                                         <MusicTagList onSelectTag={handleTagSelection} />
                                     </Col>
                                     <Col sm='8' style={{ marginBottom: '10px' }}>
-                                        <Stack direction="row" spacing={1}>
-                                            {selectTag.map((tag, index) => (
-                                                <Chip
-                                                    key={index}
-                                                    label={tag}
-                                                    onDelete={() => handleTagDelete(tag)}
-                                                />
-                                            ))}
-                                        </Stack>
+                                        <Row>
+                                            <Stack direction="column" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                                {selectTag.map((tag, index) => (
+                                                    <Chip
+                                                        key={index}
+                                                        label={tag}
+                                                        onDelete={() => handleTagDelete(tag)}
+                                                    />
+                                                ))}
+                                            </Stack>
+                                        </Row>
                                     </Col>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>writer</Col>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>
