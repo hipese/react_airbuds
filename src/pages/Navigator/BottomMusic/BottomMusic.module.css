@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.imageContainer{
+    width: 80px;
+    height: 80px;
+    margin-right: 5px;
+}
+
+.image{
+    width: 70px;
+    height: 70px;
+}
+
+.song_info{
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.title{
+    margin-top: -3px;
+    margin-bottom: 3px;
+}
+
