@@ -210,7 +210,7 @@ const Track_Upload = () => {
                             <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
                                 {files[0].image_path === "/assets/groovy2.png" ? <div className={style.imageContainer}>
                                     <img src={files[0].image_path} onClick={handleClickImage} />
-                                    <Input
+                                    <input
                                         type="file"
                                         ref={hiddenFileInput}
                                         onChange={handleImageChange}
@@ -219,7 +219,7 @@ const Track_Upload = () => {
                                     />
                                 </div> : <div className={style.imageContainer}>
                                     <img src={imageview} onClick={handleClickImage} />
-                                    <Input
+                                    <input
                                         type="file"
                                         ref={hiddenFileInput}
                                         onChange={handleImageChange}
