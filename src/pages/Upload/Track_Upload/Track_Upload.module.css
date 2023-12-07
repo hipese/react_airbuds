@@ -15,11 +15,16 @@
     width: 50%;
     border: 1px solid black;
 }
+.imageContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .imageContainer img {
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 250px;
+    max-height: 250px;
     width: 90%;
-    height: 200px;
+    height: 90%;
     object-fit: cover; /* 이미지가 컨테이너에 맞춰 조정됩니다 */
 }
 .imageContainer img:hover {
