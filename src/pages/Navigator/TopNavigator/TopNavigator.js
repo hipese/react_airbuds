@@ -15,13 +15,13 @@ const TopNavigator = () => {
                             <Link className={styles.linksvg} to="/"><SVGComponent /></Link>
                         </Col>
                         <Col>
-                            <Link className={styles.linkurl} to="/"><div>Home</div></Link>
+                            <Link className={styles.linkurl} to="/"><div>홈</div></Link>
                         </Col>
                         <Col>
-                            <Link className={styles.linkurl} to="/Feed"><div>Feed</div></Link>
+                            <Link className={styles.linkurl} to="/Feed"><div>피드</div></Link>
                         </Col>
                         <Col>
-                            <Link className={styles.linkurl} to="/Library"><div>Library</div></Link>
+                            <Link className={styles.linkurl} to="/Library"><div>라이브러리</div></Link>
                         </Col>
                     </Row>
                 </Col>
@@ -36,10 +36,10 @@ const TopNavigator = () => {
                 <Col className={styles.header_right}>
                     <Row>
                         <Col>
-                            <Link className={styles.linkurl} to="/Playlist"><div>Playlist</div></Link>
+                            <Link className={styles.linkurl} to="/Playlist"><div>플레이리스트</div></Link>
                         </Col>
                         <Col>
-                            <Link className={styles.linkurl} to="/Upload"><div>Upload</div></Link>
+                            <Link className={styles.linkurl} to="/Upload"><div>업로드</div></Link>
                         </Col>
                         <Col>
                             프로필

@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./Main.module.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, div } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
+import OwlCarousel from "./Carousel"
 
 const Main = () => {
     
@@ -25,6 +24,20 @@ const Main = () => {
                             </div>
                         </div>
                     </div>
+                    <div className={styles.carouselTitle}>최근 유행하는 노래</div>
+                    <div className={styles.carousel}>
+                        <OwlCarousel />
+                    </div>
+                    <div className={styles.carouselTitle}>기분 좋을때</div>
+                    <div className={styles.carousel}>
+                        <OwlCarousel />
+                    </div>
+                    <div className={styles.carouselTitle}>파티</div>
+                    <div className={styles.carousel}>
+                        <OwlCarousel />
+                    </div>
+
+                    <div className={styles.leftBottom}></div>
                 </div>
                 <div className={styles.rightSide}>Like</div>
             </div>
