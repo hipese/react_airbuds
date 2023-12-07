@@ -1,20 +1,8 @@
 import React from "react";
 import { Avatar, Button, Skeleton, Typography } from "@mui/material";
-import { styled } from '@mui/system';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import styles from "./None_track_info.module.css";
-
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-});
+import { Link } from "react-router-dom";
 
 const None_track_info = () => {
     return (
@@ -43,10 +31,11 @@ const None_track_info = () => {
                     Groovy의 음악 공간에 여러분의 음악을 추가해보세요.<br></br>
                     노래, 앨범, 혹은 특별한 플레이리스트를 올려주시면,<br></br>
                     여러분의 음악을 팬들과 공유할 수 있습니다.<br></br><br></br><br></br>
+                    <Link to="/Upload">
                     <Button component="label" variant="contained" startIcon={<LibraryMusicIcon />}>
                         Upload Music
-                        <VisuallyHiddenInput type="file" />
                     </Button>
+                    </Link>
                 </Typography>
             </div>
         </>
