@@ -1,8 +1,13 @@
 import { Avatar, Box, Button, Divider, Grid, Typography } from '@mui/material';
 import style from './qna.module.css'
+import { useNavigate } from 'react-router';
 const QnaContents = () => {
 
     //관리자 및 글 작성자 외에는 못들어오도록 하기
+    const navi = useNavigate();
+    const handleMoveToList = () => {
+        navi(-1);
+    }
 
     return(
         <div className={`${style.wrap}`}>
@@ -33,7 +38,7 @@ const QnaContents = () => {
                         asd
                     </div>
                     <div className={`${style.pad10} ${style.rightAlign}`}>
-                        <button>목록으로</button>
+                        <button onClick={handleMoveToList}>목록으로</button>
                     </div>
                 </div>
 

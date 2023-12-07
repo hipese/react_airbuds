@@ -2,8 +2,31 @@ import { Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 import style from './qna.module.css'
 import Reactquill from './ReactQuill';
 import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router';
 const QnaWriteMain = () =>{
-    const [board, setBoard] = useState({});
+    //writer 추후 수정해야함
+
+    const [board, setBoard] = useState({qnaTitle:"",qnaWriter:"kwon", qnaCategory:"none",qnaPublic:1, qnaContents:"",qnaAnswerState:0,qnaWriteDate:new Date().toISOString()});
+    const navi = useNavigate();
+    const handleChange = (e) => {
+        const {name,value} = e.target;
+        console.log(name, value);
+        setBoard(prev=>({...prev,[name]:value}));
+    }
+    const handleSubmit = () => {
+        console.log(board);
+        axios.post("/api/qna",board).then(res=>{
+            console.log(res.data);
+            navi("/qna");
+        }).catch((e)=>{
+            console.log(e);
+        })
+    }
+
+    const handleCancel = () => {
+        navi(-1);
+    }
     return(
         <div className={`${style.wrap}`}>
             <div className={`${style.qnaWrite} ${style.ma} `}>
@@ -26,6 +49,8 @@ const QnaWriteMain = () =>{
                                     id="outlined-size-small"
                                     size="small"
                                     fullWidth
+                                    name='qnaTitle'
+                                    onChange={handleChange}
                                     />
                             </Grid>
                         </Grid>
@@ -46,15 +71,16 @@ const QnaWriteMain = () =>{
                                 <Select
                                     labelId="demo-simple-select-required-label"
                                     id="demo-simple-select-required"
-                                    value="system"
+                                    value={board.qnaCategory}
                                     fullWidth
+                                    onChange={handleChange}
+                                    name='qnaCategory'
                                     >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    <MenuItem value="system">시스템</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
+                                    <MenuItem value="none">선택</MenuItem>
+                                    <MenuItem value="service">서비스 문의</MenuItem>
+                                    <MenuItem value="event">이벤트</MenuItem>
+                                    <MenuItem value="usurpation">권리침해</MenuItem>
+                                    <MenuItem value="error">기타오류</MenuItem>
                                 </Select>
                             </Grid>
                         </Grid>
@@ -75,11 +101,13 @@ const QnaWriteMain = () =>{
                                 <Select
                                     labelId="demo-simple-select-required-label"
                                     id="demo-simple-select-required"
-                                    value="public"
+                                    value={board.qnaPublic}
                                     fullWidth
+                                    name='qnaPublic'
+                                    onChange={handleChange}
                                     >
-                                    <MenuItem value="public">공개</MenuItem>
-                                    <MenuItem value="private">비공개</MenuItem>
+                                    <MenuItem value={1}>공개</MenuItem>
+                                    <MenuItem value={0}>비공개</MenuItem>
                                 </Select>
                             </Grid>
                         </Grid>
@@ -87,12 +115,15 @@ const QnaWriteMain = () =>{
                     <hr/>
                     <Grid container className={`${style.pl10} ${style.center}`} spacing={10}>
                             <Grid item xs={12}>
-                                <Reactquill id="editor" value={board.contents} setValue={(value) => setBoard({ ...board, contents: value })} style={{ height: "325px", width: "100%", height:"100%" }} />
+                                <Reactquill id="editor" value={board.qnaContents} setValue={(value) => setBoard({ ...board, qnaContents: value })} style={{ height: "325px", width: "100%", height:"100%" }} />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <input type="file" multiple name='files'/>
                             </Grid>
                             <Grid item xs={12}>
                                 <div className={`${style.center} ${style.btnEven}`}>
-                                    <button>취소</button>   
-                                    <button>작성</button>
+                                    <button onClick={handleCancel}>취소</button>   
+                                    <button onClick={handleSubmit}>작성</button>
                                 </div>
                             </Grid>
                         </Grid>
