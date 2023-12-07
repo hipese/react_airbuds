@@ -42,7 +42,7 @@ const TopNavigator = () => {
                             <Link className={styles.linkurl} to="/Upload"><div>업로드</div></Link>
                         </Col>
                         <Col>
-                            프로필
+                        <Link className={styles.linkurl} to="/Music"><div>프로필</div></Link>
                         </Col>
                         <Col>
                             ...

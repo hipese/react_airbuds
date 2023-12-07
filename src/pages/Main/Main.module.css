@@ -1,12 +1,13 @@
 .container {
     max-width: 90%;
-    padding-left: 150px;
+    padding-left: 250px;
+    padding-right: 250px;
     height: 100vh;
     position: relative;
     transition: ease-in-out 0.5s;
 }
 
-@Media (max-width: 1100px) {
+@Media (max-width: 1200px) {
     .container {
         max-width: 100%;
         padding-left: 0px;
@@ -21,23 +22,30 @@
 }
 
 .leftSide {
-    max-width: 950px;
-    width: 65%;
-    min-width: 600px;
+    max-width: 1100px;
+    width: 70%;
+    min-width: 900px;
     height: 100%;
     padding-right: 40px;
     border-right: 1px solid #e0e0e0;
+    overflow-y: auto;
 }
+
 
 .leftBottom {
     margin-bottom: 200px;
 }
 
 .rightSide {
-    width: 35%;
+    min-width: 400px;
     height: 100%;
     padding-left: 40px;
     padding-right: 40px;
+}
+
+.positionFixed {
+    position: fixed;
+    min-width: 400px;
 }
 
 .RecentTitle {
@@ -140,7 +148,7 @@
 
 ::-webkit-scrollbar {
     width: 5px;
-    height: 5px;
+    height: 15px;
 }
 
 ::-webkit-scrollbar-track {
@@ -156,4 +164,118 @@
     font-size: 1.8rem;
     font-weight: 500;
     margin-top: 30px;
+}
+
+/* -------------------------------------------------------------------------------------------------------------------- */
+
+.followArtist {
+    width: 100%;
+    margin-top: 30px;
+    font-size: 0.8rem;
+    color: #999999;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 10px 5px 10px;
+}
+
+.loveYou {
+    width: 100%;
+    margin-top: 30px;
+    font-size: 0.8rem;
+    color: #999999;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 10px 5px 10px;
+}
+
+.viewAll {
+    font-size: 0.8rem;
+    color: #999999;
+    float: right;
+    cursor: pointer;
+}
+
+.followIcon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    margin-top: -3px;
+}
+
+.followli {
+    width: 100%;
+    margin-top: 10px;
+    margin-left: -30px !important;
+    margin-bottom: 10px;
+    display: inline-flex;
+}
+
+.followImg {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+}
+
+.followSinger {
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+.followPersonIcon {
+    font-size: 0.8rem !important;
+    color: #999999;
+    margin-left: 10px;
+    margin-top: 5px;
+    float: left;
+}
+
+.followPerson {
+    font-size: 0.8rem;
+    color: #777777;
+    margin-left: 5px;
+    float: left;
+}
+
+.like {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+    margin-top: -5px;
+}
+
+.loveli {
+    width: 100%;
+    margin-top: 10px;
+    margin-left: -30px !important;
+    margin-bottom: 10px;
+    display: inline-flex;
+}
+
+.loveImg {
+    width: 50px;
+    height: 50px;
+    background-color: #e0e0e0;
+}
+
+.loveSinger {
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+.lovePersonIcon {
+    font-size: 0.8rem !important;
+    color: #999999;
+    margin-left: 10px;
+    margin-top: 5px;
+    float: left;
+}
+
+.lovePerson {
+    font-size: 0.8rem;
+    color: #777777;
+    margin-left: 5px;
+    float: left;
 }
