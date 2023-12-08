@@ -1,12 +1,13 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import './BottomMusic.css';
 import styles from "./BottomMusic.module.css";
+import axios from "axios"
 import { MusicContext } from '../../../App';
 
 const BottomMusic = () => {
-    const { audioFiles } = useContext(MusicContext);
+    const { audioFiles, setAudioFiles } = useContext(MusicContext);
     const [isPlaying, setIsPlaying] = useState(false);
     const [loading, setLoading] = useState(false);
     const audioRef = useRef(null);
