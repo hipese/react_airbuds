@@ -1,23 +1,23 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import './BottomMusic.css';
 import styles from "./BottomMusic.module.css";
+import { MusicContext } from '../../../App';
 
 const BottomMusic = () => {
+    const { audioFiles } = useContext(MusicContext);
     const [isPlaying, setIsPlaying] = useState(false);
     const [loading, setLoading] = useState(false);
     const audioRef = useRef(null);
-
-    const audioFiles = [
-        'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/2.mp3',
-        'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/3.mp3',
-        'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/4.mp3',
-        'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/5.mp3',
-        // Add more audio URLs as needed
-    ];
-
     const [currentTrack, setCurrentTrack] = useState(0);
+
+
+    if (audioFiles.length === 0) {
+        return null; // If empty, don't render anything
+    };
+
+
 
     const handlePlay = () => {
         setIsPlaying(true);
