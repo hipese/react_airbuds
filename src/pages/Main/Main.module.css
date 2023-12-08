@@ -94,6 +94,14 @@
     cursor: pointer;
 }
 
+.RecentTitleAndSinger {
+    width: 500px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
 .RecentSinger {
     margin-left: 5px;
     font-size: 1rem;
@@ -110,16 +118,19 @@
 }
 
 .RecentSong {
+    width: 100% - RecentSinger;
     color: white;
     font-size: 1rem;
     font-weight: 500;
     float: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .Listen {
-    float: left;
     position: absolute;
-    right: 0px;
+    right: 5px;
     top: 0px;
 }
 
