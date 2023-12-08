@@ -39,6 +39,7 @@ const Track_Upload = () => {
         // files 배열에 있는 각 파일을 formData에 추가
         files.forEach((fileData) => {
             formData.append(`file`, fileData.file);
+            formData.append(`name`, fileData.name);
             formData.append('duration', fileData.duration);
             formData.append('image_path', fileData.image_path);
             if (fileData.imageFile) {
@@ -51,7 +52,7 @@ const Track_Upload = () => {
             console.log(formData);
         });
 
-        if(selectTag.length===0){
+        if (selectTag.length === 0) {
             alert("태그를 하나라도 선택해주세요");
             return;
         }
@@ -111,10 +112,13 @@ const Track_Upload = () => {
                 // 예시: 기본 이미지 경로 설정
                 const image_path = "/assets/groovy2.png";
 
+                // 파일 이름에서 확장자 제거
+                const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
+
                 // 파일 정보와 함께 파일의 이름과 길이를 저장
                 const newFile = {
                     file: file,
-                    name: file.name, // 파일의 원래 이름
+                    name: fileNameWithoutExtension, // 파일의 원래 이름
                     duration: duration, // 파일의 길이(초)
                     imageFile: null,
                     image_path: image_path, // 여기에 이미지 경로 추가
@@ -208,7 +212,7 @@ const Track_Upload = () => {
                     </div>
                 ) : files.length === 1 ? (
                     <div className={style.uploadDetail}>
-                        <Row style={{ marginBottom: '10px',width: '100%', marginLeft:'0px',marginRight:'0px'}}>
+                        <Row style={{ marginBottom: '10px', width: '100%', marginLeft: '0px', marginRight: '0px' }}>
                             <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
                                 {files[0].image_path === "/assets/groovy2.png" ? <div className={style.imageContainer}>
                                     <img src={files[0].image_path} onClick={handleClickImage} />
@@ -231,8 +235,8 @@ const Track_Upload = () => {
                                 </div>}
 
                             </Col>
-                            <Col sm='12' md='8'style={{ marginBottom: '10px',padding: '0' }}>
-                                <Row style={{ marginBottom: '10px',width: '100%' }}>
+                            <Col sm='12' md='8' style={{ marginBottom: '10px', padding: '0' }}>
+                                <Row style={{ marginBottom: '10px', width: '100%' }}>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>제목</Col>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>
                                         <Input
@@ -244,10 +248,10 @@ const Track_Upload = () => {
                                         />
                                     </Col>
                                     <Col sm='12 ' style={{ marginBottom: '10px' }}>tag </Col>
-                                    <Col sm='12'md='4' style={{ marginBottom: '10px' }}>
+                                    <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
                                         <MusicTagList onSelectTag={handleTagSelection} />
                                     </Col>
-                                    <Col sm='12' md='8'  style={{ marginBottom: '10px'}}>
+                                    <Col sm='12' md='8' style={{ marginBottom: '10px' }}>
                                         <Row className={style.chipRow}>
                                             <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
                                                 {selectTag.map((tag, index) => (
@@ -273,7 +277,7 @@ const Track_Upload = () => {
                                 </Row>
                             </Col>
                         </Row>
-                        <Row style={{ marginBottom: '10px'}}>
+                        <Row style={{ marginBottom: '10px' }}>
                             <Col><Button color="primary" onClick={handleCancle}>취소</Button></Col>
                             <Col><Button color="primary" onClick={handleSave}>저장하기</Button></Col>
                         </Row>

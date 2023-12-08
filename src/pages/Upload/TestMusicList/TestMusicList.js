@@ -1,14 +1,8 @@
 
 import { useState, useRef, useEffect, useContext } from "react"
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import axios from "axios";
-import { MusicContext } from "../../../App";
 
 const TestMusicList = () => {
-
-    const MusicSetting = useContext(MusicContext);
 
     // 데이터베이스에 음원목록을 가져오는 변수
     const [tracks, setTracks] = useState([]);
@@ -22,6 +16,19 @@ const TestMusicList = () => {
             console.log(resp.data);
         })
     }
+
+    useEffect(() => {
+        axios.get(`/api/track/bywriter/${testText}`).then(resp => {
+            const tracksWithImages = resp.data.map(track => {
+                // trackImages 배열이 비어있지 않은 경우, 첫 번째 이미지의 경로를 추출
+                const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+                return { ...track, imagePath };
+            });
+
+            console.log("Tracks with images:", tracksWithImages);
+            setTracks(tracksWithImages);
+        });
+    }, []);
 
     // 선택한 id값의 음원 정보를 삭제하는 기능
     const handleDelete = (trackId) => {
@@ -37,11 +44,16 @@ const TestMusicList = () => {
         <div>
             {tracks.map((track, index) => (
                 <div key={index}>
-                    {track.title} <button onClick={() => handleDelete(track.trackId)}>삭제하기</button>
+                    {track.title}
+                    <br />
+                    <img
+                        src={track.imagePath ? `/tracks/image/${track.imagePath}` : '/assets/groovy2.png'}
+                        alt={track.title}
+                    />
+                    <br />
+                    <button onClick={() => handleDelete(track.trackId)}>삭제하기</button>
                 </div>
             ))}
-
-            <button onClick={handlelist}>목록 보여주기</button>
         </div>
     );
 
