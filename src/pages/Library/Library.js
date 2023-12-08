@@ -65,6 +65,11 @@ const Library = () => {
                             sx={{
                                 '&.Mui-selected': {
                                     color: '#4CAF50',
+                                    textDecoration: 'none', // 밑줄 제거
+                                },
+                                '&:hover': {
+                                    color: '#4CAF50',
+                                    textDecoration: 'none', // 밑줄 제거
                                 },
                             }} />
                         <Tab label="Likes" component={Link} to="likes" {...a11yProps(1)} />
