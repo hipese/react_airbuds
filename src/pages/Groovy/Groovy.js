@@ -14,7 +14,7 @@ import TopNavigator from "../Navigator/TopNavigator/TopNavigator";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col } from "reactstrap";
 import AnnounceList from "../Announce/AnnounceList";
-import QnaList from "../qna/qnaList";
+import QnaList from "../QnA/qnaList";
 import Upload_Main from "../Upload/Upload_Main";
 
 const Groovy = () => {
