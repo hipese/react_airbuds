@@ -5,6 +5,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.14.19",
     "@mui/material": "^5.14.20",
     "@mui/styled-engine-sc": "^6.0.0-alpha.7",
@@ -14,7 +17,10 @@
     "axios": "^1.6.2",
     "bootstrap": "^4.6.0",
     "flowbite-react": "^0.7.0",
+    "font-awesome": "^4.7.0",
     "i": "^0.3.7",
+    "jquery": "^3.7.1",
+    "owl.carousel": "^2.3.4",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
     "react-cookie": "^6.1.1",
@@ -22,6 +28,7 @@
     "react-dropzone": "^14.2.3",
     "react-h5-audio-player": "^3.9.0",
     "react-modal": "^3.16.1",
+    "react-multi-carousel": "^2.8.4",
     "react-owl-carousel": "^2.3.3",
     "react-quill": "^2.0.0",
     "react-router": "^6.20.1",
@@ -29,6 +36,7 @@
     "react-scripts": "5.0.1",
     "reactstrap": "^9.2.1",
     "styled-components": "^6.1.1",
+    "sweetalert2": "^11.10.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
