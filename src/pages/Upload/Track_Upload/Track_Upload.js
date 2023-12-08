@@ -1,9 +1,11 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useDropzone } from 'react-dropzone';
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, Input, Button } from "reactstrap";
 import style from "./Track_Upload.module.css"
-// import 'react-h5-audio-player/lib/styles.css';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import axios from "axios";
+import MusicTagList from "./MuiscTagList/MuiscTagList";
 
 const Track_Upload = () => {
 
@@ -14,7 +16,9 @@ const Track_Upload = () => {
     const [tracks, setTracks] = useState([]);
 
     const [imageview, setImageview] = useState({});
-    const [albumview, setAlbumview] = useState({});
+
+    const [selectTag, setSelectTag] = useState([]);
+
 
     // 이미지를 바꾸기 위한 것들
     // =====================================================
@@ -40,12 +44,16 @@ const Track_Upload = () => {
                 formData.append('imagefile', fileData.imageFile);
             }
             formData.append('writer', fileData.writer);
-            formData.append('tag', fileData.tag);
+            formData.append('tag', selectTag);
 
             console.log(fileData.imageFile);
             console.log(formData);
         });
 
+        if(selectTag.length===0){
+            alert("태그를 하나라도 선택해주세요");
+            return;
+        }
 
         axios.post("/api/track", formData, {
             headers: {
@@ -53,6 +61,8 @@ const Track_Upload = () => {
             }
         }).then(resp => {
             console.log("성공");
+            setFiles([]);
+
         }).catch(resp => {
             console.log("실패")
         })
@@ -85,6 +95,8 @@ const Track_Upload = () => {
     }
 
 
+
+
     const onDrop = (acceptedFiles) => {
         acceptedFiles.forEach(file => {
             const url = URL.createObjectURL(file);
@@ -102,10 +114,10 @@ const Track_Upload = () => {
                     file: file,
                     name: file.name, // 파일의 원래 이름
                     duration: duration, // 파일의 길이(초)
-                    imageFile:null,
+                    imageFile: null,
                     image_path: image_path, // 여기에 이미지 경로 추가
                     writer: "익명의 제작자",// 작사 추가
-                    tag: "의미불명" // 테그 필드 추가
+                    tag: selectTag // 테그 필드 추가
                 };
 
                 setFiles(prevFiles => [...prevFiles, newFile]);
@@ -130,10 +142,10 @@ const Track_Upload = () => {
         if (imageFile) {
             // 선택된 파일의 URL 생성 (렌더링에 사용)
             const newImagePath = URL.createObjectURL(imageFile);
-    
+
             // 보여주기용 이미지 값 설정
             setImageview(newImagePath);
-    
+
             // 실제 이미지 파일을 files 배열에 추가
             setFiles(currentFiles => {
                 const updatedFiles = [...currentFiles];
@@ -147,14 +159,6 @@ const Track_Upload = () => {
     };
 
 
-    const handleTagChange = (index, newTags) => {
-        setFiles(currentFiles => {
-            const updatedFiles = [...currentFiles];
-            updatedFiles[index] = { ...updatedFiles[index], tag: newTags };
-            return updatedFiles;
-        });
-    };
-
     const handleWriterChange = (index, newWriter) => {
         setFiles(currentFiles => {
             const updatedFiles = [...currentFiles];
@@ -162,6 +166,20 @@ const Track_Upload = () => {
             return updatedFiles;
         });
     };
+
+    // 태그 선택 변경 시 호출될 콜백 함수
+    const handleTagSelection = (selectedTag) => {
+
+        if (!selectTag.includes(selectedTag)) {
+            setSelectTag([...selectTag, selectedTag]);
+        }
+        console.log(selectTag);
+    };
+
+    const handleTagDelete = (tagToDelete) => {
+        setSelectTag((tags) => tags.filter((tag) => tag !== tagToDelete));
+    };
+
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
@@ -183,13 +201,13 @@ const Track_Upload = () => {
                             음악 파일을 드래그 앤 드롭하거나 클릭하여 파일을 선택하세요.
                         </div>
                         <div>
-                            <button>파일을 선택하세요</button>
+                            <Button color="primary">파일을 선택하세요</Button>
                         </div>
                     </div>
                 ) : files.length === 1 ? (
                     <div className={style.uploadDetail}>
-                        <Row>
-                            <Col sm='4'>
+                        <Row style={{ marginBottom: '10px',width: '100%', marginLeft:'0px',marginRight:'0px'}}>
+                            <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
                                 {files[0].image_path === "/assets/groovy2.png" ? <div className={style.imageContainer}>
                                     <img src={files[0].image_path} onClick={handleClickImage} />
                                     <input
@@ -211,11 +229,11 @@ const Track_Upload = () => {
                                 </div>}
 
                             </Col>
-                            <Col sm='8'>
-                                <Row>
-                                    <Col sm='12'>제목</Col>
-                                    <Col sm='12'>
-                                        <input
+                            <Col sm='12' md='8'style={{ marginBottom: '10px',padding: '0' }}>
+                                <Row style={{ marginBottom: '10px',width: '100%' }}>
+                                    <Col sm='12' style={{ marginBottom: '10px' }}>제목</Col>
+                                    <Col sm='12' style={{ marginBottom: '10px' }}>
+                                        <Input
                                             placeholder="제목을 입력하세요"
                                             className={style.detail_input}
                                             type="text"
@@ -223,19 +241,26 @@ const Track_Upload = () => {
                                             onChange={(e) => handleFileNameChange(0, e.target.value)} // 변경 이벤트 처리
                                         />
                                     </Col>
-                                    <Col sm='12'>tag </Col>
-                                    <Col sm='12'>
-                                        <input
-                                            className={style.detail_input}
-                                            type="text"
-                                            placeholder="다중일 경우 ,로 구분"
-                                            value={files[0].tag || ''} // 초기값 설정
-                                            onChange={(e) => handleTagChange(0, e.target.value)}
-                                        />
+                                    <Col sm='12 ' style={{ marginBottom: '10px' }}>tag </Col>
+                                    <Col sm='12'md='4' style={{ marginBottom: '10px' }}>
+                                        <MusicTagList onSelectTag={handleTagSelection} />
                                     </Col>
-                                    <Col sm='12'>writer</Col>
-                                    <Col sm='12'>
-                                        <input
+                                    <Col sm='12' md='8'  style={{ marginBottom: '10px'}}>
+                                        <Row className={style.chipRow}>
+                                            <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                                {selectTag.map((tag, index) => (
+                                                    <Chip
+                                                        key={index}
+                                                        label={tag}
+                                                        onDelete={() => handleTagDelete(tag)}
+                                                    />
+                                                ))}
+                                            </Stack>
+                                        </Row>
+                                    </Col>
+                                    <Col sm='12' style={{ marginBottom: '10px' }}>writer</Col>
+                                    <Col sm='12' style={{ marginBottom: '10px' }}>
+                                        <Input
                                             className={style.detail_input}
                                             type="text"
                                             placeholder="제작자를 입력해주세요"
@@ -246,9 +271,9 @@ const Track_Upload = () => {
                                 </Row>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col><button onClick={handleCancle}>취소</button></Col>
-                            <Col><button onClick={handleSave}>저장하기</button></Col>
+                        <Row style={{ marginBottom: '10px'}}>
+                            <Col><Button color="primary" onClick={handleCancle}>취소</Button></Col>
+                            <Col><Button color="primary" onClick={handleSave}>저장하기</Button></Col>
                         </Row>
                     </div>
                 ) :
@@ -277,7 +302,6 @@ const Track_Upload = () => {
                     </div>
                 ))}
             </div>
-
 
         </Container>
 
