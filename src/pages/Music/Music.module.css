@@ -1,8 +1,36 @@
-
-.user_info{
+.user_info {
     width: 100%;
     height: 250px;
     background-color: whitesmoke;
     display: flex;
     align-items: center;
+}
+
+.Panel{
+    height: 700px;
+}
+
+.like_edit{
+    margin-left: auto;
+}
+
+.followersInfo {
+    height: 200px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.infoItem,
+.infoItemLast {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    padding-right: 30px;
+    margin-top: 10px;
+    /* 내용 좌우 간격 조절 */
+}
+
+.infoItem {
+    border-right: 1px solid #ccc;
 }

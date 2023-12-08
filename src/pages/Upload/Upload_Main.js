@@ -5,6 +5,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Track_Upload from './Track_Upload/Track_Upload';
+import TestMusicList from './TestMusicList/TestMusicList';
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,13 +58,13 @@ export default function Upload_Main() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-       <Track_Upload/>
+        <Track_Upload />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        sdsfsfsf
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        <TestMusicList />
       </CustomTabPanel>
     </Box>
   );
