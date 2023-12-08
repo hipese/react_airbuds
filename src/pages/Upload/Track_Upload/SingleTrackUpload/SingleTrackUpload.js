@@ -1,32 +1,14 @@
-import { useState, useRef, useEffect, Fragment } from "react"
-import { Row, Col, Input, Button } from "reactstrap";
+
+import { useState, useRef, useEffect } from "react"
+import {  Row, Col, Input, Button } from "reactstrap";
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from "axios";
+import singlestyle from "./SingleTrackUpload.module.css"
 import MusicTagList from "../MuiscTagList/MuiscTagList";
-import style from "./MultiTrackUpload.module.css"
 
 
-const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag, setSelectTag }) => {
-
-
-    const [releaseDate, setReleaseDate] = useState();
-
-
-    const [playListType, setPlayListType] = useState('');
-
-    const handleChange = (event) => {
-        setPlayListType(event.target.value);
-    };
+const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setSelectTag}) => {
 
     const hiddenFileInput = useRef(null);
 
@@ -139,13 +121,11 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         setSelectTag((tags) => tags.filter((tag) => tag !== tagToDelete));
     };
 
-
-
     return (
-        <div className={style.uploadDetail}>
-            <Row style={{ marginBottom: '20px', width: '100%', marginLeft: '0px', marginRight: '0px' }}>
-                <Col sm='12' md='4' style={{ marginBottom: '20px' }}>
-                    {files[0].image_path === "/assets/groovy2.png" ? <div className={style.imageContainer}>
+        <div className={singlestyle.uploadDetail}>
+            <Row style={{ marginBottom: '10px', width: '100%', marginLeft: '0px', marginRight: '0px' }}>
+                <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
+                    {files[0].image_path === "/assets/groovy2.png" ? <div className={singlestyle.imageContainer}>
                         <img src={files[0].image_path} onClick={handleClickImage} />
                         <input
                             type="file"
@@ -154,7 +134,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                             style={{ display: 'none' }}
                             accept="image/*"
                         />
-                    </div> : <div className={style.imageContainer}>
+                    </div> : <div className={singlestyle.imageContainer}>
                         <img src={imageview} onClick={handleClickImage} />
                         <input
                             type="file"
@@ -166,62 +146,24 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                     </div>}
 
                 </Col>
-                <Col sm='12' md='8' style={{ marginBottom: '20px', padding: '0' }}>
-                    <Row style={{ marginBottom: '20px', width: '100%' }}>
-                        <Col sm='12' style={{ marginBottom: '20px' }}>제목</Col>
-                        <Col sm='12' style={{ marginBottom: '20px' }}>
+                <Col sm='12' md='8' style={{ marginBottom: '10px', padding: '0' }}>
+                    <Row style={{ marginBottom: '10px', width: '100%' }}>
+                        <Col sm='12' style={{ marginBottom: '10px' }}>제목</Col>
+                        <Col sm='12' style={{ marginBottom: '10px' }}>
                             <Input
                                 placeholder="제목을 입력하세요"
-                                className={style.detail_input}
+                                className={singlestyle.detail_input}
                                 type="text"
                                 value={files[0].name} // 파일 객체의 이름 속성 사용
                                 onChange={(e) => handleFileNameChange(0, e.target.value)} // 변경 이벤트 처리
                             />
                         </Col>
-                        <Col sm='12' md='6' style={{ marginBottom: '10px' }}>
-                            <Row style={{ marginBottom: '10px' }}>
-                                <Col sm='12' style={{ marginBottom: '10px' }}> 플레이리스트</Col>
-                                <Col sm='12' style={{ marginBottom: '10px' }}>
-                                    <Box sx={{ minWidth: 120 }}>
-                                        <FormControl fullWidth sx={{
-                                            top: '8px', // 상단 위치 조절
-                                        }}>
-                                            <InputLabel id="demo-simple-select-label" >재생목록유형</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={playListType}
-                                                label="재생목록유형"
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem value={10}>앨범</MenuItem>
-                                                <MenuItem value={20}>싱글</MenuItem>
-                                                <MenuItem value={30}>없음</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Box>
-                                </Col>
-                            </Row>
-                        </Col>
-
-                        <Col sm='12' md='6' style={{ marginBottom: '10px' }}>
-                            <Row>
-                                <Col sm='12' style={{ marginBottom: '10px' }}>출시일자</Col>
-                                <Col sm='12' style={{ marginBottom: '10px' }}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs} >
-                                        <DemoContainer components={['DatePicker']}>
-                                            <DatePicker label="출시일자선택" />
-                                        </DemoContainer>
-                                    </LocalizationProvider>
-                                </Col>
-                            </Row>
-                        </Col>
                         <Col sm='12 ' style={{ marginBottom: '10px' }}>tag </Col>
                         <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
-                            <MusicTagList onSelectTag={handleTagSelection} />
+                            <MusicTagList onSelectTag={handleTagSelection}/>
                         </Col>
                         <Col sm='12' md='8' style={{ marginBottom: '10px' }}>
-                            <Row className={style.chipRow}>
+                            <Row className={singlestyle.chipRow}>
                                 <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
                                     {selectTag.map((tag, index) => (
                                         <Chip
@@ -236,7 +178,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                         <Col sm='12' style={{ marginBottom: '10px' }}>writer</Col>
                         <Col sm='12' style={{ marginBottom: '10px' }}>
                             <Input
-                                className={style.detail_input}
+                                className={singlestyle.detail_input}
                                 type="text"
                                 placeholder="제작자를 입력해주세요"
                                 value={files[0].writer || ''} // 초기값 설정
@@ -247,25 +189,6 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                 </Col>
             </Row>
             <Row style={{ marginBottom: '10px' }}>
-
-                {files.map((file, index) => (
-                    <Fragment key={index}>
-                        <Col sm="2" style={{ marginBottom: '10px' }}>
-                            {index}
-                        </Col>
-                        <Col sm="10" style={{ marginBottom: '10px' }}>
-                            <Input
-                                className={style.detail_input_filename}
-                                type="text"
-                                placeholder="제목을 입력하세요"
-                                value={file.name || ''} // 각 파일의 이름 사용
-                                onChange={(e) => handleFileNameChange(index, e.target.value)}
-                            />
-                        </Col>
-                    </Fragment>
-                ))}
-            </Row>
-            <Row style={{ marginBottom: '10px' }}>
                 <Col><Button color="primary" onClick={handleCancle}>취소</Button></Col>
                 <Col><Button color="primary" onClick={handleSave}>저장하기</Button></Col>
             </Row>
@@ -274,4 +197,4 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
 }
 
-export default MultiTrackUpload;
+export default SingleTrackUpload;

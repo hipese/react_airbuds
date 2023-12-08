@@ -9,14 +9,6 @@ const TestMusicList = () => {
 
     const testText = "잉여";
 
-    // 데이터베이스에 존재하는 모든 음원 정보를 가져오는 기능
-    const handlelist = () => {
-        axios.get(`/api/track/bywriter/${testText}`).then(resp => {
-            setTracks(resp.data);
-            console.log(resp.data);
-        })
-    }
-
     useEffect(() => {
         axios.get(`/api/track/bywriter/${testText}`).then(resp => {
             const tracksWithImages = resp.data.map(track => {
@@ -28,6 +20,10 @@ const TestMusicList = () => {
             console.log("Tracks with images:", tracksWithImages);
             setTracks(tracksWithImages);
         });
+
+        axios.get("/api/trackTag/romance").then(resp=>{
+            console.log(resp.data);
+        })
     }, []);
 
     // 선택한 id값의 음원 정보를 삭제하는 기능
