@@ -24,6 +24,10 @@ const QnaWriteMain = () =>{
         })
     }
 
+    const handleFileChange = () => {
+        
+    }
+
     const handleCancel = () => {
         navi(-1);
     }
@@ -114,20 +118,19 @@ const QnaWriteMain = () =>{
                     </div>
                     <hr/>
                     <Grid container className={`${style.pl10} ${style.center}`} spacing={10}>
-                            <Grid item xs={12}>
-                                <Reactquill id="editor" value={board.qnaContents} setValue={(value) => setBoard({ ...board, qnaContents: value })} style={{ height: "325px", width: "100%", height:"100%" }} />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <input type="file" multiple name='files'/>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <div className={`${style.center} ${style.btnEven}`}>
-                                    <button onClick={handleCancel}>취소</button>   
-                                    <button onClick={handleSubmit}>작성</button>
-                                </div>
-                            </Grid>
+                        <Grid item xs={12}>
+                            <Reactquill id="editor" value={board.qnaContents} setValue={(value) => setBoard({ ...board, qnaContents: value })} style={{ height: "325px", width: "100%", height:"100%" }} />
                         </Grid>
-                    
+                        <Grid item xs={12}>
+                            <input type="file" multiple name='files' onChange={handleFileChange}/>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div className={`${style.center} ${style.btnEven}`}>
+                                <button onClick={handleCancel}>취소</button>   
+                                <button onClick={handleSubmit}>작성</button>
+                            </div>
+                        </Grid>
+                    </Grid>                    
                 </div>
             </div>
         </div>
