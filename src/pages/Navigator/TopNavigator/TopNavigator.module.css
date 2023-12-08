@@ -26,27 +26,27 @@
 }
 
 .linksvg:hover svg path:nth-child(1) {
-    fill: #17a2b8;
+    fill: #2ECC71;
     transition-delay: 0s;
 }
 
 .linksvg:hover svg path:nth-child(2) {
-    fill: #17a2b8;
+    fill: #2ECC71;
     transition-delay: 0.2s;
 }
 
 .linksvg:hover svg path:nth-child(3) {
-    fill: #17a2b8;
+    fill: #2ECC71;
     transition-delay: 0.4s;
 }
 
 .linksvg:hover svg path:nth-child(4) {
-    fill: #17a2b8;
+    fill: #2ECC71;
     transition-delay: 0.6s;
 }
 
 .linksvg:hover svg path:nth-child(5) {
-    fill: #17a2b8;
+    fill: #2ECC71;
     transition-delay: 0.8s;
 }
 
@@ -70,7 +70,6 @@
 
 .linkurl:hover div {
     background-color: black;
-    color: #17a2b8;
     text-decoration: none;
 }
 
