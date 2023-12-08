@@ -92,7 +92,7 @@ const TopNavigator = () => {
                                 :
                                 <>
                                     <Col>
-                                        <div onClick={handleLoginClick}>Login</div>
+                                        <div className={styles.linkurl} onClick={handleLoginClick}><div>Login</div></div>
                                     </Col>
                                     <Col>
                                         <Link className={styles.linkurl} to="/Register"><div>Sign Up</div></Link>

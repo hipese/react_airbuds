@@ -14,9 +14,6 @@ const Register = () => {
     // 이메일 인증 여부
     const [verified, setVerified] = useState(false);
 
-    // 이메일 전송 상태
-    const [verificationMessage, setVerificationMessage] = useState('');
-
     //contents_container 의 left 속성 값, 좌우로 이동할 때 씀
     const [leftPosition, setLeftPosition] = useState(0);
 
@@ -36,15 +33,16 @@ const Register = () => {
         setLeftPosition(-100);
     }
     const SecondNextBtnHandler = () => {
-        if (verified)
-            setLeftPosition(-200);
-        else {
-            Swal.fire({
-                icon: "error",
-                title: "어이쿠..!",
-                text: "이메일 인증을 먼저 진행해주세요!"
-            })
-        }
+        // if (verified)
+        //     setLeftPosition(-200);
+        // else {
+        //     Swal.fire({
+        //         icon: "error",
+        //         title: "어이쿠..!",
+        //         text: "이메일 인증을 먼저 진행해주세요!"
+        //     })
+        // }
+        setLeftPosition(-200);
 
     }
     const FirstBackBtnHandler = () => {
@@ -71,14 +69,26 @@ const Register = () => {
             axios.post(`/api/member/register/${userInfo.email}`)
                 .then(response => {
                     if (response.data === 'success') {
-                        setVerificationMessage('이메일로 인증코드가 전송되었습니다.');
+                        Swal.fire({
+                            icon: "success",
+                            title: "해당 이메일로 인증번호를 전송했습니다.",
+                            text: "인증번호를 빈 칸에 넣고 인증 버튼을 클릭해주세요!"
+                        })
                     } else {
-                        setVerificationMessage('이메일 전송 실패');
+                        Swal.fire({
+                            icon: "error",
+                            title: "해당 이메일로 인증번호 전송을 실패했습니다...",
+                            text: "이 현상이 지속적으로 발생할 경우 관리자에게 문의해주시기 바랍니다."
+                        })
                     }
                 })
                 .catch(error => {
                     console.error('이메일 전송 에러:', error);
-                    setVerificationMessage('이메일 전송 중 오류가 발생했습니다.');
+                    Swal.fire({
+                        icon: "error",
+                        title: "이메일 전송 중 오류가 발생했습니다...",
+                        text: "이 현상이 지속적으로 발생할 경우 관리자에게 문의해주시기 바랍니다."
+                    })
                 });
 
 
@@ -97,17 +107,37 @@ const Register = () => {
         axios.post(`/api/member/verify/${verifyCode}`)
             .then(response => {
                 if (response.data === 'success') {
-                    setVerificationMessage('인증 성공!');
+                    Swal.fire({
+                        icon: "success",
+                        title: "인증 성공!",
+                        text: "이제 다음 과정으로 넘어가세요!"
+                    })
                     setVerified(true);
                 } else {
-                    setVerificationMessage('인증 실패');
+                    Swal.fire({
+                        icon: "error",
+                        title: "인증 실패...",
+                        text: "인증 번호를 다시 확인해주세요!."
+                    })
                     setVerified(false);
                 }
             })
             .catch(error => {
                 console.error('인증 에러:', error);
-                setVerificationMessage('인증 중 오류가 발생했습니다.');
+                Swal.fire({
+                    icon: "error",
+                    title: "인증 중 오류가 발생했습니다...",
+                    text: "이 현상이 지속적으로 발생할 경우 관리자에게 문의해주시기 바랍니다."
+                })
             });
+    }
+
+    const IdCheckHandler = () => {
+
+    }
+
+    const PasswordConfirmChangeHandler = (e) => {
+
     }
 
     const SignUpHandler = () => {
@@ -118,7 +148,7 @@ const Register = () => {
 
     return (
         <Container className={style.register_container} fluid>
-            <Row className={`${style.row_center} ${style.row_header}`}>
+            <Row className={`${style.row_header}`}>
                 <h1>Create <strong>Airbuds</strong> Account</h1>
             </Row>
 
@@ -148,7 +178,6 @@ const Register = () => {
                     <Row className={style.verify_container}>
                         <Input className={style.input_verify} type="number" placeholder="인증번호" onChange={VerifyCodeChangeHandler}></Input>
                         <button className={`${style.btn_verify} ${style.btn_css}`} onClick={handleCheck}>인증</button>
-                        {verificationMessage && <p>{verificationMessage}</p>}
                     </Row>
 
                     <Row className={style.double_btn_container}>
@@ -161,12 +190,23 @@ const Register = () => {
                 <Col xs={4}>
 
                     <Row className={style.row_center}>
-                        <Input className={style.input_email} name="email" type="text" placeholder="Continue with E-mail" onChange={InputChangeHandler}></Input>
+                        <Input className={style.input_id} name="id" type="text" placeholder="아이디" onChange={InputChangeHandler}></Input>
+                        <button className={`${style.btn_check_id} ${style.btn_css}`} onClick={IdCheckHandler}>중복 검사</button>
+                    </Row>
+
+                    <Row className={style.row_center}>
+                        <Input className={style.input_password} name="password" type="password" placeholder="비밀번호" onChange={InputChangeHandler}></Input>
+                    </Row>
+
+                    <Row className={style.row_center}>
+                        <Input className={style.input_password_confirm} name="password" type="password" placeholder="비밀번호 확인" onChange={PasswordConfirmChangeHandler}></Input>
+                        <br></br>
+
                     </Row>
 
                     <Row className={style.double_btn_container}>
                         <button className={`${style.btn_back} ${style.btn_css}`} onClick={SecondBackBtnHandler}>뒤로</button>
-                        <button className={`${style.btn_next} ${style.btn_css}`} onClick={SignUpHandler}>Done!</button>
+                        <button className={`${style.btn_next} ${style.btn_css}`} onClick={SignUpHandler}>회원가입 완료</button>
                     </Row>
 
                 </Col>
