@@ -4,39 +4,46 @@ import 'react-h5-audio-player/lib/styles.css';
 import './BottomMusic.css';
 import styles from "./BottomMusic.module.css";
 import axios from "axios"
-import { MusicContext } from '../../../App';
+import { CurrentTrackContext, MusicContext, TrackInfoContext } from '../../../App';
+import { PlayingContext } from '../../../App';
 
 const BottomMusic = () => {
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const { isPlaying, setIsPlaying } = useContext(PlayingContext);
     const [loading, setLoading] = useState(false);
     const audioRef = useRef(null);
-    const [currentTrack, setCurrentTrack] = useState(0);
-
-
-    // 데이터베이스에 음원경로만 가져오는 변수
+    const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
+    const { track_info, setTrack_info } = useContext(TrackInfoContext);
     const [tracks, setTracks] = useState([]);
 
-    const testText = "잉여";
+    const testText = "강휘바";
 
     useEffect(() => {
-        axios.get(`/api/track/bywriter/${testText}`)
-            .then(resp => {
-                console.log(resp.data);
+        axios.get(`/api/track/bywriter/${testText}`).then(resp => {
+            const tracksWithImages = resp.data.map(track => {
+                const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
                 const newTracks = resp.data.map(track => "/tracks/" + track.filePath);
                 const updatedAudioFiles = [...audioFiles, ...newTracks];
                 setAudioFiles(updatedAudioFiles);
-                console.log(newTracks);
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
+                return { ...track, imagePath };
             });
+            
+            setTracks(tracksWithImages);
+            const firstTrackInfo = tracksWithImages[0];
+            setTrack_info({
+                title: firstTrackInfo.title,
+                writer: firstTrackInfo.writer,
+                imagePath: firstTrackInfo.imagePath
+            });
+        });
     }, []);
+
 
 
     // audioFiles 상태가 변경될 때마다 로그 출력
     useEffect(() => {
         console.log("Updated audio files:", audioFiles);
+        console.log(tracks);
     }, [audioFiles]);
 
     if (audioFiles.length === 0) {
@@ -44,10 +51,10 @@ const BottomMusic = () => {
     };
 
 
-
     const handlePlay = () => {
         setIsPlaying(true);
         setLoading(true);
+        console.log(currentTrack);
     };
 
     const handlePause = () => {
@@ -60,14 +67,45 @@ const BottomMusic = () => {
 
     const handleNextTrack = () => {
         const nextTrack = (currentTrack + 1) % audioFiles.length;
+
+        // 'tracks' 상태에서 다음 곡의 정보를 가져옵니다.
+        const nextTrackInfo = tracks[nextTrack];
+
+        // 곡 정보 컨텍스트를 업데이트합니다.
+        setTrack_info({
+            title: nextTrackInfo.title,
+            writer: nextTrackInfo.writer,
+            imagePath: nextTrackInfo.imagePath
+        });
+
+        // 현재 재생 중인 트랙을 업데이트합니다.
         setCurrentTrack(nextTrack);
     };
 
     const handlePreviousTrack = () => {
-        // Logic for moving to the previous track
-        const previousTrack = (currentTrack - 1 + audioFiles.length) % audioFiles.length;
+        // 이전 트랙으로 이동하는 논리
+        let previousTrack = (currentTrack - 1 + audioFiles.length) % audioFiles.length;
+
+        // 만약 현재 트랙이 0보다 작다면 마지막 트랙으로 이동
+        if (previousTrack < 0) {
+            previousTrack = audioFiles.length - 1;
+        }
+
+        // 'tracks' 상태에서 이전 곡의 정보를 가져옵니다.
+        const previousTrackInfo = tracks[previousTrack];
+
+        // 곡 정보 컨텍스트를 업데이트합니다.
+        setTrack_info({
+            title: previousTrackInfo.title,
+            writer: previousTrackInfo.writer,
+            imagePath: previousTrackInfo.imagePath
+        });
+
+        // 현재 재생 중인 트랙을 업데이트합니다.
         setCurrentTrack(previousTrack);
     };
+
+
 
     const handleEnded = () => {
         // Callback for when the audio ends
@@ -80,7 +118,7 @@ const BottomMusic = () => {
         <div className={styles.container}>
             <div className={styles.imageContainer}>
                 <img
-                    src="/logo512.png"
+                    src={`/tracks/image/${track_info.imagePath}`}
                     alt="Description of the image"
                     className={styles.image}
                 />
@@ -91,8 +129,8 @@ const BottomMusic = () => {
                 showJumpControls={true}
                 customAdditionalControls={[
                     <div className={styles.song_info}>
-                        <div className={styles.title}>groovy</div>
-                        <div className={styles.singer}>groovy.project</div>
+                        <div className={styles.title}>{track_info.title}</div>
+                        <div className={styles.singer}>{track_info.writer}</div>
                     </div>
                 ]}
                 showSkipControls={true}
