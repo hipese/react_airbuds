@@ -61,9 +61,13 @@
 }
 
 .carouselTitle {
+    width: 180px;
     color: black;
     font-size: 1rem;
     font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 @keyframes bounceEffect {

@@ -7,11 +7,19 @@ import RightSide from "./RightSide/RightSide";
 
 const Main = () => {
     const [recentMusic, setRecentMusic] = useState([]);
+    const [trackInfo, setTrackInfo] = useState([]);
     
     useEffect(() => {
         axios.get("/api/track/recent")
             .then((res) => {
                 setRecentMusic(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        axios.get("/api/trackTag/romance")
+            .then((res) => {
+                setTrackInfo(res.data);
             })
             .catch((err) => {
                 console.log(err);
@@ -48,11 +56,11 @@ const Main = () => {
                     <div className={styles.carousel}>
                         <OwlCarousel />
                     </div>
-                    <div className={styles.carouselTitle}>기분 좋을때</div>
+                    <div className={styles.carouselTitle}>로맨틱한</div>
                     <div className={styles.carousel}>
-                        <OwlCarousel />
+                        <OwlCarousel trackInfo={trackInfo} />
                     </div>
-                    <div className={styles.carouselTitle}>파티</div>
+                    <div className={styles.carouselTitle}>기분 좋을때</div>
                     <div className={styles.carousel}>
                         <OwlCarousel />
                     </div>

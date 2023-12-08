@@ -95,19 +95,18 @@
 }
 
 .RecentTitleAndSinger {
+    display: flex;
     width: 500px;
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
-
 .RecentSinger {
-    margin-left: 5px;
+    flex-shrink: 0;
+    flex-basis: [RecentSinger의 너비];
     font-size: 1rem;
     font-weight: 500;
     color: #dbdbdb;
-    float: left;
+    white-space: nowrap;
 }
 
 .RecentMusic span {
@@ -118,14 +117,13 @@
 }
 
 .RecentSong {
-    width: 100% - RecentSinger;
-    color: white;
-    font-size: 1rem;
-    font-weight: 500;
-    float: left;
+    flex-grow: 1;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
 }
 
 .Listen {

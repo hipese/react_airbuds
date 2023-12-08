@@ -6,7 +6,7 @@ import styles from "./Carousel.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-const Carousel = () => {
+const Carousel = ({trackInfo}) => {
     const carouselRef = useRef(null);
 
     const goToPrev = () => {
@@ -40,7 +40,19 @@ const Carousel = () => {
               }}
             ref={carouselRef}
         >
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 1" />
+              {trackInfo && trackInfo.map((track, index) => {
+                    return (
+                        <div className={styles.item} key={index}>
+                            <img src="http://placehold.it/150x150" alt="Image 1" />
+                            <div className={styles.carouselTitle}>{track.title}</div>
+                            <div className={styles.carouselSinger}>{track.writer}</div>
+                        </div>
+                    );
+                })}
+             
+
+
+        {/* <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 1" />
             <div className={styles.carouselTitle}>여기다 넣으면 잘 됨</div>
             <div className={styles.carouselSinger}>IU</div>
         </div> 
@@ -54,7 +66,7 @@ const Carousel = () => {
         <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 9" />제목9번</div>
         <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 10" />제목10번</div>
         <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 11" />제목11번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 12" />제목12번</div>
+        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 12" />제목12번</div> */}
         </OwlCarousel>
         <div className={styles.carouselButton}>
             <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button> 
