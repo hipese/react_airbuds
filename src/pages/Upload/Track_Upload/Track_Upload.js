@@ -6,6 +6,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
 import MusicTagList from "./MuiscTagList/MuiscTagList";
+import MultiTrackUpload from "./MultiTrackUpload/MultiTrackUpload";
 
 const Track_Upload = () => {
 
@@ -284,7 +285,7 @@ const Track_Upload = () => {
                     </div>
                 ) :
                     <div className={style.uploadDetail}>
-                        {"파일이 2개 이상이면 ㄱㄱㄱㄱ"}
+                      <MultiTrackUpload/>
                     </div>
                 }
             </Row>
