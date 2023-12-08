@@ -1,23 +1,49 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import './BottomMusic.css';
 import styles from "./BottomMusic.module.css";
+import axios from "axios"
+import { MusicContext } from '../../../App';
 
 const BottomMusic = () => {
+    const { audioFiles, setAudioFiles } = useContext(MusicContext);
     const [isPlaying, setIsPlaying] = useState(false);
     const [loading, setLoading] = useState(false);
     const audioRef = useRef(null);
-
-    const audioFiles = [
-        'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/2.mp3',
-        'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/3.mp3',
-        'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/4.mp3',
-        'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/5.mp3',
-        // Add more audio URLs as needed
-    ];
-
     const [currentTrack, setCurrentTrack] = useState(0);
+
+
+    // 데이터베이스에 음원경로만 가져오는 변수
+    const [tracks, setTracks] = useState([]);
+
+    const testText = "잉여";
+
+    useEffect(() => {
+        axios.get(`/api/track/bywriter/${testText}`)
+            .then(resp => {
+                console.log(resp.data);
+                const newTracks = resp.data.map(track => "/tracks/" + track.filePath);
+                const updatedAudioFiles = [...audioFiles, ...newTracks];
+                setAudioFiles(updatedAudioFiles);
+                console.log(newTracks);
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+    }, []);
+
+
+    // audioFiles 상태가 변경될 때마다 로그 출력
+    useEffect(() => {
+        console.log("Updated audio files:", audioFiles);
+    }, [audioFiles]);
+
+    if (audioFiles.length === 0) {
+        return null; // If empty, don't render anything
+    };
+
+
 
     const handlePlay = () => {
         setIsPlaying(true);

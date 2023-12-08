@@ -17,6 +17,7 @@ const Track_Upload = () => {
 
     const [imageview, setImageview] = useState({});
 
+    // 선택된 태그를 가져오는 방법
     const [selectTag, setSelectTag] = useState([]);
 
 
@@ -62,6 +63,7 @@ const Track_Upload = () => {
         }).then(resp => {
             console.log("성공");
             setFiles([]);
+            setSelectTag([]);
 
         }).catch(resp => {
             console.log("실패")
