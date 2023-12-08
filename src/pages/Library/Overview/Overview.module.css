@@ -1,15 +1,73 @@
-.container{
-    height: 1200px;
-}
-
-.overview{
-    width: 100%;
-    height: 200px;
-    margin-bottom: 20px;
-    /* background-color: whitesmoke; */
-}
-
-.emptySlot{
-    width: 200px;
+.Carousel {
+    position: relative;
+    width: 70%;
     height: 100%;
+    overflow: hidden;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.OwlCarousel .item {
+    position: relative;
+    width: 180px;
+    height: 250px;
+    z-index: 100;
+    backface-visibility: hidden;
+}
+
+.carouselButton {
+    position: relative;
+    z-index: 100;
+}
+
+.owlPrev {
+    position: absolute;
+    top: -158px;
+    background-color: transparent;
+    border-radius: 50%;
+    border: 1px solid black;
+    left: 3px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.owlNext {
+    position: absolute;
+    top: -158px;
+    background-color: transparent;
+    border-radius: 50%;
+    border: 1px solid black;
+    right: 3px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carouselSinger {
+    color: #c9c9c9;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.carouselTitle {
+    color: black;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.carouselTitle1 {
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-top: 30px;
 }

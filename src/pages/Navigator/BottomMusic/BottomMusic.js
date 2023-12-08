@@ -12,12 +12,9 @@ const BottomMusic = () => {
     const audioRef = useRef(null);
     const [currentTrack, setCurrentTrack] = useState(0);
 
-
     if (audioFiles.length === 0) {
         return null; // If empty, don't render anything
     };
-
-
 
     const handlePlay = () => {
         setIsPlaying(true);
