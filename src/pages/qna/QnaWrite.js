@@ -7,7 +7,8 @@ import { useNavigate } from 'react-router';
 const QnaWriteMain = () =>{
     //writer 추후 수정해야함
 
-    const [board, setBoard] = useState({qnaTitle:"",qnaWriter:"kwon", qnaCategory:"none",qnaPublic:1, qnaContents:"",qnaAnswerState:0,qnaWriteDate:new Date().toISOString()});
+    const [board, setBoard] = useState({qnaTitle:"",qnaWriter:"kwon", qnaCategory:"none",qnaPublic:1, qnaContents:"",qnaAnswerState:0,qnaWriteDate:new Date().toISOString(),files:[]});
+
     const navi = useNavigate();
     const handleChange = (e) => {
         const {name,value} = e.target;
@@ -16,16 +17,27 @@ const QnaWriteMain = () =>{
     }
     const handleSubmit = () => {
         console.log(board);
-        axios.post("/api/qna",board).then(res=>{
-            console.log(res.data);
+        const formData = new FormData();
+        formData.append("qnaTitle",board.qnaTitle);
+        formData.append("qnaWriter",board.qnaWriter);
+        formData.append("qnaCategory",board.qnaCategory);
+        formData.append("qnaPublic",board.qnaPublic);
+        formData.append("qnaContents",board.qnaContents);
+        formData.append("qnaAnswerState",board.qnaAnswerState);
+        formData.append("qnaWriteDate",board.qnaWriteDate);
+        for(const file of board.files){
+            formData.append("files",file);
+        }
+        console.log(formData);
+        axios.post("/api/qna",formData).then(res=>{
             navi("/qna");
         }).catch((e)=>{
             console.log(e);
-        })
+        });
     }
 
-    const handleFileChange = () => {
-        
+    const handleFileChange = (e) => {
+        setBoard(prev=>({...prev,files:[...e.target.files]}));
     }
 
     const handleCancel = () => {
