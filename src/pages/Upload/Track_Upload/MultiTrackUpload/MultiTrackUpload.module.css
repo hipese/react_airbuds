@@ -18,9 +18,6 @@
     border: 1px solid black;
 }
 .imageContainer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin-top: 10px;
 }
 .imageContainer img {
@@ -44,6 +41,6 @@
     justify-content: center;
     align-items: center;
 }
-.dropFiles{
-   margin-bottom: 20px;
+.detail_input_filename{
+    width: 90%;
 }

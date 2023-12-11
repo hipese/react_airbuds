@@ -1,67 +1,87 @@
-import React from "react";
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
-import ListSubheader from '@mui/material/ListSubheader';
+import React, { useEffect, useRef, useState } from 'react';
+import OwlCarousel from 'react-owl-carousel';
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel/dist/assets/owl.theme.default.css';
 import styles from "./Overview.module.css";
-import { Skeleton } from "@mui/material";
-
-const itemData = [
-  {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: '아침',
-    author: '@bkristastucchio',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: '아침',
-    author: '@bkristastucchio',
-  },
-  // ... 다른 항목들
-];
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import axios from "axios"
 
 const Overview = () => {
-  const categories = [
-    "최근 재생 목록",
-    "좋아요",
-    "플레이리스트",
-    "앨범",
-    "팔로잉",
-  ];
 
+  // 데이터베이스에 음원목록을 가져오는 변수
+  const [tracks, setTracks] = useState([]);
+
+  const testText = "잉여";
+
+  // 선택한 writer에 음원 정보를 전부 가져오기
+  useEffect(() => {
+    axios.get(`/api/track/bywriter/${testText}`).then(resp => {
+      const tracksWithImages = resp.data.map(track => {
+        // trackImages 배열이 비어있지 않은 경우, 첫 번째 이미지의 경로를 추출
+        const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+        return { ...track, imagePath };
+      });
+
+      console.log("Tracks with images:", tracksWithImages);
+      setTracks(tracksWithImages);
+    });
+  }, []);
+
+
+
+  const carouselRef = useRef(null);
+
+  const goToPrev = () => {
+    if (carouselRef.current) {
+      carouselRef.current.prev();
+    }
+  };
+
+  const goToNext = () => {
+    if (carouselRef.current) {
+      carouselRef.current.next();
+    }
+  }
   return (
-    <div className={styles.container}>
-      {categories.map((category, index) => (
-        <div key={index} className={styles.overview}>
-          <ImageList sx={{ width: '90%', height: '100%' }} cols={7}>
-            <ImageListItem key="Subheader" cols={7} sx={{ zIndex: -3 }}>
-              <ListSubheader component="div">{category}</ListSubheader>
-            </ImageListItem>
-            {itemData.slice(0, 7).map((item, itemIndex) => (
-              <ImageListItem key={itemIndex} sx={{ width: '200px', height: '200px' }}>
-                <img
-                  srcSet={`${item.img}`}
-                  src={`${item.img}`}
-                  alt={item.title}
-                  loading="lazy"
-                />
-                <ImageListItemBar title={item.title} subtitle={item.author} />
-              </ImageListItem>
+    <><div className={styles.carouselTitle1}>최근에 재생한 노래들</div>
+      <div className={styles.carousel}>
+        <div className={styles.Carousel}>
+          <OwlCarousel
+            className={styles.OwlCarousel}
+            loop
+            margin={10}
+            nav={false}
+            dots={false}
+            autoplay
+            autoplayTimeout={10000}
+            autoWidth={true}
+            autoplayHoverPause
+            responsive={{
+              768: {
+                items: 5
+              },
+            }}
+            ref={carouselRef}
+          >
+            <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 1" />
+              <div className={styles.carouselTitle}>여기다 넣으면 잘 됨</div>
+              <div className={styles.carouselSinger}>IU</div>
+            </div>
+            {tracks.map((track, index) => (
+              <div className={styles.item} key={index}>
+                <img src={"/tracks/image/"+track.imagePath} alt={`Image ${index + 1}`} />
+                <div className={styles.carouselTitle}>{track.title}</div>
+                <div className={styles.carouselSinger}>{track.writer}</div>
+              </div>
             ))}
-            {/* itemData에 충분한 항목이 없는 경우 빈 슬롯을 표시합니다. */}
-            {itemData.length < 7 && (
-              Array.from({ length: 7 - itemData.length }).map((_, emptyIndex) => (
-                <ImageListItem key={`empty-${emptyIndex}`} sx={{ width: '200px' }}>
-                  <div className={styles.emptySlot}>
-                    <Skeleton variant="rectangular" width="100%" height="100%" />
-                  </div>
-                </ImageListItem>
-              ))
-            )}
-          </ImageList>
+          </OwlCarousel>
+          <div className={styles.carouselButton}>
+            <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button>
+            <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button>
+          </div>
         </div>
-      ))}
-    </div>
+      </div></>
   );
 };
 
