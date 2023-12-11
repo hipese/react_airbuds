@@ -6,9 +6,11 @@ import Stack from '@mui/material/Stack';
 import axios from "axios";
 import singlestyle from "./SingleTrackUpload.module.css"
 import MusicTagList from "../MuiscTagList/MuiscTagList";
-
+import dayjs from 'dayjs';
 
 const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setSelectTag}) => {
+
+    const [selectedDate, setSelectedDate] = useState(dayjs());
 
     const hiddenFileInput = useRef(null);
 
@@ -29,6 +31,7 @@ const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setS
             formData.append(`name`, fileData.name);
             formData.append('duration', fileData.duration);
             formData.append('image_path', fileData.image_path);
+            
             if (fileData.imageFile) {
                 formData.append('imagefile', fileData.imageFile);
             }
@@ -38,6 +41,7 @@ const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setS
             console.log(fileData.imageFile);
             console.log(formData);
         });
+        formData.append('releaseDate', selectedDate ? selectedDate.toISOString() : '');
 
         if (selectTag.length === 0) {
             alert("태그를 하나라도 선택해주세요");
@@ -188,10 +192,10 @@ const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setS
                     </Row>
                 </Col>
             </Row>
-            <Row style={{ marginBottom: '10px' }}>
-                <Col><Button color="primary" onClick={handleCancle}>취소</Button></Col>
-                <Col><Button color="primary" onClick={handleSave}>저장하기</Button></Col>
-            </Row>
+            <Col>
+                <Button color="primary" onClick={handleCancle}>취소</Button>
+                <Button color="primary" onClick={handleSave}>저장하기</Button>
+            </Col>
         </div>
     );
 

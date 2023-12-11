@@ -14,25 +14,75 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from "axios";
 import MusicTagList from "../MuiscTagList/MuiscTagList";
 import style from "./MultiTrackUpload.module.css"
+import dayjs from 'dayjs';
 
 
 const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag, setSelectTag }) => {
 
 
-    const [releaseDate, setReleaseDate] = useState();
-
-
+    // 선택된 트랙의 인덱스를 저장하는 상태 변수 추가
+    const [selectedDate, setSelectedDate] = useState(dayjs());
     const [playListType, setPlayListType] = useState('');
+    const [order, setOrder] = useState([]);
+    const [albumTitle, setAlbumTitle] = useState("익명의 앨범");
+
+    const currentDatePicker = dayjs();
 
     const handleChange = (event) => {
         setPlayListType(event.target.value);
     };
 
+    // 이미지 변경을 위한 input
     const hiddenFileInput = useRef(null);
 
     const handleClickImage = () => {
         hiddenFileInput.current.click();
     };
+
+
+
+    // 새로운 음원 파일을 추가하기 위한 ref
+    const hiddenAudioInput = useRef(null);
+
+    const handleAddTrackClick = () => {
+        hiddenAudioInput.current.click();
+    };
+
+    // 음원 변경
+    const handleAudioFileChange = (e) => {
+        const newAudioFile = e.target.files[0];
+
+        if (newAudioFile) {
+            const url = URL.createObjectURL(newAudioFile);
+            const audio = new Audio(url);
+
+            audio.onloadedmetadata = () => {
+                // 파일 길이(초)를 구합니다
+                const duration = audio.duration;
+
+                // 기본 이미지 경로 설정 (변경할 수 있음)
+                const image_path = "/assets/groovy2.png";
+
+                // 파일 이름에서 확장자 제거
+                const fileNameWithoutExtension = newAudioFile.name.split('.').slice(0, -1).join('.');
+
+                // 새 파일 객체 생성    
+                const newFile = {
+                    file: newAudioFile,
+                    name: fileNameWithoutExtension, // 파일의 원래 이름
+                    duration: duration, // 파일의 길이(초)
+                    imageFile: null,
+                    image_path: image_path, // 여기에 이미지 경로 추가
+                    writer: "익명의 제작자", // 기본값, 필요에 따라 변경 가능
+                    tag: selectTag // 기본값, 필요에 따라 변경 가능
+                };
+
+                // files 배열에 새 파일 추가
+                setFiles(prevFiles => [...prevFiles, newFile]);
+            };
+        }
+    };
+
     // =====================================================
 
     // 데이터베이스에 음원정보를 저장하고 파일을 업로드 하는 장소
@@ -40,6 +90,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         const formData = new FormData();
 
         console.log(files)
+        
 
         // files 배열에 있는 각 파일을 formData에 추가
         files.forEach((fileData) => {
@@ -47,33 +98,43 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
             formData.append(`name`, fileData.name);
             formData.append('duration', fileData.duration);
             formData.append('image_path', fileData.image_path);
-            if (fileData.imageFile) {
-                formData.append('imagefile', fileData.imageFile);
-            }
             formData.append('writer', fileData.writer);
             formData.append('tag', selectTag);
-
-            console.log(fileData.imageFile);
-            console.log(formData);
         });
+        formData.append('releaseDate', selectedDate ? selectedDate.toISOString() : '');
+        formData.append('albumTitle', albumTitle);
 
-        if (selectTag.length === 0) {
-            alert("태그를 하나라도 선택해주세요");
-            return;
+        console.log(order);
+
+        if (playListType === "앨범") {
+            axios.post("/api/album", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(resp => {
+                console.log("성공");
+                setFiles([]);
+                setSelectTag([]);
+
+            }).catch(resp => {
+                console.log("실패")
+            })
+        }
+        else {
+            axios.post("/api/track/multiUpload", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(resp => {
+                console.log("성공");
+                setFiles([]);
+                setSelectTag([]);
+
+            }).catch(resp => {
+                console.log("실패")
+            })
         }
 
-        axios.post("/api/track", formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }).then(resp => {
-            console.log("성공");
-            setFiles([]);
-            setSelectTag([]);
-
-        }).catch(resp => {
-            console.log("실패")
-        })
     }
 
     const handleCancle = () => {
@@ -83,6 +144,11 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         }
         setFiles([]);
     }
+
+
+    const handleAlbumTitleChange = (e) => {
+        setAlbumTitle(e.target.value);
+    };
 
     const handleFileNameChange = (index, newName) => {
         setFiles(currentFiles => {
@@ -125,6 +191,25 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
             return updatedFiles;
         });
     };
+
+
+    // 날짜 변경을 처리하는 함수
+    const handleReleaseDateChange = (newDate) => {
+        // newDate가 유효한 Date 객체인지 확인
+        if (newDate && newDate.isValid()) {
+            setSelectedDate(newDate);
+        }
+    };
+
+    const handleTrackOrderChange = (index, newOrder) => {
+        setOrder(currentOrder => {
+            const updatedOrder = [...currentOrder];
+            updatedOrder[index] = parseInt(newOrder, 10); // Convert string to number
+            return updatedOrder;
+        });
+    };
+
+
 
     // 태그 선택 변경 시 호출될 콜백 함수
     const handleTagSelection = (selectedTag) => {
@@ -171,11 +256,11 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                         <Col sm='12' style={{ marginBottom: '20px' }}>제목</Col>
                         <Col sm='12' style={{ marginBottom: '20px' }}>
                             <Input
-                                placeholder="제목을 입력하세요"
+                                placeholder="앨범 제목을 입력하세요"
                                 className={style.detail_input}
                                 type="text"
-                                value={files[0].name} // 파일 객체의 이름 속성 사용
-                                onChange={(e) => handleFileNameChange(0, e.target.value)} // 변경 이벤트 처리
+                                value={albumTitle}
+                                onChange={handleAlbumTitleChange}
                             />
                         </Col>
                         <Col sm='12' md='6' style={{ marginBottom: '10px' }}>
@@ -194,9 +279,8 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                                 label="재생목록유형"
                                                 onChange={handleChange}
                                             >
-                                                <MenuItem value={10}>앨범</MenuItem>
-                                                <MenuItem value={20}>싱글</MenuItem>
-                                                <MenuItem value={30}>없음</MenuItem>
+                                                <MenuItem value={"앨범"}>앨범</MenuItem>
+                                                <MenuItem value={"싱글"}>싱글</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </Box>
@@ -208,9 +292,14 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                             <Row>
                                 <Col sm='12' style={{ marginBottom: '10px' }}>출시일자</Col>
                                 <Col sm='12' style={{ marginBottom: '10px' }}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DemoContainer components={['DatePicker']}>
-                                            <DatePicker label="출시일자선택" />
+                                            <DatePicker
+                                                label="출시일자선택"
+                                                defaultValue={dayjs(currentDatePicker)}
+                                                value={selectedDate}
+                                                onChange={handleReleaseDateChange}
+                                            />
                                         </DemoContainer>
                                     </LocalizationProvider>
                                 </Col>
@@ -246,12 +335,24 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                     </Row>
                 </Col>
             </Row>
+            <hr />
             <Row style={{ marginBottom: '10px' }}>
-
+                <Col sm="2" style={{ marginBottom: '10px' }}>
+                    트랙순서
+                </Col>
+                <Col sm="10" style={{ marginBottom: '10px' }}>
+                    트랙제목
+                </Col>
                 {files.map((file, index) => (
                     <Fragment key={index}>
                         <Col sm="2" style={{ marginBottom: '10px' }}>
-                            {index}
+                            <Input
+                                className={style.detail_input_filename}
+                                type="text"
+                                placeholder="순서를 입력하세요"
+                                value={order[index] || index + 1}
+                                onChange={(e) => handleTrackOrderChange(index, e.target.value)}
+                            />
                         </Col>
                         <Col sm="10" style={{ marginBottom: '10px' }}>
                             <Input
@@ -264,11 +365,24 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                         </Col>
                     </Fragment>
                 ))}
+
             </Row>
-            <Row style={{ marginBottom: '10px' }}>
-                <Col><Button color="primary" onClick={handleCancle}>취소</Button></Col>
-                <Col><Button color="primary" onClick={handleSave}>저장하기</Button></Col>
-            </Row>
+
+            <hr />
+            <Col sm="12">
+                <input
+                    type="file"
+                    ref={hiddenAudioInput}
+                    onChange={handleAudioFileChange}
+                    style={{ display: 'none' }}
+                    accept="audio/*"
+                />
+                <Button onClick={handleAddTrackClick}>다른 트렉 추가하기</Button></Col>
+            <hr />
+            <Col>
+                <Button color="primary" onClick={handleCancle}>취소</Button>
+                <Button color="primary" onClick={handleSave}>저장하기</Button>
+            </Col>
         </div>
     );
 

@@ -1,5 +1,6 @@
 
 import { useState, useRef, useEffect } from "react"
+
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -11,7 +12,6 @@ const MusicTagList = ({onSelectTag}) => {
 
     useEffect(() => {
         axios.get("/api/MusicTag").then(resp => {
-            console.log(resp.data)
             setTagList(resp.data)
         })
 

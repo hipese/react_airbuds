@@ -38,9 +38,6 @@ const Track_Upload = () => {
         })
     }
 
-
-
-
     const onDrop = (acceptedFiles) => {
         acceptedFiles.forEach(file => {
             const url = URL.createObjectURL(file);
@@ -56,6 +53,10 @@ const Track_Upload = () => {
                 // 파일 이름에서 확장자 제거
                 const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
 
+                // 현재 날짜를 가져옵니다
+                const currentDate = new Date();
+
+
                 // 파일 정보와 함께 파일의 이름과 길이를 저장
                 const newFile = {
                     file: file,
@@ -64,23 +65,30 @@ const Track_Upload = () => {
                     imageFile: null,
                     image_path: image_path, // 여기에 이미지 경로 추가
                     writer: "익명의 제작자",// 작사 추가
-                    tag: selectTag // 테그 필드 추가
+                    tag: selectTag, // 테그 필드 추가
                 };
-
+              
                 setFiles(prevFiles => [...prevFiles, newFile]);
             };
         });
     };
+
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
         accept: 'audio/*' // 오디오 파일만 허용
     });
 
-    const filesList = files.map((file, index) => (
-        <li key={index}>{file.file.name} - {file.file.size} bytes - 길이: {file.duration}초</li>
-    ));
-
+    const filesList = files.map((file, index) => {
+        if (!file || !file.file) {
+            return <li key={index}>파일 정보를 읽을 수 없음</li>;
+        }
+        return (
+            <li key={index}>
+                {file.file.name} - {file.file.size} bytes - 길이: {file.duration}초
+            </li>
+        );
+    });
 
     return (
         <Container fluid>
