@@ -22,11 +22,9 @@ const BottomMusic = () => {
     useEffect(() => {
         axios.get(`/api/track/bywriter/${testText}`)
             .then(resp => {
-                console.log(resp.data);
                 const newTracks = resp.data.map(track => "/tracks/" + track.filePath);
                 const updatedAudioFiles = [...audioFiles, ...newTracks];
                 setAudioFiles(updatedAudioFiles);
-                console.log(newTracks);
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
@@ -35,13 +33,13 @@ const BottomMusic = () => {
 
 
     // audioFiles 상태가 변경될 때마다 로그 출력
-    useEffect(() => {
-        console.log("Updated audio files:", audioFiles);
-    }, [audioFiles]);
+    // useEffect(() => {
+    //     console.log("Updated audio files:", audioFiles);
+    // }, [audioFiles]);
 
-    if (audioFiles.length === 0) {
-        return null; // If empty, don't render anything
-    };
+    // if (audioFiles.length === 0) {
+    //     return null; // If empty, don't render anything
+    // };
 
 
 
