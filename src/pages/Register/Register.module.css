@@ -32,20 +32,33 @@
     padding-right: 15px;
 }
 
-.input_email, .input_id, .input_password, .input_password_confirm{
+.input_email, .input_id, .input_password, .input_password_confirm, .input_birth{
     width: 300px;
     text-align: center;
 }
 
-.input_email:focus, .input_verify:focus {
+.input_email:focus, .input_verify:focus, .input_birth {
     outline: none;
 }
 
+.input_birth::before {
+    content: "생년월일";
+    display: block;
+    position: absolute;
+    color: #aaa;
+    z-index: 1;
+}
+
+.input_birth {
+    position: relative;
+    z-index: 2;
+}
+
 .input_verify {
-    width: 110px;
+    width: 150px;
     text-align: center;
     /* margin-left: 160px; */
-    margin-left: 190px;
+    margin-left: 150px;
 }
 
 .input_id {
@@ -153,4 +166,18 @@ input::-webkit-inner-spin-button {
     appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
+}
+
+.loading {
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(210, 210, 210);
+    flex-direction: column;
 }

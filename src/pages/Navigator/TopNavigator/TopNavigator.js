@@ -7,6 +7,8 @@ import SVGComponent from "./SVGComponent";
 import { LoginContext } from "../../../App";
 import React from "react";
 import Swal from "sweetalert2";
+import "@sweetalert2/themes/bootstrap-4";
+import axios from "axios";
 
 const TopNavigator = () => {
 
@@ -34,16 +36,36 @@ const TopNavigator = () => {
                 const id = document.getElementById("username").value;
                 const password = document.getElementById("password").value;
                 if (!id || !password) {
-                    Swal.showValidationMessage(`Please enter username and password`)
+                    Swal.showValidationMessage(`Please enter ID and password`)
                 }
                 return { id, password }
             },
-        })
+        })  
 
         if (formValues) {
             console.log(formValues);
             // 로그인 axios
-            // axios.post("/auth/login")
+            let formData = new FormData();
+            formData.append("id", formValues.id);
+            formData.append("password", formValues.password);
+             axios.post("/api/member/login", formData).then(resp => {
+                setLoginID(formValues.id);
+             }).catch(err => {
+                if(err.response.status == 401) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "알수없는 아이디 혹은 비밀번호 입니다.",
+                        text: "아이디와 비밀번호를 다시 확인해주세요.",
+                    }).finally(handleLoginClick)
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "오류가 발생했습니다...",
+                        text: "이 현상이 지속적으로 발생할 경우 관리자에게 문의해주시기 바랍니다.",
+                    })
+                }
+                
+             })
         }
     }
 
