@@ -29,6 +29,7 @@
     padding-right: 40px;
     border-right: 1px solid #e0e0e0;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 
@@ -64,9 +65,10 @@
 }
 
 .RecentImg {
-    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
     height: 100%;
-    border: 1px solid white;
+    object-fit: cover;
 }
 
 .RecentMusic {

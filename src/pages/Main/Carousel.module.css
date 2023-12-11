@@ -69,31 +69,3 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
-@keyframes bounceEffect {
-
-    0%,
-    100% {
-        transform: translateX(0);
-    }
-
-    20% {
-        transform: translateX(-10px);
-    }
-
-    40% {
-        transform: translateX(10px);
-    }
-
-    60% {
-        transform: translateX(-10px);
-    }
-
-    80% {
-        transform: translateX(10px);
-    }
-}
-
-.carouselBounce {
-    animation: bounce 1s;
-}

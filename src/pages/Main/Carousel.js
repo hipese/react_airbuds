@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect,useState, useRef} from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
@@ -6,7 +6,8 @@ import styles from "./Carousel.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-const Carousel = ({trackInfo}) => {
+const Carousel = React.memo(({ trackInfo }) => {
+    console.log("Carousel.js: trackInfo:", trackInfo);
     const carouselRef = useRef(null);
 
     const goToPrev = () => {
@@ -29,10 +30,10 @@ const Carousel = ({trackInfo}) => {
             margin={10}
             nav={false}
             dots={false}
-            autoplay
-            autoplayTimeout={10000}  
+            // autoplay
+            // autoplayTimeout={10000}  
             autoWidth={true}
-            autoplayHoverPause 
+            // autoplayHoverPause 
             responsive={{
                 768: {
                     items: 5
@@ -41,11 +42,14 @@ const Carousel = ({trackInfo}) => {
             ref={carouselRef}
         >
               {trackInfo && trackInfo.map((track, index) => {
+                  const trackImage = track.track.trackImages && track.track.trackImages.length > 0
+                    ? `/tracks/image/${track.track.trackImages[0].imagePath}`
+                    : "http://placehold.it/150x150";
                     return (
                         <div className={styles.item} key={index}>
-                            <img src="http://placehold.it/150x150" alt="Image 1" />
-                            <div className={styles.carouselTitle}>{track.title}</div>
-                            <div className={styles.carouselSinger}>{track.writer}</div>
+                            <img src={trackImage} alt={`Track ${index + 1} - ${track.track.title}`} width={"180px"} height={"180px"} />
+                            <div className={styles.carouselTitle}>{track.track.title}</div>
+                            <div className={styles.carouselSinger}>{track.track.writer}</div>
                         </div>
                     );
                 })}
@@ -74,6 +78,6 @@ const Carousel = ({trackInfo}) => {
         </div>        
     </div>
   );
-}
+});
 
 export default Carousel;
