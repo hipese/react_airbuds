@@ -36,7 +36,9 @@ const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setS
                 formData.append('imagefile', fileData.imageFile);
             }
             formData.append('writer', fileData.writer);
-            formData.append('tag', selectTag);
+            selectTag.forEach(tag => {
+                formData.append('tag', tag.id);
+            });
 
             console.log(fileData.imageFile);
             console.log(formData);
@@ -68,6 +70,7 @@ const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setS
             return;
         }
         setFiles([]);
+        setSelectTag([]);
     }
 
     const handleFileNameChange = (index, newName) => {
@@ -113,12 +116,15 @@ const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setS
     };
 
     // 태그 선택 변경 시 호출될 콜백 함수
-    const handleTagSelection = (selectedTag) => {
+    const handleTagSelection = (selectedTagObject) => {
+        const newTag = {
+            id: selectedTagObject.tagId,
+            name: selectedTagObject.tagName
+        };
 
-        if (!selectTag.includes(selectedTag)) {
-            setSelectTag([...selectTag, selectedTag]);
+        if (!selectTag.some(tag => tag.id === newTag.id)) {
+            setSelectTag([...selectTag, newTag]);
         }
-        console.log(selectTag);
     };
 
     const handleTagDelete = (tagToDelete) => {
@@ -172,7 +178,7 @@ const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setS
                                     {selectTag.map((tag, index) => (
                                         <Chip
                                             key={index}
-                                            label={tag}
+                                            label={tag.name}
                                             onDelete={() => handleTagDelete(tag)}
                                         />
                                     ))}

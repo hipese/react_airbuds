@@ -32,8 +32,12 @@ const MusicTagList = ({onSelectTag}) => {
     const groupedTags = groupTagsByBase(tagList);
 
     const handleSelectChange = (event) => {
-        onSelectTag(event.target.value);
+        const selectedTag = tagList.find(tag => tag.tagName === event.target.value);
+        if (selectedTag) {
+            onSelectTag({ tagId: selectedTag.tagId, tagName: selectedTag.tagName });
+        }
     };
+
 
 
     return (
