@@ -11,6 +11,7 @@ export const MusicContext = createContext();
 export const PlayingContext = createContext();
 export const CurrentTrackContext = createContext();
 export const TrackInfoContext = createContext();
+export const TrackContext = createContext();
 function App() {
   const [loginID, setLoginID] = useState("");
   const [audioFiles, setAudioFiles] = useState([
@@ -23,6 +24,7 @@ function App() {
   const [track_info, setTrack_info] = useState({});
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
+  const [tracks, setTracks] = useState([]);
 
   return (
     <Router>
@@ -31,11 +33,13 @@ function App() {
           <CurrentTrackContext.Provider value={{ currentTrack, setCurrentTrack }}>
             <PlayingContext.Provider value={{ isPlaying, setIsPlaying }}>
               <TrackInfoContext.Provider value={{ track_info, setTrack_info }}>
-                <CookiesProvider>
-                  <Routes>
-                    <Route path="/*" element={<Groovy />} />
-                  </Routes>
-                </CookiesProvider>
+                <TrackContext.Provider value={{ tracks, setTracks }}>
+                  <CookiesProvider>
+                    <Routes>
+                      <Route path="/*" element={<Groovy />} />
+                    </Routes>
+                  </CookiesProvider>
+                </TrackContext.Provider>
               </TrackInfoContext.Provider>
             </PlayingContext.Provider>
           </CurrentTrackContext.Provider>

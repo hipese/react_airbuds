@@ -4,7 +4,7 @@ import 'react-h5-audio-player/lib/styles.css';
 import './BottomMusic.css';
 import styles from "./BottomMusic.module.css";
 import axios from "axios"
-import { CurrentTrackContext, MusicContext, TrackInfoContext } from '../../../App';
+import { CurrentTrackContext, MusicContext, TrackContext, TrackInfoContext } from '../../../App';
 import { PlayingContext } from '../../../App';
 
 const BottomMusic = () => {
@@ -14,7 +14,7 @@ const BottomMusic = () => {
     const audioRef = useRef(null);
     const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
     const { track_info, setTrack_info } = useContext(TrackInfoContext);
-    const [tracks, setTracks] = useState([]);
+    const { tracks, setTracks } = useContext(TrackContext);
 
     const testText = "강휘바";
 
@@ -27,7 +27,7 @@ const BottomMusic = () => {
                 setAudioFiles(updatedAudioFiles);
                 return { ...track, imagePath };
             });
-            
+
             setTracks(tracksWithImages);
             const firstTrackInfo = tracksWithImages[0];
             setTrack_info({
