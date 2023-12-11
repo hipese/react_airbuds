@@ -66,6 +66,7 @@
 .linkurl:hover {
     color: rgb(255, 255, 255);
     text-decoration: none;
+    cursor: pointer;
 }
 
 .linkurl:hover div {

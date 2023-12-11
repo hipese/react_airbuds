@@ -10,19 +10,21 @@
 .row_center {
     justify-content: center;
     align-items: center;
+    margin-top: 15px;
 }
 
 .contents_container {
     position: absolute;
     left : 0vw;
     width: 300vw;
-    margin-top: 50px;
+    margin-top: 35px;
     margin-bottom: 30px;
     
 }
 
 .row_header {
     margin-top: 50px;
+    justify-content: center;
 }
 
 .email_contents_container {
@@ -30,18 +32,37 @@
     padding-right: 15px;
 }
 
-.input_email {
+.input_email, .input_id, .input_password, .input_password_confirm, .input_birth{
     width: 300px;
     text-align: center;
 }
 
-.input_email:focus, .input_verify:focus {
+.input_email:focus, .input_verify:focus, .input_birth {
     outline: none;
 }
 
+.input_birth::before {
+    content: "생년월일";
+    display: block;
+    position: absolute;
+    color: #aaa;
+    z-index: 1;
+}
+
+.input_birth {
+    position: relative;
+    z-index: 2;
+}
+
 .input_verify {
-    width: 100px;
+    width: 150px;
     text-align: center;
+    /* margin-left: 160px; */
+    margin-left: 150px;
+}
+
+.input_id {
+    margin-left: 130px;
 }
 
 .social_image:hover {
@@ -89,7 +110,7 @@
 
 .btn_verify {
     margin-left: 10px;
-    width: 80px;
+    width: 120px;
     height: 38px;
 }
 
@@ -110,13 +131,19 @@
     /* box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75); */
 }
 
-.btn_verify, .btn_send_verify {
+.btn_verify, .btn_send_verify, .btn_check_id {
     background-image: linear-gradient(to right, #0ba360, #3cba92, #30dd8a, #2bb673);
     /* box-shadow: 0 4px 15px 0 rgba(23, 168, 108, 0.75); */
 }
 
-.btn_next:focus, .btn_back:focus, .btn_verify:focus {
+.btn_next:focus, .btn_back:focus, .btn_verify:focus, .btn_check_id {
     outline: none;
+}
+
+.btn_check_id {
+    width: 120px;
+    height: 38px;
+    margin-left: 10px;
 }
 
 .verify_container {
@@ -139,4 +166,18 @@ input::-webkit-inner-spin-button {
     appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
+}
+
+.loading {
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(210, 210, 210);
+    flex-direction: column;
 }
