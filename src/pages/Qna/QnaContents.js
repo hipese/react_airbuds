@@ -10,13 +10,16 @@ const QnaContents = () => {
     
     const loginID = "kwon"; //임시
 
+    const [isChanged,setChanged] = useState(0);
+
     const [selectedQna,setSelectedQna] = useState({});
     const [files,setFiles] = useState([]);
     const [reply,setReply] = useState({qnaSeq:seq, answerWriter:loginID,answerContents:"",answerWriteDate:new Date().toISOString()});
     const [replyList,setReplyList] = useState([]);
-    const [updateReply,setUpdateReply] = useState({qnaSeq:seq, answerWriter:loginID,answerContents:"",answerWriteDate:new Date().toISOString()});
+    const [updateReply,setUpdateReply] = useState({qnaSeq:seq, answerWriter:loginID, answerSeq:null, answerContents:"",answerWriteDate:new Date().toISOString()});
     const [tempReply,setTempReply] = useState("");
-    const [isUpdate,setUpdate] = useState({state:false,seq:0});
+    const [isUpdateState,setUpdateState] = useState(false);
+    const [isUpdateSeq,setUpdateSeq] = useState(0);
     
     //관리자 및 글 작성자 외에는 못들어오도록 하기
     const navi = useNavigate();
@@ -24,22 +27,27 @@ const QnaContents = () => {
         navi(-1);
     }
 
-    const handleUpdateChange = (e) => {
+    const handleUpdateChange = (e,i) => {
         const value = e.target.textContent;
-        console.log(value);
-        setUpdateReply(prev=>({...prev,answerContents:value}));
+        setUpdateReply(prev=>({...prev,answerContents:value,answerSeq:i}));
     }
 
     const handleUpdate = (i) => {
-        setUpdate({state:true,seq:i});
+        setUpdateSeq(i);
+        setUpdateState(true);            
         setTempReply(); 
+        
         //나중에 댓글 불러오고 map으로 출력, 수정할때 수정전 결과 임시 저장
     }
 
-    const handleUpdateSubmit = (i) => {
-        console.log(updateReply);
-        setUpdate({state:false,seq:i});
-        //setTempReply("");        
+    const handleUpdateSubmit = (e,seq,i) => {
+        setUpdateState(false);
+        setUpdateSeq(0);
+        axios.put(`/api/qna/${updateReply.answerSeq}`,updateReply).then(res=>{
+
+        }).catch((e)=>{
+            console.log(e);
+        });
     }
 
     const handleReplyChange = (e) => {
@@ -71,6 +79,14 @@ const QnaContents = () => {
         });
     },[]);
 
+    useEffect(()=>{
+        axios.get(`/api/qna/replylist/${seq}`).then(res=>{
+            setReplyList(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    },[isChanged]);
+
     const handleDelete = () => {
         axios.delete(`/api/qna/delete/${seq}`).then(res=>{
             navi("/qna");
@@ -79,9 +95,17 @@ const QnaContents = () => {
         });
     }
 
+    const handleAnswerDelete = (reply_seq) => {
+        axios.delete(`/api/qna/reply/delete/${reply_seq}`).then(res=>{
+            setChanged(isChanged+1);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
     return(
         <div className={`${style.wrap}`}>
-            <div className={`${style.qnaContents} ${style.ma} ${style.border}`}>
+            <div className={`${style.qnaContents} ${style.ma}`}>
                 <div className={`${style.marginT70}`}>
                     <Grid container className={`${style.pl10} ${style.center}`}>
                         <Grid item xs={12}>
@@ -94,7 +118,12 @@ const QnaContents = () => {
                     <Grid container className={`${style.pl10} ${style.center}`}>
                         <Grid item xs={12} sm={6}>
                             <Typography fontSize={12}>
-                                {selectedQna.qnaCategory}
+                                카테고리 : {
+                                    selectedQna.qnaCategory == "usurpation" ? "권리 침해" : 
+                                    selectedQna.qnaCategory == "service" ? "서비스 문의" :
+                                    selectedQna.qnaCategory == "event" ? "이벤트" :
+                                    selectedQna.qnaCategory == "error" ? "기타 오류" : ""
+                                }
                             </Typography>
                         </Grid>                        
                         <Grid item xs={12} sm={6}>
@@ -182,19 +211,19 @@ const QnaContents = () => {
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={12} sm={9}>
-                                    <div className={`${style.border} ${style.replyContents} ${style.pad10}`} contentEditable={isUpdate.state} name="answerContents" onInput={handleUpdateChange} suppressContentEditableWarning>
+                                    <div className={`${style.border} ${style.replyContents} ${style.pad10}`} contentEditable={isUpdateState} name="answerContents" onInput={(event)=>{handleUpdateChange(event,e.answerSeq)}} suppressContentEditableWarning>
                                         {e.answerContents}
                                     </div>
                                     <div className={`${style.replyBtnEven} ${style.padingT10}`}>
-                                        <Button variant="outlined" size="small">
-                                            Delete
+                                        <Button variant="outlined" size="small" onClick={()=>{handleAnswerDelete(e.answerSeq)}}>
+                                            삭제하기
                                         </Button>
-                                        {isUpdate.state ? isUpdate.seq == i ? <Button variant="outlined" size="small" onClick={()=>{handleUpdateSubmit(e.answerSeq,i)}}>
-                                            Submit
+                                        {isUpdateState ? isUpdateSeq == i ? <Button variant="outlined" size="small" onClick={handleUpdateSubmit}>
+                                            수정완료
                                         </Button> : <Button variant="outlined" size="small" onClick={()=>{handleUpdate(i)}}>
-                                            Update
+                                            수정하기
                                         </Button> : <Button variant="outlined" size="small" onClick={()=>{handleUpdate(i)}}>
-                                            Update
+                                            수정하기
                                         </Button> }                                        
                                     </div>
                                 </Grid>
