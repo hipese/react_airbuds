@@ -1,13 +1,16 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useDropzone } from 'react-dropzone';
 import { Container, Row,Button } from "reactstrap";
 import styles from "./Track_Upload.module.css"
 import axios from "axios";
 import MultiTrackUpload from "./MultiTrackUpload/MultiTrackUpload";
 import SingleTrackUpload from "./SingleTrackUpload/SingleTrackUpload";
+import { LoginContext } from "../../../App";
 
 
 const Track_Upload = () => {
+
+    const loginID=useContext(LoginContext);
 
     // 업로드할 음원 파일을 저장하는 변수
     const [files, setFiles] = useState([]);
@@ -23,7 +26,7 @@ const Track_Upload = () => {
 
     // 데이터베이스에 존재하는 모든 음원 정보를 가져오는 기능
     const handlelist = () => {
-        axios.get("/api/track").then(resp => {
+        axios.get(`/api/track/findById/${loginID.loginID}`).then(resp => {
             console.log(resp.data);
             setTracks(resp.data)
         })
