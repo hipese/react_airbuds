@@ -1,0 +1,54 @@
+.dashcontainer{
+    width: 1200px;
+    height: 100%;
+    min-width: 600px;
+    max-width: 1400px;
+}
+
+.dashBox{
+    width: 80%;
+    height: 130px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.dashLBox{
+    width: 95%;
+    height: 560px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.dashBox:hover{
+    box-shadow: 0px 0px 20px 0px #40404020;
+}
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vcenter{
+    display: flex;
+    align-items: center;
+}
+
+.hcenter{
+    display: flex;
+    justify-content: center;
+}
+
+.ma{
+    margin:auto;
+}
+
+.w100{
+    width: 100%;
+}
+
+.pad10{
+    padding: 10px;
+}

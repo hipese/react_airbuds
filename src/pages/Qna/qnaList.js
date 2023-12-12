@@ -6,12 +6,12 @@ import { useNavigate } from "react-router";
 import { Link, Route, Routes } from "react-router-dom";
 import QnaContents from './QnaContents';
 import QnaWrite from './QnaWrite';
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 
 
 const QnaList =() => {
-    const [qnaList,setQnaList] = useState([]);
+    const {qnaList,setQnaList} = useContext(QnaContext);
     const navi = useNavigate();
     const handleMove = (e,i) => {
         console.log(i);
@@ -106,19 +106,25 @@ const QnaList =() => {
             })}
             <div className={`${style.rightAlign}`}>
                 <Link to="write"><button>문의하기</button></Link>
+            </div>           
+            <div className={`${style.center}`}>
+                <Pagination count={10} />
             </div>            
-            <Pagination count={10} />
         </div>
     )
 }
+export const QnaContext = createContext();
 
 const QnaListMain = () =>{
+    const [qnaList,setQnaList] = useState([]);
     return(
-        <Routes>
-            <Route path="/" element={<QnaList/>}></Route>
-            <Route path="contents/:seq" element={<QnaContents/>}></Route>
-            <Route path="write" element={<QnaWrite/>}></Route>
-        </Routes>
+        <QnaContext.Provider value={{qnaList,setQnaList}}>
+            <Routes>
+                <Route path="/" element={<QnaList/>}></Route>
+                <Route path="contents/:seq" element={<QnaContents/>}></Route>
+                <Route path="write" element={<QnaWrite/>}></Route>
+            </Routes>
+        </QnaContext.Provider>
     )     
 }
 export default QnaListMain;
