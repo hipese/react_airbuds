@@ -46,34 +46,29 @@ const Track_Upload = () => {
         acceptedFiles.forEach(file => {
             const url = URL.createObjectURL(file);
             const audio = new Audio(url);
-
+    
             audio.onloadedmetadata = () => {
-                // 파일 길이(초)를 구합니다
                 const duration = audio.duration;
-
-                // 예시: 기본 이미지 경로 설정
                 const image_path = "/assets/groovy2.png";
-
-                // 파일 이름에서 확장자 제거
                 const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
-
-                // 현재 날짜를 가져옵니다
-                const currentDate = new Date();
-
-
-                // 파일 정보와 함께 파일의 이름과 길이를 저장
+    
                 const newFile = {
                     file: file,
-                    name: fileNameWithoutExtension, // 파일의 원래 이름
-                    duration: duration, // 파일의 길이(초)
+                    name: fileNameWithoutExtension,
+                    duration: duration,
                     imageFile: null,
-                    image_path: image_path, // 여기에 이미지 경로 추가
-                    writer: "익명의 제작자",// 작사 추가
-                    tag: selectTag, // 테그 필드 추가
+                    image_path: image_path,
+                    writer: "익명의 제작자",
+                    tags: [] 
                 };
-
-                setFiles(prevFiles => [...prevFiles, newFile]);
-               
+    
+                if (acceptedFiles.length === 1) {
+                    // Handle single file upload
+                    setFiles([newFile]);
+                } else {
+                    // Handle multiple file upload
+                    setFiles(prevFiles => [...prevFiles, newFile]);
+                }
             };
         });
     };

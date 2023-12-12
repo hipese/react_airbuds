@@ -51,6 +51,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
     };
 
 
+    console.log(files);
 
     // 새로운 음원 파일을 추가하기 위한 ref
     const hiddenAudioInput = useRef(null);
@@ -240,6 +241,27 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
 
 
+    const handleTrackTagSelection = (fileIndex, selectedTag) => {
+        setFiles(currentFiles => currentFiles.map((file, idx) => {
+            if (idx === fileIndex) {
+                // Check if the tag already exists
+                if (!file.tags.some(tag => tag.id === selectedTag.id)) {
+                    return { ...file, tags: [...file.tags, selectedTag] };
+                }
+            }
+            return file;
+        }));
+    };
+
+    const handleTrackTagDelete = (fileIndex, tagToDelete) => {
+        setFiles(currentFiles => currentFiles.map((file, idx) => {
+            if (idx === fileIndex) {
+                return { ...file, tags: file.tags.filter(tag => tag.id !== tagToDelete.id) };
+            }
+            return file;
+        }));
+    };
+
     return (
         <div className={style.uploadDetail}>
             <Row style={{ marginBottom: '20px', width: '100%', marginLeft: '0px', marginRight: '0px' }}>
@@ -383,17 +405,17 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                 onChange={(e) => handleFileNameChange(index, e.target.value)}
                             />
                         </Col>
-                        <Col sm='4' md='4' style={{ marginBottom: '10px' }}>
-                            <MusicTagList onSelectTag={handleTagSelection} />
+                        <Col sm="4" md="4" style={{ marginBottom: '10px' }}>
+                            <MusicTagList onSelectTag={(tag) => handleTrackTagSelection(index, tag)} />
                         </Col>
-                        <Col sm='12' md='12' style={{ marginBottom: '10px' }}>
+                        <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
                             <Row className={style.chipRow}>
                                 <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                                    {selectTag.map((tag, index) => (
+                                    {file.tags.map((tag, tagIndex) => (
                                         <Chip
-                                            key={index}
-                                            label={tag.name}
-                                            onDelete={() => handleTagDelete(tag)}
+                                            key={tagIndex}
+                                            label={tag.tagName}
+                                            onDelete={() => handleTrackTagDelete(index, tag)}
                                         />
                                     ))}
                                 </Stack>
