@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, Fragment } from "react"
+import { useState, useRef, useEffect, Fragment, useContext } from "react"
 import { Row, Col, Input, Button } from "reactstrap";
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
@@ -15,14 +15,25 @@ import axios from "axios";
 import MusicTagList from "../MuiscTagList/MuiscTagList";
 import style from "./MultiTrackUpload.module.css"
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import { LoginContext } from "../../../../App";
 
 
 const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag, setSelectTag }) => {
 
+    const loginID = useContext(LoginContext);
+    const [trackSelcetTag, setTrackSelcetTag] = useState([]);
+
+
+    dayjs.extend(utc);
+    dayjs.extend(timezone);
+
+    dayjs.tz.setDefault("Asia/Seoul");
 
     // 선택된 트랙의 인덱스를 저장하는 상태 변수 추가
     const [selectedDate, setSelectedDate] = useState(dayjs());
-    const [playListType, setPlayListType] = useState('');
+    const [playListType, setPlayListType] = useState(null);
     const [order, setOrder] = useState([]);
     const [albumTitle, setAlbumTitle] = useState("익명의 앨범");
 
@@ -74,7 +85,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                     imageFile: null,
                     image_path: image_path, // 여기에 이미지 경로 추가
                     writer: "익명의 제작자", // 기본값, 필요에 따라 변경 가능
-                    tag: selectTag // 기본값, 필요에 따라 변경 가능
+                    tag: trackSelcetTag // 기본값, 필요에 따라 변경 가능
                 };
 
                 // files 배열에 새 파일 추가
@@ -90,7 +101,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         const formData = new FormData();
 
         console.log(files)
-        
+
 
         // files 배열에 있는 각 파일을 formData에 추가
         files.forEach((fileData) => {
@@ -103,8 +114,8 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         });
         formData.append('releaseDate', selectedDate ? selectedDate.toISOString() : '');
         formData.append('albumTitle', albumTitle);
+        formData.append('login', loginID.loginID);
 
-        console.log(order);
 
         if (playListType === "앨범") {
             axios.post("/api/album", formData, {
@@ -212,12 +223,15 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
 
     // 태그 선택 변경 시 호출될 콜백 함수
-    const handleTagSelection = (selectedTag) => {
+    const handleTagSelection = (selectedTagObject) => {
+        const newTag = {
+            id: selectedTagObject.tagId,
+            name: selectedTagObject.tagName
+        };
 
-        if (!selectTag.includes(selectedTag)) {
-            setSelectTag([...selectTag, selectedTag]);
+        if (!selectTag.some(tag => tag.id === newTag.id)) {
+            setSelectTag([...selectTag, newTag]);
         }
-        console.log(selectTag);
     };
 
     const handleTagDelete = (tagToDelete) => {
@@ -305,23 +319,29 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                 </Col>
                             </Row>
                         </Col>
-                        <Col sm='12 ' style={{ marginBottom: '10px' }}>tag </Col>
-                        <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
-                            <MusicTagList onSelectTag={handleTagSelection} />
-                        </Col>
-                        <Col sm='12' md='8' style={{ marginBottom: '10px' }}>
-                            <Row className={style.chipRow}>
-                                <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                                    {selectTag.map((tag, index) => (
-                                        <Chip
-                                            key={index}
-                                            label={tag}
-                                            onDelete={() => handleTagDelete(tag)}
-                                        />
-                                    ))}
-                                </Stack>
-                            </Row>
-                        </Col>
+                        {
+                            playListType === "앨범" && (
+                                <Fragment>
+                                    <Col sm='12' style={{ marginBottom: '10px' }}>AlbumTag</Col>
+                                    <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
+                                        <MusicTagList onSelectTag={handleTagSelection} />
+                                    </Col>
+                                    <Col sm='12' md='8' style={{ marginBottom: '10px' }}>
+                                        <Row className={style.chipRow}>
+                                            <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                                {selectTag.map((tag, index) => (
+                                                    <Chip
+                                                        key={index}
+                                                        label={tag.name}
+                                                        onDelete={() => handleTagDelete(tag)}
+                                                    />
+                                                ))}
+                                            </Stack>
+                                        </Row>
+                                    </Col>
+                                </Fragment>
+                            )
+                        }
                         <Col sm='12' style={{ marginBottom: '10px' }}>writer</Col>
                         <Col sm='12' style={{ marginBottom: '10px' }}>
                             <Input
@@ -354,7 +374,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                 onChange={(e) => handleTrackOrderChange(index, e.target.value)}
                             />
                         </Col>
-                        <Col sm="10" style={{ marginBottom: '10px' }}>
+                        <Col sm="6" style={{ marginBottom: '10px' }}>
                             <Input
                                 className={style.detail_input_filename}
                                 type="text"
@@ -362,6 +382,22 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                 value={file.name || ''} // 각 파일의 이름 사용
                                 onChange={(e) => handleFileNameChange(index, e.target.value)}
                             />
+                        </Col>
+                        <Col sm='4' md='4' style={{ marginBottom: '10px' }}>
+                            <MusicTagList onSelectTag={handleTagSelection} />
+                        </Col>
+                        <Col sm='12' md='12' style={{ marginBottom: '10px' }}>
+                            <Row className={style.chipRow}>
+                                <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                    {selectTag.map((tag, index) => (
+                                        <Chip
+                                            key={index}
+                                            label={tag.name}
+                                            onDelete={() => handleTagDelete(tag)}
+                                        />
+                                    ))}
+                                </Stack>
+                            </Row>
                         </Col>
                     </Fragment>
                 ))}
