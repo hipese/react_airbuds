@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from "react"
+import { useState } from "react"
 import { useDropzone } from 'react-dropzone';
-import { Container, Row, Col, Input, Button } from "reactstrap";
+import { Container, Row,Button } from "reactstrap";
 import styles from "./Track_Upload.module.css"
 import axios from "axios";
 import MultiTrackUpload from "./MultiTrackUpload/MultiTrackUpload";
 import SingleTrackUpload from "./SingleTrackUpload/SingleTrackUpload";
+
 
 const Track_Upload = () => {
 
@@ -67,7 +68,7 @@ const Track_Upload = () => {
                     writer: "익명의 제작자",// 작사 추가
                     tag: selectTag, // 테그 필드 추가
                 };
-              
+
                 setFiles(prevFiles => [...prevFiles, newFile]);
             };
         });
@@ -104,9 +105,11 @@ const Track_Upload = () => {
                         </div>
                     </div>
                 ) : files.length === 1 ? (
-                    <SingleTrackUpload files={files} setFiles={setFiles} imageview={imageview} setImageview={setImageview} selectTag={selectTag} setSelectTag={setSelectTag} />
+                    <SingleTrackUpload files={files} setFiles={setFiles} imageview={imageview} setImageview={setImageview}
+                        selectTag={selectTag} setSelectTag={setSelectTag}  />
                 ) :
-                    <MultiTrackUpload files={files} setFiles={setFiles} imageview={imageview} setImageview={setImageview} selectTag={selectTag} setSelectTag={setSelectTag} />
+                    <MultiTrackUpload files={files} setFiles={setFiles} imageview={imageview} setImageview={setImageview}
+                        selectTag={selectTag} setSelectTag={setSelectTag}  />
                 }
             </Row>
 
