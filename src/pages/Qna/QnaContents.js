@@ -1,17 +1,23 @@
 import { Avatar, Box, Button, Divider, Grid, Typography } from '@mui/material';
 import style from './qna.module.css'
 import { useNavigate, useParams } from 'react-router';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { QnaContext } from './qnaList';
+import { Link } from 'react-router-dom';
 const QnaContents = () => {
     const {seq} = useParams();
-    const loginID = "kwon";
     
+    const loginID = "kwon"; //임시
+
+    const [selectedQna,setSelectedQna] = useState({});
+    const [files,setFiles] = useState([]);
     const [reply,setReply] = useState({qnaSeq:seq, answerWriter:loginID,answerContents:"",answerWriteDate:new Date().toISOString()});
     const [replyList,setReplyList] = useState([]);
     const [updateReply,setUpdateReply] = useState({qnaSeq:seq, answerWriter:loginID,answerContents:"",answerWriteDate:new Date().toISOString()});
     const [tempReply,setTempReply] = useState("");
     const [isUpdate,setUpdate] = useState({state:false,seq:0});
+    
     //관리자 및 글 작성자 외에는 못들어오도록 하기
     const navi = useNavigate();
     const handleMoveToList = () => {
@@ -51,21 +57,27 @@ const QnaContents = () => {
     }
 
     useEffect(()=>{
+        axios.get(`/api/qna/contents/${seq}`).then(res=>{
+            setSelectedQna(res.data);
+            setFiles(res.data.files);
+        }).catch((e)=>{
+            console.log(e);
+        });
+
         axios.get(`/api/qna/replylist/${seq}`).then(res=>{
-            console.log(res.data);
             setReplyList(res.data);
         }).catch((e)=>{
             console.log(e);
         });
     },[]);
 
-    useEffect(()=>{
-        axios.get(`/api/qna/replylist/${seq}`).then(res=>{
-            setReplyList(res.data);
+    const handleDelete = () => {
+        axios.delete(`/api/qna/delete/${seq}`).then(res=>{
+            navi("/qna");
         }).catch((e)=>{
             console.log(e);
         });
-    },[replyList]);
+    }
 
     return(
         <div className={`${style.wrap}`}>
@@ -74,7 +86,7 @@ const QnaContents = () => {
                     <Grid container className={`${style.pl10} ${style.center}`}>
                         <Grid item xs={12}>
                             <Typography fontSize={24}>
-                                Title
+                                {selectedQna.qnaTitle}
                             </Typography>
                         </Grid>
                     </Grid>
@@ -82,22 +94,42 @@ const QnaContents = () => {
                     <Grid container className={`${style.pl10} ${style.center}`}>
                         <Grid item xs={12} sm={6}>
                             <Typography fontSize={12}>
-                                분류  : Category
+                                {selectedQna.qnaCategory}
                             </Typography>
                         </Grid>                        
                         <Grid item xs={12} sm={6}>
                             <Typography fontSize={{xs:"12px",sm:"14px"}} className={`${style.rightAlign}`}>
-                            작성자 : kwon
+                                작성자 : {selectedQna.qnaWriter}
                             </Typography>
                         </Grid>
                     </Grid>
                     <hr/>
-                    <div className={`${style.qnaDetail} ${style.border} ${style.borderRad} ${style.ma}`}>
-                        asd
+                    <div className={`${style.qnaDetail} ${style.border} ${style.borderRad} ${style.ma}`} dangerouslySetInnerHTML={{ __html: selectedQna.qnaContents }}>
+                        
                     </div>
-                    <div className={`${style.pad10} ${style.rightAlign}`}>
-                        <button onClick={handleMoveToList}>목록으로</button>
-                    </div>
+                    <hr/>
+                    <Grid container className={`${style.pl10} ${style.center}`}>
+                        <Grid item xs={12} sm={8}>
+                            <Typography fontSize={12}>
+                                {files != null || files != undefined || files.length <= 0 
+                                ? files.map((e,i)=>{
+                                    return(
+                                        <div key={i}>
+                                            <a href={``}>{e.oriName}</a> 
+                                            <br/>
+                                        </div>
+                                    )
+                                }) : "첨부파일 없음" }
+                            </Typography>
+                        </Grid>                        
+                        <Grid item xs={12} sm={4} className={`${style.rightAlign}`}>
+                            
+                            { selectedQna.qnaWriter == loginID ? <div className={`${style.btnEven}`}><button onClick={handleDelete}>삭제하기</button>
+                                                                <button onClick={handleMoveToList}>목록으로</button></div>
+                                                                :<button onClick={handleMoveToList}>목록으로</button>    }
+                        </Grid>
+                    </Grid>
+                    <hr/>
                 </div>
 
                 {/* Reply */}
