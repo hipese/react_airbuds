@@ -16,6 +16,7 @@ import { Container, Row, Col } from "reactstrap";
 import AnnounceList from "../Announce/AnnounceList";
 import QnaList from "../Qna/qnaList";
 import Upload_Main from "../Upload/Upload_Main";
+import DashBoardMain from "../Dashboard/Dashboard";
 
 const Groovy = () => {
     return (
@@ -39,6 +40,7 @@ const Groovy = () => {
                         <Route path="Admin/*" element={<Admin />} />
                         <Route path="Announce/*" element={<AnnounceList />} />
                         <Route path="QnA/*" element={<QnaList />} />
+                        <Route path="Dashboard/*" element={<DashBoardMain/>} />
                     </Routes>
             </Container>
             <div className={styles.botMusic}>
