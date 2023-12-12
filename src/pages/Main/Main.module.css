@@ -7,7 +7,7 @@
     transition: ease-in-out 0.5s;
 }
 
-@Media (max-width: 1200px) {
+@Media (max-width: 1100px) {
     .container {
         max-width: 100%;
         padding-left: 0px;
@@ -22,9 +22,9 @@
 }
 
 .leftSide {
-    max-width: 1100px;
-    width: 70%;
-    min-width: 900px;
+    max-width: 1400px;
+    width: 100%;
+    min-width: 1100px;
     height: 100%;
     padding-right: 40px;
     border-right: 1px solid #e0e0e0;
@@ -51,9 +51,9 @@
 }
 
 .RecentMusicBox {
-    max-width: 920px;
+    max-width: 100%;
     width: 100%;
-    height: 245px;
+    height: 300px;
     margin-top: 15px;
     margin-left: 10px;
     border: 1px solid #e0e0e0;
@@ -65,8 +65,8 @@
 }
 
 .RecentImg {
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 250px;
+    max-width: 250px;
     height: 100%;
     object-fit: cover;
 }
@@ -82,8 +82,8 @@
     width: 100%;
     position: relative;
     margin-left: 20px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 11px;
+    padding-bottom: 11px;
     padding-left: 10px;
     font-size: 1rem;
     font-weight: 500;
@@ -98,14 +98,14 @@
 
 .RecentTitleAndSinger {
     display: flex;
-    width: 500px;
+    width: 630px;
     overflow: hidden;
 }
 
 .RecentSinger {
     flex-shrink: 0;
     flex-basis: [RecentSinger의 너비];
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
     color: #dbdbdb;
     white-space: nowrap;
@@ -123,7 +123,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
     color: white;
 }
@@ -137,7 +137,7 @@
 .play {
     position: absolute;
     right: 80px;
-    top: 15px;
+    top: 18px;
     width: 0;
     height: 0;
     border-top: 6px solid transparent;
@@ -149,7 +149,7 @@
     width: 70px;
     position: absolute;
     right: 0px;
-    top: 8px;
+    top: 10px;
     color: white;
 }
 

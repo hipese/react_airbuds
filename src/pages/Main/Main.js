@@ -43,7 +43,7 @@ const Main = () => {
     useEffect(() => {
         if (Array.isArray(selectTitle)) {
             selectTitle.forEach(tag => {
-                if ([6, 8, 10].includes(tag.tagId)) {
+                if ([5, 6, 8, 9, 10, 12, 13, 14].includes(tag.tagId)) {
                     axios.get("/api/trackTag", { params: { tag: tag.tagId }})
                         .then((res) => {
                             setTrackInfoByTag(prevState => ({
@@ -97,7 +97,7 @@ const Main = () => {
                     <div className={styles.carousel}>
                         <OwlCarousel />
                     </div>
-                    {Array.isArray(selectTitle) && selectTitle.filter(tag => [6, 8, 10].includes(tag.tagId)).map((filterTag, index) => (
+                    {Array.isArray(selectTitle) && selectTitle.filter(tag => [5, 6, 8, 9, 10, 12, 13, 14].includes(tag.tagId)).map((filterTag, index) => (
                         <div key={index}>
                             <div className={styles.carouselTitle}>{filterTag.tagName}</div>
                             <div className={styles.carousel}>

@@ -5,9 +5,10 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import styles from "./Carousel.module.css"; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import heart from "./assets/heart.svg";
+import playlist from "./assets/playlist.svg";
 
 const Carousel = React.memo(({ trackInfo }) => {
-    console.log("Carousel.js: trackInfo:", trackInfo);
     const carouselRef = useRef(null);
 
     const goToPrev = () => {
@@ -15,7 +16,6 @@ const Carousel = React.memo(({ trackInfo }) => {
             carouselRef.current.prev();
         }
     };
-
     const goToNext = () => {
         if (carouselRef.current) {
             carouselRef.current.next();
@@ -27,7 +27,7 @@ const Carousel = React.memo(({ trackInfo }) => {
         <OwlCarousel
             className={styles.OwlCarousel}
             loop 
-            margin={10}
+            margin={20}
             nav={false}
             dots={false}
             // autoplay
@@ -36,7 +36,7 @@ const Carousel = React.memo(({ trackInfo }) => {
             // autoplayHoverPause 
             responsive={{
                 768: {
-                    items: 5
+                    items: 4
                 },
               }}
             ref={carouselRef}
@@ -47,30 +47,21 @@ const Carousel = React.memo(({ trackInfo }) => {
                     : "http://placehold.it/150x150";
                     return (
                         <div className={styles.item} key={index}>
-                            <img src={trackImage} alt={`Track ${index + 1} - ${track.track.title}`} width={"180px"} height={"180px"} />
-                            <div className={styles.carouselTitle}>{track.track.title}</div>
-                            <div className={styles.carouselSinger}>{track.track.writer}</div>
+                            <div className={styles.imgHover}>
+                                <img className={styles.trackImg} src={trackImage} alt={`Track ${index + 1} - ${track.track.title}`} />
+                                <div className={styles.hoverNaviheart} >
+                                    <img src={heart} alt="" className={styles.onClickHeart} />
+                                </div>
+                                <div className={styles.hoverNaviplaylist}><img src={playlist} alt="" className={styles.NonClickPlaylist} /></div>
+                            </div>
+                            <div className={styles.carouselContents}> 
+                                <div className={styles.carouselTitle}>{track.track.title}</div>
+                                <div className={styles.carouselSinger}>{track.track.writer}</div>
+                            </div>
                         </div>
                     );
                 })}
              
-
-
-        {/* <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 1" />
-            <div className={styles.carouselTitle}>여기다 넣으면 잘 됨</div>
-            <div className={styles.carouselSinger}>IU</div>
-        </div> 
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 2" />제목2번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 3" />제목3번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 4" />제목4번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 5" />제목5번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 6" />제목6번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 7" />제목7번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 8" />제목8번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 9" />제목9번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 10" />제목10번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 11" />제목11번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 12" />제목12번</div> */}
         </OwlCarousel>
         <div className={styles.carouselButton}>
             <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button> 
