@@ -60,7 +60,7 @@ const AnnounceWriteMain = () =>{
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    label="제목"
+                                    label="제목2"
                                     id="outlined-size-small"
                                     size="small"
                                     fullWidth
