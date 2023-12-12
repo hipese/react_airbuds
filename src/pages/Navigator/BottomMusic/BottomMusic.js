@@ -42,8 +42,8 @@ const BottomMusic = () => {
 
     // audioFiles 상태가 변경될 때마다 로그 출력
     useEffect(() => {
-        console.log("Updated audio files:", audioFiles);
-        console.log(tracks);
+        //console.log("Updated audio files:", audioFiles);
+        //console.log(tracks);
     }, [audioFiles]);
 
     if (audioFiles.length === 0) {

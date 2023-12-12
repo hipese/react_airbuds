@@ -8,6 +8,7 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import axios from "axios";
 import { CurrentTrackContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../App';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import { Link } from 'react-router-dom';
 
 const Overview = () => {
   const [track, setTrack] = useState([]);
@@ -73,6 +74,10 @@ const Overview = () => {
     setIsPlaying(true);
   };
 
+  const trackDetail = () => {
+
+  }
+
   return (
     <>
       <div className={styles.carouselTitle1}>최근에 재생한 노래들</div>
@@ -100,11 +105,16 @@ const Overview = () => {
                 className={styles.item}
                 key={index}
               >
-                <img src={`/tracks/image/${track.imagePath}`} alt={`Image ${index + 1}`} />
-                <div className={styles.carouselTitle}>{track.title}</div>
-                <div className={styles.carouselSinger}>
-                  {track.writer}
+                <div>
+                  <Link to={`/Detail/${track.trackId}`}>
+                    <img src={`/tracks/image/${track.imagePath}`} alt={`Image ${index + 1}`} />
+                    <div className={styles.carouselTitle}>{track.title}</div>
+                    <div className={styles.carouselSinger}>
+                      {track.writer}
+                    </div>
+                  </Link>
                 </div>
+
                 <div className={styles.play_button}
                   onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
                 >
