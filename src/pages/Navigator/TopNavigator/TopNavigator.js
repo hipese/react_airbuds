@@ -9,6 +9,8 @@ import React from "react";
 import Swal from "sweetalert2";
 import "@sweetalert2/themes/bootstrap-4";
 import axios from "axios";
+import Dropdown from "react-bootstrap/Dropdown";
+import { DropdownDivider } from "react-bootstrap";
 
 const TopNavigator = () => {
 
@@ -69,6 +71,14 @@ const TopNavigator = () => {
         }
     }
 
+    const handleLogoutClick = () => {
+        axios.post("/api/member/logout").then(() => {
+            setLoginID("");
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
     return (
         <Container className={`${styles.container} ${styles.containerFluid}`} fluid>
             <Row>
@@ -110,6 +120,9 @@ const TopNavigator = () => {
                                     <Col>
                                         Profile
                                     </Col>
+                                    <Col>
+                                        <div className={styles.linkurl} onClick={handleLogoutClick}><div>로그아웃</div></div>
+                                    </Col>
                                 </>
                                 :
                                 <>
@@ -121,9 +134,6 @@ const TopNavigator = () => {
                                     </Col>
                                 </>
                         }
-                        <Col>
-                            ...
-                        </Col>
                     </Row>
                 </Col>
             </Row>
