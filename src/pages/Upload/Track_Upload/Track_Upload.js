@@ -73,6 +73,7 @@ const Track_Upload = () => {
                 };
 
                 setFiles(prevFiles => [...prevFiles, newFile]);
+               
             };
         });
     };
