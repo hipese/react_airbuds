@@ -26,6 +26,7 @@ const BottomMusic = () => {
                 const updatedAudioFiles = [...audioFiles, ...newTracks];
                 setAudioFiles(updatedAudioFiles);
                 return { ...track, imagePath };
+
             });
 
             setTracks(tracksWithImages);
@@ -41,14 +42,13 @@ const BottomMusic = () => {
 
 
     // audioFiles 상태가 변경될 때마다 로그 출력
-    useEffect(() => {
-        //console.log("Updated audio files:", audioFiles);
-        //console.log(tracks);
-    }, [audioFiles]);
+    // useEffect(() => {
+    //     console.log("Updated audio files:", audioFiles);
+    // }, [audioFiles]);
 
-    if (audioFiles.length === 0) {
-        return null; // If empty, don't render anything
-    };
+    // if (audioFiles.length === 0) {
+    //     return null; // If empty, don't render anything
+    // };
 
 
     const handlePlay = () => {
