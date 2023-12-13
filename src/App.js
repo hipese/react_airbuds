@@ -9,15 +9,23 @@ import axios from 'axios';
 
 export const LoginContext = createContext();
 export const MusicContext = createContext();
+export const PlayingContext = createContext();
+export const CurrentTrackContext = createContext();
+export const TrackInfoContext = createContext();
+export const TrackContext = createContext();
 function App() {
   const [loginID, setLoginID] = useState("");
   const [audioFiles, setAudioFiles] = useState([
-    'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/2.mp3',
-    'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/3.mp3',
-    'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/4.mp3',
-    'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/5.mp3',
-    // Add more audio URLs as needed
+    // 'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/2.mp3',
+    // 'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/3.mp3',
+    // 'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/4.mp3',
+    // 'https://raw.githubusercontent.com/himalayasingh/music-player-1/master/music/5.mp3',
+    // // Add more audio URLs as needed
   ]);
+  const [track_info, setTrack_info] = useState({});
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTrack, setCurrentTrack] = useState(0);
+  const [tracks, setTracks] = useState([]);
 
   useEffect(()=>{
     axios.get("/api/member/isLogined").then(resp => {
@@ -29,11 +37,19 @@ function App() {
     <Router>
       <LoginContext.Provider value={{ loginID, setLoginID }}>
         <MusicContext.Provider value={{ audioFiles, setAudioFiles }}>
-          <CookiesProvider>
-            <Routes>
-              <Route path="/*" element={<Groovy />} />
-            </Routes>
-          </CookiesProvider>
+          <CurrentTrackContext.Provider value={{ currentTrack, setCurrentTrack }}>
+            <PlayingContext.Provider value={{ isPlaying, setIsPlaying }}>
+              <TrackInfoContext.Provider value={{ track_info, setTrack_info }}>
+                <TrackContext.Provider value={{ tracks, setTracks }}>
+                  <CookiesProvider>
+                    <Routes>
+                      <Route path="/*" element={<Groovy />} />
+                    </Routes>
+                  </CookiesProvider>
+                </TrackContext.Provider>
+              </TrackInfoContext.Provider>
+            </PlayingContext.Provider>
+          </CurrentTrackContext.Provider>
         </MusicContext.Provider>
       </LoginContext.Provider>
     </Router>
