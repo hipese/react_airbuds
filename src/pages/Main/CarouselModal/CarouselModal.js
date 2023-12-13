@@ -32,6 +32,7 @@ const CarouselModal = ({ onClose, trackInfo }) => {
                             <span>-</span>
                             <div className={styles.playlistTitleModal}>{trackInfo.track.title}</div>
                         </div>
+                        <div ></div>
                     </li>
                     <li className={styles.playlist}></li>
                     <li className={styles.playlist}></li>

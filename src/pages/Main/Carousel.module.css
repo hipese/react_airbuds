@@ -24,7 +24,7 @@
 
 .imgHover:hover {
     border: 1px solid #999999;
-    background: linear-gradient(to top, rgb(180, 180, 180) 0%, white 40%) !important;
+    background: linear-gradient(to top, rgb(0, 0, 0) 0%, white 40%) !important;
     transition: all 0.8s ease-in-out;
 }
 
