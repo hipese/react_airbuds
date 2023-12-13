@@ -47,8 +47,8 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
     const [playListType, setPlayListType] = useState(null);
     const [order, setOrder] = useState([]);
     const [albumTitle, setAlbumTitle] = useState("익명의 앨범");
-    const [writer,setWriter] =useState("익명의 제작자");    
-    const [titleImage,setTitleImage]=useState();
+    const [writer, setWriter] = useState("익명의 제작자");
+    const [titleImage, setTitleImage] = useState();
 
     const currentDatePicker = dayjs();
 
@@ -135,7 +135,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
 
         });
-        formData.append("titleImage",titleImage);
+        formData.append("titleImage", titleImage);
         formData.append('writer', writer);
         formData.append('releaseDate', selectedDate ? selectedDate.toISOString() : '');
         formData.append('albumTitle', albumTitle);
@@ -203,11 +203,11 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         const imageFile = e.target.files[0];
         if (imageFile) {
             const newImagePath = URL.createObjectURL(imageFile) // URL에 타임스탬프 추가
-    
+
             setImageview(newImagePath); // 보여주기용 이미지 값 설정
-    
+
             setTitleImage(imageFile); // titleImage 상태 업데이트
-    
+
             // files 배열의 모든 요소에 새 이미지 파일과 이미지 경로 업데이트
             setFiles(currentFiles => currentFiles.map(file => ({
                 ...file,
@@ -217,7 +217,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         }
         console.log(files);
     };
-   
+
     const handleWriterChange = (index, newWriter) => {
         setFiles(currentFiles => {
             const updatedFiles = [...currentFiles];
@@ -344,19 +344,23 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                 </Col>
                 <Col sm='12' md='8' style={{ marginBottom: '20px', padding: '0' }}>
                     <Row style={{ marginBottom: '20px', width: '100%' }}>
-                        <Col sm='12' style={{ marginBottom: '20px' }}>제목</Col>
-                        <Col sm='12' style={{ marginBottom: '20px' }}>
-                            <Input
-                                placeholder="앨범 제목을 입력하세요"
-                                className={style.detail_input}
-                                type="text"
-                                value={albumTitle}
-                                onChange={handleAlbumTitleChange}
-                            />
-                        </Col>
+                        {playListType !== '싱글' && playListType !== null && (
+                            <>
+                                <Col sm='12' style={{ marginBottom: '20px' }}>제목</Col>
+                                <Col sm='12' style={{ marginBottom: '20px' }}>
+                                    <Input
+                                        placeholder="앨범 제목을 입력하세요"
+                                        className={style.detail_input}
+                                        type="text"
+                                        value={albumTitle}
+                                        onChange={handleAlbumTitleChange}
+                                    />
+                                </Col>
+                            </>
+                        )}
                         <Col sm='12' md='6' style={{ marginBottom: '10px' }}>
                             <Row style={{ marginBottom: '10px' }}>
-                                <Col sm='12' style={{ marginBottom: '10px' }}> 플레이리스트</Col>
+                                <Col sm='12' style={{ marginBottom: '10px' }}> 재생목록유형</Col>
                                 <Col sm='12' style={{ marginBottom: '10px' }}>
                                     <Box sx={{ minWidth: 120 }}>
                                         <FormControl fullWidth sx={{
