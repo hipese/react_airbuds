@@ -47,6 +47,8 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
     const [playListType, setPlayListType] = useState(null);
     const [order, setOrder] = useState([]);
     const [albumTitle, setAlbumTitle] = useState("익명의 앨범");
+    const [writer,setWriter] =useState("익명의 제작자");    
+    const [titleImage,setTitleImage]=useState();
 
     const currentDatePicker = dayjs();
 
@@ -120,7 +122,9 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
             formData.append(`name`, fileData.name);
             formData.append('duration', fileData.duration);
             formData.append('image_path', fileData.image_path);
-            formData.append('writer', fileData.writer);
+            if (fileData.imageFile) {
+                formData.append('imagefile', fileData.imageFile);
+            }
             // 각 파일에 대한 태그 ID 배열 추출 및 추가
             if (trackSelectTag[index]) {
                 const tagIds = trackSelectTag[index].map(tag => tag.tagId);
@@ -131,6 +135,8 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
 
         });
+        formData.append("titleImage",titleImage);
+        formData.append('writer', writer);
         formData.append('releaseDate', selectedDate ? selectedDate.toISOString() : '');
         formData.append('albumTitle', albumTitle);
         formData.append('login', loginID.loginID);
@@ -196,31 +202,30 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
     const handleImageChange = (e) => {
         const imageFile = e.target.files[0];
         if (imageFile) {
-            // 선택된 파일의 URL 생성 (렌더링에 사용)
-            const newImagePath = URL.createObjectURL(imageFile);
-
-            // 보여주기용 이미지 값 설정
-            setImageview(newImagePath);
-
-            // 실제 이미지 파일을 files 배열에 추가
-            setFiles(currentFiles => {
-                const updatedFiles = [...currentFiles];
-                if (updatedFiles.length > 0) {
-                    // 첫 번째 요소에 이미지 파일 추가
-                    updatedFiles[0] = { ...updatedFiles[0], image_path: imageFile.name, imageFile: imageFile };
-                }
-                return updatedFiles;
-            });
+            const newImagePath = URL.createObjectURL(imageFile) // URL에 타임스탬프 추가
+    
+            setImageview(newImagePath); // 보여주기용 이미지 값 설정
+    
+            setTitleImage(imageFile); // titleImage 상태 업데이트
+    
+            // files 배열의 모든 요소에 새 이미지 파일과 이미지 경로 업데이트
+            setFiles(currentFiles => currentFiles.map(file => ({
+                ...file,
+                imageFile: imageFile, // 모든 트랙에 동일한 이미지 파일 설정
+                image_path: imageFile.name // 모든 트랙에 새 이미지 파일 이름으로 image_path 설정
+            })));
         }
+        console.log(files);
     };
-
-
+   
     const handleWriterChange = (index, newWriter) => {
         setFiles(currentFiles => {
             const updatedFiles = [...currentFiles];
             updatedFiles[index] = { ...updatedFiles[index], writer: newWriter };
             return updatedFiles;
         });
+
+        setWriter(newWriter);
     };
 
 
