@@ -16,6 +16,7 @@ import { Container, Row, Col } from "reactstrap";
 import AnnounceList from "../Announce/AnnounceList";
 import QnaList from "../Qna/qnaList";
 import Upload_Main from "../Upload/Upload_Main";
+import Track_Detail from "../Detail/TrackDetail/Track_Detail";
 import DashBoardMain from "../Dashboard/Dashboard";
 
 const Groovy = () => {
@@ -39,6 +40,7 @@ const Groovy = () => {
                         <Route path="Report/*" element={<Report />} />
                         <Route path="Admin/*" element={<Admin />} />
                         <Route path="Announce/*" element={<AnnounceList />} />
+                        <Route path="Detail/:trackId/*" element={<Track_Detail />} />
                         <Route path="QnA/*" element={<QnaList />} />
                         <Route path="Dashboard/*" element={<DashBoardMain/>} />
                     </Routes>
