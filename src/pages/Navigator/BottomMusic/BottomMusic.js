@@ -17,15 +17,13 @@ const BottomMusic = () => {
     const { tracks, setTracks } = useContext(TrackContext);
     const { loginID, setLoginID } = useContext(LoginContext);
 
-    const testText = loginID;
-
     useEffect(() => {
 
-        if (!testText) {
+        if (!loginID) {
             return;
         }
 
-        axios.get(`/api/track/findById/${testText}`).then(resp => {
+        axios.get(`/api/track/findById/${loginID}`).then(resp => {
             const tracksWithImages = resp.data.map(track => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
                 const newTracks = resp.data.map(track => "/tracks/" + track.filePath);
@@ -60,7 +58,7 @@ const BottomMusic = () => {
     const handlePlay = () => {
         setIsPlaying(true);
         setLoading(true);
-        console.log(currentTrack);
+        //console.log(currentTrack);
     };
 
     const handlePause = () => {

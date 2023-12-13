@@ -12,16 +12,22 @@ import { Link } from 'react-router-dom';
 
 const Overview = () => {
   const [track, setTrack] = useState([]);
-  const { audioFiles, setAudioFiles } = useContext(MusicContext);// 그냥 trackInfo로 넘겨서 bottomMusic쪽에서 추가해야 할듯
+  const { audioFiles, setAudioFiles } = useContext(MusicContext);
   const { isPlaying, setIsPlaying } = useContext(PlayingContext);
   const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
   const { track_info, setTrack_info } = useContext(TrackInfoContext);
   const { tracks, setTracks } = useContext(TrackContext);
   const { loginID, setLoginID } = useContext(LoginContext);
-  const testText = loginID;
 
   useEffect(() => {
-    axios.get(`/api/track/bywriter/${testText}`).then(resp => {
+    console.log(loginID);
+
+    if (!loginID) {
+      return;
+    }
+
+    axios.get(`/api/track/findById/${loginID}`).then(resp => {
+      console.log(loginID);
       const tracksWithImages = resp.data.map(track => {
         const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
         return { ...track, imagePath };
@@ -29,7 +35,7 @@ const Overview = () => {
 
       setTrack(tracksWithImages);
     });
-  }, []);
+  }, [loginID]);
 
   const carouselRef = useRef(null);
 
@@ -74,10 +80,6 @@ const Overview = () => {
     setCurrentTrack(0);
     setIsPlaying(true);
   };
-
-  const trackDetail = () => {
-
-  }
 
   return (
     <>
