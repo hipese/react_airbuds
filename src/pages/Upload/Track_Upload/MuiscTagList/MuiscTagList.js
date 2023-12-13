@@ -36,6 +36,7 @@ const MusicTagList = ({onSelectTag}) => {
         if (selectedTag) {
             onSelectTag({ tagId: selectedTag.tagId, tagName: selectedTag.tagName });
         }
+        console.log(selectedTag);
     };
 
 
