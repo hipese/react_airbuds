@@ -14,29 +14,12 @@ const AnnounceWriteMain = () =>{
         console.log(name, value);
         setAnnounce(prev=>({...prev,[name]:value}));
     }
-    const handleSubmit = () => {
-        console.log(announce);
-        const formData = new FormData();
-        formData.append("announceTitle",announce.announceTitle);
-        formData.append("announceWriter",announce.announceWriter);
-        formData.append("announceCategory",announce.announceCategory);
-        formData.append("announcePublic",announce.announcePublic);
-        formData.append("announceContents",announce.announceContents);
-        formData.append("announceAnswerState",announce.announceAnswerState);
-        formData.append("announceWriteDate",announce.announceWriteDate);
-        for(const file of announce.files){
-            formData.append("files",file);
-        }
-        console.log(formData);
-        axios.post("/api/announce",formData).then(res=>{
+    const handleSubmit = () => {        
+        axios.post("/api/announce",announce).then(res=>{
             navi("/announce");
         }).catch((e)=>{
             console.log(e);
         });
-    }
-
-    const handleFileChange = (e) => {
-        setAnnounce(prev=>({...prev,files:[...e.target.files]}));
     }
 
     const handleCancel = () => {
@@ -46,6 +29,9 @@ const AnnounceWriteMain = () =>{
         <div className={`${style.wrap}`}>
             <div className={`${style.announceWrite} ${style.ma} `}>
                 <div className={`${style.marginT70}`}>
+                    <Typography className={`${style.pad10}`} fontSize={26} fontWeight={'bold'}>
+                        공지사항 작성
+                    </Typography>
                     <div className={`${style.announceTitle} ${style.borderWrite}`}>
                         <Grid container className={`${style.pl10} ${style.center}`} spacing={1}>
                             <Grid item xs={12}>
@@ -60,7 +46,7 @@ const AnnounceWriteMain = () =>{
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    label="제목2"
+                                    label="공지 제목"
                                     id="outlined-size-small"
                                     size="small"
                                     fullWidth
@@ -92,10 +78,11 @@ const AnnounceWriteMain = () =>{
                                     name='announceCategory'
                                     >
                                     <MenuItem value="none">선택</MenuItem>
-                                    <MenuItem value="service">서비스 문의</MenuItem>
-                                    <MenuItem value="event">이벤트</MenuItem>
-                                    <MenuItem value="usurpation">권리침해</MenuItem>
-                                    <MenuItem value="error">기타오류</MenuItem>
+                                    <MenuItem value="info">안내</MenuItem>
+                                    <MenuItem value="news">서비스 소식</MenuItem>
+                                    <MenuItem value="open">서비스 오픈</MenuItem>
+                                    <MenuItem value="inspection">서비스 점검</MenuItem>
+                                    <MenuItem value="close">서비스 종료</MenuItem>
                                 </Select>
                             </Grid>
                         </Grid>

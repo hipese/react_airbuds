@@ -4,6 +4,7 @@ import style from './dashboard.module.css'
 import { styled } from '@mui/material/styles';
 import { Box, Button, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tab, Tooltip, Typography } from "@mui/material";
 import LineChart from './charts/line'
+import FunnelChart from './charts/funnel'
 import { Line } from "@nivo/line";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
@@ -225,7 +226,7 @@ const DashBoardDisplay = () => {
                                 className={`${style.center} ${style.w100}`}
                             >                    
                                 <div className={`${style.dashLBox}`}>
-                                    <LineChart/>
+                                    <FunnelChart/>
                                 </div>   
                             </Box>
                         </Grid>
