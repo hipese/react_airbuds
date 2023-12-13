@@ -6,7 +6,7 @@ import styles from "./Overview.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
-import { CurrentTrackContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../App';
+import { CurrentTrackContext, LoginContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../App';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { Link } from 'react-router-dom';
 
@@ -17,7 +17,8 @@ const Overview = () => {
   const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
   const { track_info, setTrack_info } = useContext(TrackInfoContext);
   const { tracks, setTracks } = useContext(TrackContext);
-  const testText = "강휘바";
+  const { loginID, setLoginID } = useContext(LoginContext);
+  const testText = loginID;
 
   useEffect(() => {
     axios.get(`/api/track/bywriter/${testText}`).then(resp => {

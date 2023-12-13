@@ -4,7 +4,7 @@ import 'react-h5-audio-player/lib/styles.css';
 import './BottomMusic.css';
 import styles from "./BottomMusic.module.css";
 import axios from "axios"
-import { CurrentTrackContext, MusicContext, TrackContext, TrackInfoContext } from '../../../App';
+import { CurrentTrackContext, LoginContext, MusicContext, TrackContext, TrackInfoContext } from '../../../App';
 import { PlayingContext } from '../../../App';
 
 const BottomMusic = () => {
@@ -15,18 +15,23 @@ const BottomMusic = () => {
     const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
     const { track_info, setTrack_info } = useContext(TrackInfoContext);
     const { tracks, setTracks } = useContext(TrackContext);
+    const { loginID, setLoginID } = useContext(LoginContext);
 
-    const testText = "강휘바";
+    const testText = loginID;
 
     useEffect(() => {
-        axios.get(`/api/track/bywriter/${testText}`).then(resp => {
+
+        if (!testText) {
+            return;
+        }
+
+        axios.get(`/api/track/findById/${testText}`).then(resp => {
             const tracksWithImages = resp.data.map(track => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
                 const newTracks = resp.data.map(track => "/tracks/" + track.filePath);
                 const updatedAudioFiles = [...audioFiles, ...newTracks];
                 setAudioFiles(updatedAudioFiles);
                 return { ...track, imagePath };
-
             });
 
             setTracks(tracksWithImages);
@@ -36,8 +41,9 @@ const BottomMusic = () => {
                 writer: firstTrackInfo.writer,
                 imagePath: firstTrackInfo.imagePath
             });
+            setIsPlaying(false);
         });
-    }, []);
+    }, [loginID]);
 
 
 
@@ -129,8 +135,8 @@ const BottomMusic = () => {
                 showJumpControls={true}
                 customAdditionalControls={[
                     <div className={styles.song_info}>
-                        <div className={styles.title}>{track_info.title}</div>
-                        <div className={styles.singer}>{track_info.writer}</div>
+                        <div className={styles.title}>{track_info.title ?? '알 수 없는 제목'}</div>
+                        <div className={styles.singer}>{track_info.writer ?? '알 수 없는 작곡가'}</div>
                     </div>
                 ]}
                 showSkipControls={true}

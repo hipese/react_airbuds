@@ -6,47 +6,17 @@ import styles from './Track_Detail.module.css';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import WaveSurfer from 'wavesurfer.js';
+
 
 const Track_Detail = () => {
     const { trackId } = useParams();
     const [track, setTrack] = useState({});
-    const [waveSurfer, setWaveSurfer] = useState(null);
 
     useEffect(() => {
         axios.get(`/api/track/bytrack_id/${trackId}`).then(resp => {
             setTrack(resp.data);
-            
-            const wavesurfer = WaveSurfer.create({
-                container: '#waveform', // 파형이 표시될 위치의 요소 ID
-                responsive: true,
-                height: 100, // 파형 높이
-            });
-
-            // 오디오 파일 로딩
-            wavesurfer.load(`/tracks/${resp.data.filePath}`);
-
-            // Wavesurfer 상태 업데이트
-            wavesurfer.on('ready', () => {
-                console.log('Wavesurfer is ready');
-            });
-
-            // Wavesurfer 컴포넌트를 상태로 설정
-            setWaveSurfer(wavesurfer);
-
-            // 트랙 ID가 변경될 때마다 Wavesurfer를 초기화합니다.
-            return () => {
-                wavesurfer.destroy();
-            };
         });
-    }, [trackId]);
-
-
-    // 파형이 표시될 위치에 대한 CSS 스타일
-    const waveformStyle = {
-        width: '100%',
-        position: 'relative',
-    };
+    }, []);
 
 
     return (
@@ -65,11 +35,10 @@ const Track_Detail = () => {
                     <p>2 months ago</p>
                 </div>
             </div>
-             <div id="waveform" style={waveformStyle}></div>
             <div className="relative">
                 {track.trackImages && track.trackImages.length > 0 && (
                     <img
-                        alt="Waveform"
+                        alt=""
                         className="w-full h-48"
                         height="200"
                         src={`/tracks/image/${track.trackImages[0].imagePath}`}
