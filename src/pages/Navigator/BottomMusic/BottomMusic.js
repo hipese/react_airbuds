@@ -19,17 +19,17 @@ const BottomMusic = () => {
 
     const testText = "잉여";
 
-    useEffect(() => {
-        axios.get(`/api/track/bywriter/${testText}`)
-            .then(resp => {
-                const newTracks = resp.data.map(track => "/tracks/" + track.filePath);
-                const updatedAudioFiles = [...audioFiles, ...newTracks];
-                setAudioFiles(updatedAudioFiles);
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     axios.get(`/api/track/bywriter/${testText}`)
+    //         .then(resp => {
+    //             const newTracks = resp.data.map(track => "/tracks/" + track.filePath);
+    //             const updatedAudioFiles = [...audioFiles, ...newTracks];
+    //             setAudioFiles(updatedAudioFiles);
+    //         })
+    //         .catch(error => {
+    //             console.error("Error fetching data:", error);
+    //         });
+    // }, []);
 
 
     // audioFiles 상태가 변경될 때마다 로그 출력

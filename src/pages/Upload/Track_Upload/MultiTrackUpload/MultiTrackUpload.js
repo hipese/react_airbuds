@@ -23,8 +23,18 @@ import { LoginContext } from "../../../../App";
 const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag, setSelectTag }) => {
 
     const loginID = useContext(LoginContext);
-    const [trackSelcetTag, setTrackSelcetTag] = useState([]);
 
+    const [trackSelectTag, setTrackSelectTag] = useState([]);
+
+    useEffect(() => {
+        // files 배열의 각 파일에 대해 tags 속성만 추출하여 새로운 배열 생성
+        const newTrackSelectTags = files.map(file => file.tags || []);
+        setTrackSelectTag(newTrackSelectTags);
+
+    }, [files]);
+
+    console.log(trackSelectTag);
+    console.log(files);
 
     dayjs.extend(utc);
     dayjs.extend(timezone);
@@ -51,7 +61,6 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
     };
 
 
-    console.log(files);
 
     // 새로운 음원 파일을 추가하기 위한 ref
     const hiddenAudioInput = useRef(null);
@@ -86,7 +95,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                     imageFile: null,
                     image_path: image_path, // 여기에 이미지 경로 추가
                     writer: "익명의 제작자", // 기본값, 필요에 따라 변경 가능
-                    tag: trackSelcetTag // 기본값, 필요에 따라 변경 가능
+                    tags: [] // 기본값, 필요에 따라 변경 가능
                 };
 
                 // files 배열에 새 파일 추가
@@ -242,18 +251,35 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
 
     const handleTrackTagSelection = (fileIndex, selectedTag) => {
+        // trackSelectTag 업데이트
+        setTrackSelectTag(currentTags => {
+            const updatedTags = [...currentTags];
+            if (!updatedTags[fileIndex].some(tag => tag.id === selectedTag.id)) {
+                updatedTags[fileIndex] = [...updatedTags[fileIndex], selectedTag];
+            }
+            return updatedTags;
+        });
+
+        // files 배열 내의 해당 파일의 tags 업데이트
         setFiles(currentFiles => currentFiles.map((file, idx) => {
             if (idx === fileIndex) {
-                // Check if the tag already exists
-                if (!file.tags.some(tag => tag.id === selectedTag.id)) {
-                    return { ...file, tags: [...file.tags, selectedTag] };
-                }
+                // 기존 태그 목록 복사 후 새 태그 추가
+                const updatedTags = file.tags ? [...file.tags, selectedTag] : [selectedTag];
+                return { ...file, tags: updatedTags };
             }
             return file;
         }));
     };
 
+
     const handleTrackTagDelete = (fileIndex, tagToDelete) => {
+        setTrackSelectTag(currentTags => {
+            const updatedTags = [...currentTags];
+            updatedTags[fileIndex] = updatedTags[fileIndex].filter(tag => tag.id !== tagToDelete.id);
+            return updatedTags;
+        });
+
+        // 기존의 setFiles 로직도 유지
         setFiles(currentFiles => currentFiles.map((file, idx) => {
             if (idx === fileIndex) {
                 return { ...file, tags: file.tags.filter(tag => tag.id !== tagToDelete.id) };
@@ -409,21 +435,22 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                             <MusicTagList onSelectTag={(tag) => handleTrackTagSelection(index, tag)} />
                         </Col>
                         <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
-                            <Row className={style.chipRow}>
-                                <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                                    {file.tags.map((tag, tagIndex) => (
-                                        <Chip
-                                            key={tagIndex}
-                                            label={tag.tagName}
-                                            onDelete={() => handleTrackTagDelete(index, tag)}
-                                        />
-                                    ))}
-                                </Stack>
-                            </Row>
+                            {trackSelectTag[index] && trackSelectTag[index].length > 0 && (
+                                <Row className={style.chipRow}>
+                                    <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                        {trackSelectTag[index].map((tag, tagIndex) => (
+                                            <Chip
+                                                key={tagIndex}
+                                                label={tag.tagName}
+                                                onDelete={() => handleTrackTagDelete(index, tag)}
+                                            />
+                                        ))}
+                                    </Stack>
+                                </Row>
+                            )}
                         </Col>
                     </Fragment>
                 ))}
-
             </Row>
 
             <hr />

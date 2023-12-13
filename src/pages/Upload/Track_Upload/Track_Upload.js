@@ -31,7 +31,7 @@ const Track_Upload = () => {
             setTracks(resp.data)
         })
     }
-
+    
     // 선택한 id값의 음원 정보를 삭제하는 기능
     const handleDelete = (trackId) => {
         console.log("뭐임" + trackId);
