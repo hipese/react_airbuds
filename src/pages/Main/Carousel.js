@@ -7,9 +7,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import heart from "./assets/heart.svg";
 import playlist from "./assets/playlist.svg";
+import CarouselModal from "./CarouselModal/CarouselModal";
 
 const Carousel = React.memo(({ trackInfo }) => {
     const carouselRef = useRef(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedTrack, setSelectedTrack] = useState(null);
 
     const goToPrev = () => {
         if (carouselRef.current) {
@@ -22,6 +25,14 @@ const Carousel = React.memo(({ trackInfo }) => {
         }
     }
 
+    const openModal = (track) => {
+        setIsModalOpen(true);
+        setSelectedTrack(track);
+    }
+    const closeModal = () => {
+        setIsModalOpen(false);
+    }
+
   return (
     <div className={styles.Carousel}>
         <OwlCarousel
@@ -30,6 +41,7 @@ const Carousel = React.memo(({ trackInfo }) => {
             margin={20}
             nav={false}
             dots={false}
+            mouseDrag={false}
             // autoplay
             // autoplayTimeout={10000}  
             autoWidth={true}
@@ -52,7 +64,9 @@ const Carousel = React.memo(({ trackInfo }) => {
                                 <div className={styles.hoverNaviheart} >
                                     <img src={heart} alt="" className={styles.onClickHeart} />
                                 </div>
-                                <div className={styles.hoverNaviplaylist}><img src={playlist} alt="" className={styles.NonClickPlaylist} /></div>
+                                <div className={styles.hoverNaviplaylist}>
+                                    <img src={playlist} alt="" className={styles.NonClickPlaylist} onClick={() => openModal(track)} />
+                                </div>
                             </div>
                             <div className={styles.carouselContents}> 
                                 <div className={styles.carouselTitle}>{track.track.title}</div>
@@ -66,7 +80,8 @@ const Carousel = React.memo(({ trackInfo }) => {
         <div className={styles.carouselButton}>
             <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button> 
             <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button> 
-        </div>        
+        </div>  
+            {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} />}
     </div>
   );
 });

@@ -16,7 +16,6 @@ const Main = () => {
     useEffect(() => {
         axios.get("/api/track/recent")
             .then((res) => {
-                console.log(res.data);
                 setRecentMusic(res.data);
                 if (res.data.length > 0 && res.data[0].trackImages && res.data[0].trackImages.length > 0) {
                     setSelectImage(res.data[0].trackImages[0].imagePath);
