@@ -2,8 +2,9 @@ import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Groovy from "./pages/Groovy/Groovy";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { CookiesProvider } from "react-cookie";
+import axios from 'axios';
 
 
 export const LoginContext = createContext();
@@ -25,6 +26,12 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [tracks, setTracks] = useState([]);
+
+  useEffect(()=>{
+    axios.get("/api/member/isLogined").then(resp => {
+      setLoginID(resp.data);
+    }).catch(()=>{})
+  }, [])
 
   return (
     <Router>
