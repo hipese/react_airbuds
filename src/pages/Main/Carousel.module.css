@@ -9,10 +9,34 @@
 
 .OwlCarousel .item {
     position: relative;
-    width: 180px;
-    height: 250px;
+    width: 230px;
+    height: 300px;
     z-index: 100;
     backface-visibility: hidden;
+}
+
+.imgHover {
+    border: 1px solid #e0e0e0;
+    width: 230px !important;
+    height: 230px !important;
+    position: relative;
+}
+
+.imgHover:hover {
+    border: 1px solid #999999;
+    background: linear-gradient(to top, rgb(0, 0, 0) 0%, white 40%) !important;
+    transition: all 0.8s ease-in-out;
+}
+
+.imgHover:hover .trackImg {
+    opacity: 0.9;
+    transition: all 0.8s ease-in-out;
+}
+
+.trackImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .carouselButton {
@@ -22,7 +46,7 @@
 
 .owlPrev {
     position: absolute;
-    top: -158px;
+    top: -180px;
     background-color: transparent;
     border-radius: 50%;
     border: 1px solid black;
@@ -39,7 +63,7 @@
 
 .owlNext {
     position: absolute;
-    top: -158px;
+    top: -180px;
     background-color: transparent;
     border-radius: 50%;
     border: 1px solid black;
@@ -54,6 +78,7 @@
     align-items: center;
 }
 
+
 .carouselSinger {
     color: #c9c9c9;
     font-size: 0.8rem;
@@ -61,7 +86,61 @@
 }
 
 .carouselTitle {
+    width: 180px;
     color: black;
     font-size: 1rem;
     font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.imgHover:hover .hoverNaviheart {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-10px);
+    transition: all 0.8s ease-in-out;
+    cursor: pointer;
+}
+
+.imgHover:hover .hoverNaviplaylist {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-10px);
+    transition: all 0.8s ease-in-out;
+    cursor: pointer;
+}
+
+.hoverNaviheart {
+    position: absolute;
+    bottom: 0px;
+    right: 45px;
+    transition: all 0.8s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    translate: translateY(100%);
+}
+
+.hoverNaviplaylist {
+    position: absolute;
+    bottom: -2px;
+    right: 10px;
+    transition: all 0.8s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    translate: translateY(100%);
+
+}
+
+.NonClickHeart {
+    filter: brightness(100%);
+}
+
+.NonClickPlaylist {
+    filter: brightness(100%);
+}
+
+.onClickHeart {
+    filter: invert(27%) sepia(94%) saturate(7461%) hue-rotate(356deg) brightness(100%) contrast(119%);
 }
