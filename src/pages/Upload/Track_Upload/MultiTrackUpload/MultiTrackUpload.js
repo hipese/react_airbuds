@@ -37,8 +37,8 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
     }, [files]);
 
-    console.log(trackSelectTag);
-    console.log(files);
+    // console.log(trackSelectTag);
+    // console.log(files);
 
 
 
