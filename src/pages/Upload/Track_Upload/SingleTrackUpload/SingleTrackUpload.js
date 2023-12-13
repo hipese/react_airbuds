@@ -7,12 +7,24 @@ import axios from "axios";
 import singlestyle from "./SingleTrackUpload.module.css"
 import MusicTagList from "../MuiscTagList/MuiscTagList";
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { LoginContext } from "../../../../App";
+
+
+
+
+
 
 const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setSelectTag}) => {
 
     const loginID = useContext(LoginContext);
 
+    dayjs.extend(utc);
+    dayjs.extend(timezone);
+
+    dayjs.tz.setDefault("Asia/Seoul");
+    
     const [selectedDate, setSelectedDate] = useState(dayjs());
 
     const hiddenFileInput = useRef(null);
@@ -25,7 +37,7 @@ const SingleTrackUpload = ({files,setFiles,imageview,setImageview,selectTag,setS
     // 데이터베이스에 음원정보를 저장하고 파일을 업로드 하는 장소
     const handleSave = () => {
         const formData = new FormData();
-        
+
         // files 배열에 있는 각 파일을 formData에 추가
         files.forEach((fileData) => {
             formData.append(`file`, fileData.file);

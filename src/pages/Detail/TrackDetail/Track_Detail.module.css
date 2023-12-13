@@ -1,0 +1,39 @@
+.flexContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px;
+}
+
+.innerContainer {
+    display: flex;
+    align-items: center;
+}
+
+.profileImage {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+}
+
+.absoluteBottomLeft {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    /* 예시에 따라 조절 가능한 값 */
+}
+
+.innerContainer2 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.profileContainer{
+    display: flex;
+}
+
+.flexItemsCenterSpaceX2 {
+    display: flex;
+    align-items: center;
+}
