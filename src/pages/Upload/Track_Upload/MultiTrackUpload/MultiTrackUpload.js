@@ -273,16 +273,21 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
 
     const handleTrackTagDelete = (fileIndex, tagToDelete) => {
-        setTrackSelectTag(currentTags => {
-            const updatedTags = [...currentTags];
-            updatedTags[fileIndex] = updatedTags[fileIndex].filter(tag => tag.id !== tagToDelete.id);
-            return updatedTags;
-        });
-
-        // 기존의 setFiles 로직도 유지
+        // trackSelectTag 배열 업데이트
+        setTrackSelectTag(currentTags => currentTags.map((tags, idx) => {
+            if (idx === fileIndex) {
+                // 선택된 파일의 태그 배열에서 tagToDelete와 일치하지 않는 태그만 필터링
+                return tags.filter(tag => tag.id !== tagToDelete.id);
+            }
+            return tags;
+        }));
+    
+        // files 배열 업데이트
         setFiles(currentFiles => currentFiles.map((file, idx) => {
             if (idx === fileIndex) {
-                return { ...file, tags: file.tags.filter(tag => tag.id !== tagToDelete.id) };
+                // 선택된 파일의 태그 배열에서 tagToDelete와 일치하지 않는 태그만 필터링
+                const updatedTags = file.tags.filter(tag => tag.id !== tagToDelete.id);
+                return { ...file, tags: updatedTags };
             }
             return file;
         }));
