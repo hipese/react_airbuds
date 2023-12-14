@@ -4,7 +4,7 @@ import 'react-h5-audio-player/lib/styles.css';
 import './BottomMusic.css';
 import styles from "./BottomMusic.module.css";
 import axios from "axios"
-import { CurrentTrackContext, LoginContext, MusicContext, TrackContext, TrackInfoContext } from '../../../App';
+import { AutoPlayContext, CurrentTrackContext, LoginContext, MusicContext, TrackContext, TrackInfoContext } from '../../../App';
 import { PlayingContext } from '../../../App';
 
 const BottomMusic = () => {
@@ -16,6 +16,7 @@ const BottomMusic = () => {
     const { track_info, setTrack_info } = useContext(TrackInfoContext);
     const { tracks, setTracks } = useContext(TrackContext);
     const { loginID, setLoginID } = useContext(LoginContext);
+    const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
 
     useEffect(() => {
 
@@ -31,24 +32,20 @@ const BottomMusic = () => {
                 setAudioFiles(updatedAudioFiles);
                 return { ...track, imagePath };
             });
-
             setTracks(tracksWithImages);
             const firstTrackInfo = tracksWithImages[0];
             setTrack_info({
-                title: firstTrackInfo.title,
-                writer: firstTrackInfo.writer,
-                imagePath: firstTrackInfo.imagePath
+                title: firstTrackInfo?.title ?? '알 수 없는 제목',
+                writer: firstTrackInfo?.writer ?? '알 수 없는 작곡가',
+                imagePath: firstTrackInfo?.imagePath ?? '기본 이미지 경로'
             });
-            setIsPlaying(false);
         });
     }, [loginID]);
 
 
-
-    // audioFiles 상태가 변경될 때마다 로그 출력
     // useEffect(() => {
-    //     console.log("Updated audio files:", audioFiles);
-    // }, [audioFiles]);
+    //     console.log(isPlaying);
+    // }, [isPlaying]);
 
     // if (audioFiles.length === 0) {
     //     return null; // If empty, don't render anything
@@ -81,6 +78,7 @@ const BottomMusic = () => {
             writer: nextTrackInfo.writer,
             imagePath: nextTrackInfo.imagePath
         });
+        setAutoPlayAfterSrcChange(true);
 
         // 현재 재생 중인 트랙을 업데이트합니다.
         setCurrentTrack(nextTrack);
@@ -105,6 +103,7 @@ const BottomMusic = () => {
             imagePath: previousTrackInfo.imagePath
         });
 
+        setAutoPlayAfterSrcChange(true);
         // 현재 재생 중인 트랙을 업데이트합니다.
         setCurrentTrack(previousTrack);
     };
@@ -128,7 +127,7 @@ const BottomMusic = () => {
                 />
             </div>
             <AudioPlayer
-                autoPlayAfterSrcChange={true}
+                autoPlayAfterSrcChange={autoPlayAfterSrcChange}
                 src={audioFiles[currentTrack]}
                 showJumpControls={true}
                 customAdditionalControls={[

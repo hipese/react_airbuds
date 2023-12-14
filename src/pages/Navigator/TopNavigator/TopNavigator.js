@@ -1,4 +1,4 @@
-import react, { useContext } from "react";
+import react, { useContext, useState } from "react";
 import styles from "./TopNavigator.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col } from "reactstrap";
@@ -14,7 +14,7 @@ import { DropdownDivider } from "react-bootstrap";
 
 const TopNavigator = () => {
 
-    const {loginID, setLoginID} = useContext(LoginContext)
+    const {loginID, setLoginID} = useContext(LoginContext);
 
     const handleLoginClick = async () => {
         const { value: formValues } = await Swal.fire({
@@ -120,7 +120,7 @@ const TopNavigator = () => {
                                         <Link className={styles.linkurl} to="/Upload"><div>업로드</div></Link>
                                     </Col>
                                     <Col>
-                                        Profile
+                                        <Link className={styles.linkurl} to={`/Mypage/${loginID}`}><div>Profile</div></Link>
                                     </Col>
                                     <Col>
                                         <div className={styles.linkurl} onClick={handleLogoutClick}><div>로그아웃</div></div>
