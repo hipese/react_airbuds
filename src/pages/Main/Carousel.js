@@ -1,4 +1,4 @@
-import React, {useEffect,useState, useRef} from 'react';
+import React, {useEffect,useState, useRef, useContext} from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
@@ -8,11 +8,15 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import heart from "./assets/heart.svg";
 import playlist from "./assets/playlist.svg";
 import CarouselModal from "./CarouselModal/CarouselModal";
+import { LoginContext } from '../../App';
+import axios from 'axios';
 
-const Carousel = React.memo(({ trackInfo }) => {
+const Carousel = React.memo(({ trackInfo,trackLike,setLike}) => {
     const carouselRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTrack, setSelectedTrack] = useState(null);
+    const { loginID, setLoginID } = useContext(LoginContext);
+    const storageId = localStorage.getItem("loginID");
 
     const goToPrev = () => {
         if (carouselRef.current) {
@@ -31,6 +35,35 @@ const Carousel = React.memo(({ trackInfo }) => {
     }
     const closeModal = () => {
         setIsModalOpen(false);
+    }
+
+    const handleFavorite = (trackId, isLiked,e) => {
+        console.log(trackId);
+        if(!isLiked){
+            const formData = new FormData();
+            formData.append("trackId",trackId);
+            formData.append("id",storageId);
+            axios.post(`/api/like`,formData).then(res=>{
+                console.log(res.data);
+                setLike([...trackLike, { trackId : trackId, id: storageId, likeSeq: res.data.likeSeq }]);
+                e.target.classList.add(styles.onClickHeart);
+                e.target.classList.remove(styles.NonClickHeart);
+            }).catch((e)=>{
+                console.log(e);
+            });
+        }else{
+            const deleteData = new FormData();
+            deleteData.append("trackId",trackId);
+            deleteData.append("id",storageId);
+            axios.post(`/api/like/delete`,deleteData).then(res=>{
+                console.log(res.data);
+                setLike(trackLike.filter(likedTrack => likedTrack.trackId !== trackId));
+                e.target.classList.remove(styles.onClickHeart);
+                e.target.classList.add(styles.NonClickHeart);
+            }).catch((e)=>{
+                console.log(e);
+            });            
+        }        
     }
 
   return (
@@ -57,12 +90,21 @@ const Carousel = React.memo(({ trackInfo }) => {
                   const trackImage = track.track.trackImages && track.track.trackImages.length > 0
                     ? `/tracks/image/${track.track.trackImages[0].imagePath}`
                     : "http://placehold.it/150x150";
+                    //setLikeState(trackLike.some(trackLike => trackLike.trackId === track.track.trackId));
+                    //settingLike(track.track.trackId);
                     return (
                         <div className={styles.item} key={index}>
                             <div className={styles.imgHover}>
                                 <img className={styles.trackImg} src={trackImage} alt={`Track ${index + 1} - ${track.track.title}`} />
                                 <div className={styles.hoverNaviheart} >
-                                    <img src={heart} alt="" className={styles.onClickHeart} />
+                                        <img 
+                                        src={heart} 
+                                        alt="" 
+                                        className={
+                                            trackLike.some(trackLike => trackLike.trackId === track.track.trackId) 
+                                            ? styles.onClickHeart : styles.NonClickHeart} 
+                                        onClick={(e)=>{handleFavorite(track.track.trackId,trackLike.some(trackLike => trackLike.trackId === track.track.trackId),e)}}/>
+                                    
                                 </div>
                                 <div className={styles.hoverNaviplaylist}>
                                     <img src={playlist} alt="" className={styles.NonClickPlaylist} onClick={() => openModal(track)} />
