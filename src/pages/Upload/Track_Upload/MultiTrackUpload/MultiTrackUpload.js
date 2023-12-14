@@ -123,7 +123,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
         console.log(files)
         console.log(selectTag)
-
+        console.log(trackSelectTag);
 
         // files 배열에 있는 각 파일을 formData에 추가
         files.forEach((fileData, index) => {
