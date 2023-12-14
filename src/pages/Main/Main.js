@@ -45,7 +45,7 @@ const Main = () => {
                 setSelectTitle([]);
             });
             loadingLikes();
-    }, []);
+    }, [loginID]);
 
     const loadingLikes = async () => {
         axios.get(`/api/like/${storageId}`).then(res=>{
@@ -129,7 +129,7 @@ const Main = () => {
                     <div className={styles.leftBottom}></div>
                 </div>
                 <div className={styles.rightSide}>
-                    <RightSide />
+                    <RightSide trackLike={trackLike} trackInfoByTag={trackInfoByTag}/>
                 </div>
             </div>
         </div>

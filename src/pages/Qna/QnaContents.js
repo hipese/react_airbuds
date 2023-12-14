@@ -1,25 +1,25 @@
-import { Avatar, Box, Button, Divider, Grid, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Divider, Grid, Snackbar, Typography } from '@mui/material';
 import style from './qna.module.css'
 import { useNavigate, useParams } from 'react-router';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { QnaContext } from './qnaList';
 import { Link } from 'react-router-dom';
+import { LoginContext } from '../../App';
 const QnaContents = () => {
     const {seq} = useParams();
-    
-    const loginID = "kwon"; //임시
-
     const [isChanged,setChanged] = useState(0);
 
     const [selectedQna,setSelectedQna] = useState({});
     const [files,setFiles] = useState([]);
-    const [reply,setReply] = useState({qnaSeq:seq, answerWriter:loginID,answerContents:"",answerWriteDate:new Date().toISOString()});
+    const [reply,setReply] = useState({qnaSeq:seq, answerWriter:"",answerContents:"",answerWriteDate:new Date().toISOString()});
     const [replyList,setReplyList] = useState([]);
-    const [updateReply,setUpdateReply] = useState({qnaSeq:seq, answerWriter:loginID, answerSeq:null, answerContents:"",answerWriteDate:new Date().toISOString()});
+    const [updateReply,setUpdateReply] = useState({qnaSeq:seq, answerWriter:"", answerSeq:null, answerContents:"",answerWriteDate:new Date().toISOString()});
     const [tempReply,setTempReply] = useState("");
     const [isUpdateState,setUpdateState] = useState(false);
     const [isUpdateSeq,setUpdateSeq] = useState(0);
+    const {loginID} = useContext(LoginContext);
+    const contentEditableRef = useRef(null);
     
     //관리자 및 글 작성자 외에는 못들어오도록 하기
     const navi = useNavigate();
@@ -29,7 +29,7 @@ const QnaContents = () => {
 
     const handleUpdateChange = (e,i) => {
         const value = e.target.textContent;
-        setUpdateReply(prev=>({...prev,answerContents:value,answerSeq:i}));
+        setUpdateReply(prev=>({...prev,answerContents:value,answerSeq:i,answerWriter:loginID}));
     }
 
     const handleUpdate = (i) => {
@@ -52,31 +52,53 @@ const QnaContents = () => {
 
     const handleReplyChange = (e) => {
         const value = e.target.textContent;
-        setReply(prev=>({...prev,answerContents:value}));
+        setReply(prev=>({...prev,answerContents:value,answerWriter:loginID}));
     }
 
     const handlePostReply = () => {
         axios.post(`/api/qna/reply`,reply).then(res=>{
             console.log(res.data);
-            setReplyList(prev=>([...prev,reply]))
+            setReplyList(prev=>([...prev,reply]));
+            setOpen(true);
+            contentEditableRef.current.innerHTML = "";
         }).catch((e)=>{
             console.log(e);
         });
     }
 
     useEffect(()=>{
+        
+
+
         axios.get(`/api/qna/contents/${seq}`).then(res=>{
-            setSelectedQna(res.data);
-            setFiles(res.data.files);
+            if(res.data.qnaPublic == 0){
+                if(loginID == res.data.qnaWriter || loginID == "devel"){
+                    setSelectedQna(res.data);
+                    setFiles(res.data.files);
+                    axios.get(`/api/qna/replylist/${seq}`).then(res=>{
+                        setReplyList(res.data);
+                    }).catch((e)=>{
+                        console.log(e);
+                    });
+                }else{
+                    alert("관리자 및 작성자만 열람가능합니다.");
+                    navi("/qna");
+                    return;
+                }
+            }else{
+                setSelectedQna(res.data);
+                setFiles(res.data.files);
+                axios.get(`/api/qna/replylist/${seq}`).then(res=>{
+                    setReplyList(res.data);
+                }).catch((e)=>{
+                    console.log(e);
+                });
+            }
         }).catch((e)=>{
             console.log(e);
         });
 
-        axios.get(`/api/qna/replylist/${seq}`).then(res=>{
-            setReplyList(res.data);
-        }).catch((e)=>{
-            console.log(e);
-        });
+        
     },[]);
 
     useEffect(()=>{
@@ -102,6 +124,16 @@ const QnaContents = () => {
             console.log(e);
         });
     }
+
+    const [open, setOpen] = useState(false);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+        return;
+        }
+
+        setOpen(false);
+    };
 
     return(
         <div className={`${style.wrap}`}>
@@ -162,7 +194,7 @@ const QnaContents = () => {
                 </div>
 
                 {/* Reply */}
-                <div>
+                <div className={`${style.marginB100}`}>
                     <Grid container className={`${style.qnaReply} ${style.center} ${style.border} ${style.pad10} ${style.ma}`}>
                         <Grid item xs={12} sm={3}>
                             <Grid container>
@@ -175,20 +207,20 @@ const QnaContents = () => {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <div className={`${style.center}`}>
-                                        name : kwon
+                                        name : {loginID}
                                     </div>
                                 </Grid>
                             </Grid>
                         </Grid>
                         <Grid item xs={12} sm={9}>
-                            <div className={`${style.border} ${style.replyContents} ${style.pad10}`} onInput={handleReplyChange} contentEditable={true} suppressContentEditableWarning>
+                            <div className={`${style.border} ${style.replyContents} ${style.pad10}`} onInput={handleReplyChange} contentEditable={true} suppressContentEditableWarning ref={contentEditableRef}>
 
                             </div>
                             <div className={`${style.replyBtnEven} ${style.padingT10}`}>
                                 <Button variant="outlined" size="small" onClick={handlePostReply}>
                                     댓글 달기
                                 </Button>
-                            </div>
+                            </div>                            
                         </Grid>
                     </Grid>
                     {replyList.map((e,i)=>{
@@ -257,6 +289,11 @@ const QnaContents = () => {
                     })}
                 </div>
             </div>
+            <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{vertical:"top",horizontal:"right"}} className={`${style.snackpos}`}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%'}}>
+                    댓글 작성 완료.
+                </Alert>
+            </Snackbar>
         </div>
 
         

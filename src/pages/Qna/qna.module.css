@@ -35,6 +35,9 @@
 .marginB20{
     margin-bottom: 20px;
 }
+.marginB100{
+    margin-bottom: 100px;
+}
 
 .ma{
     margin: auto;
@@ -142,6 +145,10 @@
 .replyBtnEven{
     display: flex;
     justify-content: space-evenly;
+}
+
+.snackpos{
+    bottom: -650px;
 }
 
 /* QnA Write CSS */
