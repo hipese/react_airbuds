@@ -50,9 +50,10 @@ const TopNavigator = () => {
             let formData = new FormData();
             formData.append("id", formValues.id);
             formData.append("password", formValues.password);
-             axios.post("/api/member/login", formData).then(resp => {
+            axios.post("/api/member/login", formData).then(resp => {
                 setLoginID(formValues.id);
-             }).catch(err => {
+                localStorage.setItem("loginID",formValues.id);
+            }).catch(err => {
                 if(err.response.status == 401) {
                     Swal.fire({
                         icon: "error",
@@ -67,13 +68,14 @@ const TopNavigator = () => {
                     })
                 }
                 
-             })
+            })
         }
     }
 
     const handleLogoutClick = () => {
         axios.post("/api/member/logout").then(() => {
             setLoginID("");
+            localStorage.removeItem("loginID");
         }).catch(err => {
             console.log(err);
         })
