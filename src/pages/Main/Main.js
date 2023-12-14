@@ -1,25 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styles from "./Main.module.css";
 import axios from "axios";
 import { Link } from "react-router-dom"
 import OwlCarousel from "./Carousel"
 import RightSide from "./RightSide/RightSide";
+import { LoginContext } from "../../App";
 
 const Main = () => {
     const [recentMusic, setRecentMusic] = useState([]);
     const [selectTitle, setSelectTitle] = useState([]);
     const [selectImage, setSelectImage] = useState("");
     const [trackInfoByTag, setTrackInfoByTag] = useState({});
+    const [trackLike,setLike] = useState([]);
+    const { loginID, setLoginID } = useContext(LoginContext);
+    const storageId = localStorage.getItem("loginID");
+    const [isFavorite, setFavorite] = useState(0);
 
     const [flag, setFlag] = useState(true);
     
     useEffect(() => {
         axios.get("/api/track/recent")
             .then((res) => {
+                console.log(loginID);
                 setRecentMusic(res.data);
                 if (res.data.length > 0 && res.data[0].trackImages && res.data[0].trackImages.length > 0) {
                     setSelectImage(res.data[0].trackImages[0].imagePath);
-                }
+                }                
             })
             .catch((err) => {
                 console.log(err);
@@ -38,7 +44,22 @@ const Main = () => {
                 console.log(err);
                 setSelectTitle([]);
             });
+            loadingLikes();
     }, []);
+
+    const loadingLikes = async () => {
+        axios.get(`/api/like/${storageId}`).then(res=>{
+            console.log(res.data);
+            setLike(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
+    useEffect(()=>{
+        loadingLikes();
+    },[isFavorite]);
+
     useEffect(() => {
         if (Array.isArray(selectTitle)) {
             selectTitle.forEach(tag => {
@@ -100,7 +121,7 @@ const Main = () => {
                         <div key={index}>
                             <div className={styles.carouselTitle}>{filterTag.tagName}</div>
                             <div className={styles.carousel}>
-                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} />
+                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike}/>
                             </div>
                         </div>
                     ))}

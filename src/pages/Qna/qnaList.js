@@ -29,22 +29,22 @@ const QnaList =() => {
     return(
         <div className={`${style.container}`}>
             <Grid container className={`${style.marginT70} ${style.borderTB} ${style.boardLine} ${style.pad10} `}>
-                <Grid xs={1} className={`${style.center}`}>
+                <Grid item xs={1} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     No
                     </Typography>
                 </Grid>
-                <Grid xs={2} className={`${style.center}`}>
+                <Grid item xs={2} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     분류
                     </Typography>
                 </Grid>
-                <Grid xs={5} className={`${style.center}`}>
+                <Grid item xs={5} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     제목
                     </Typography>
                 </Grid>
-                <Grid xs={3} className={`${style.center}`}>
+                <Grid item xs={3} className={`${style.center}`}>
                     <Typography fontSize={{xs:"12px",sm:"14px"}}>
                     작성자
                     </Typography>
@@ -64,13 +64,13 @@ const QnaList =() => {
             {qnaList.map((e,i)=>{
                 return(
                     <Grid key={i} container className={`${style.announceLine} ${style.pad10}`} onClick={()=>{handleMove(e.qnaSeq,e.qnaPublic)}}>
-                        <Grid xs={1} className={`${style.center}`}>
+                        <Grid item xs={1} className={`${style.center}`}>
                             {e.qnaPublic == 0 ? <LockIcon fontSize="small"/> : <LockOpenIcon fontSize="small"/>}
                             <Typography fontSize={{xs:"12px",sm:"14px"}}>                            
                             {e.qnaSeq}
                             </Typography>
                         </Grid>
-                        <Grid xs={2} className={`${style.center}`}>
+                        <Grid item xs={2} className={`${style.center}`}>
                             <Typography fontSize={{xs:"12px",sm:"14px"}}>
                                 {
                                     e.qnaCategory == "usurpation" ? "권리 침해" : 
@@ -80,12 +80,12 @@ const QnaList =() => {
                                 }
                             </Typography>
                         </Grid>
-                        <Grid xs={5} className={`${style.center}`}>
+                        <Grid item xs={5} className={`${style.center}`}>
                             <Typography fontSize={{xs:"12px",sm:"14px"}}>
                                 {e.qnaTitle}
                             </Typography>
                         </Grid>
-                        <Grid xs={3} className={`${style.center}`}>
+                        <Grid item xs={3} className={`${style.center}`}>
                             <Typography fontSize={{xs:"12px",sm:"14px"}}>
                                 {e.qnaWriter}
                             </Typography>
