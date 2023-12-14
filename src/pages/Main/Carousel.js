@@ -38,7 +38,7 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike}) => {
     }
 
     const handleFavorite = (trackId, isLiked,e) => {
-        console.log(trackId);
+        console.log(trackId);        
         if(!isLiked){
             const formData = new FormData();
             formData.append("trackId",trackId);
@@ -66,7 +66,9 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike}) => {
         }        
     }
 
-  return (
+    
+
+return (
     <div className={styles.Carousel}>
         <OwlCarousel
             className={styles.OwlCarousel}
@@ -83,11 +85,11 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike}) => {
                 768: {
                     items: 4
                 },
-              }}
+            }}
             ref={carouselRef}
         >
-              {trackInfo && trackInfo.map((track, index) => {
-                  const trackImage = track.track.trackImages && track.track.trackImages.length > 0
+            {trackInfo && trackInfo.map((track, index) => {
+                const trackImage = track.track.trackImages && track.track.trackImages.length > 0
                     ? `/tracks/image/${track.track.trackImages[0].imagePath}`
                     : "http://placehold.it/150x150";
                     //setLikeState(trackLike.some(trackLike => trackLike.trackId === track.track.trackId));
