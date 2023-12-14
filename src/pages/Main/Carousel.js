@@ -1,24 +1,69 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect,useState, useRef, useContext} from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import styles from "./Carousel.module.css"; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import heart from "./assets/heart.svg";
+import playlist from "./assets/playlist.svg";
+import CarouselModal from "./CarouselModal/CarouselModal";
+import { LoginContext } from '../../App';
+import axios from 'axios';
 
-const Carousel = () => {
+const Carousel = React.memo(({ trackInfo,trackLike,setLike}) => {
     const carouselRef = useRef(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedTrack, setSelectedTrack] = useState(null);
+    const { loginID, setLoginID } = useContext(LoginContext);
+    const storageId = localStorage.getItem("loginID");
 
     const goToPrev = () => {
         if (carouselRef.current) {
             carouselRef.current.prev();
         }
     };
-
     const goToNext = () => {
         if (carouselRef.current) {
             carouselRef.current.next();
         }
+    }
+
+    const openModal = (track) => {
+        setIsModalOpen(true);
+        setSelectedTrack(track);
+    }
+    const closeModal = () => {
+        setIsModalOpen(false);
+    }
+
+    const handleFavorite = (trackId, isLiked,e) => {
+        console.log(trackId);
+        if(!isLiked){
+            const formData = new FormData();
+            formData.append("trackId",trackId);
+            formData.append("id",storageId);
+            axios.post(`/api/like`,formData).then(res=>{
+                console.log(res.data);
+                setLike([...trackLike, { trackId : trackId, id: storageId, likeSeq: res.data.likeSeq }]);
+                e.target.classList.add(styles.onClickHeart);
+                e.target.classList.remove(styles.NonClickHeart);
+            }).catch((e)=>{
+                console.log(e);
+            });
+        }else{
+            const deleteData = new FormData();
+            deleteData.append("trackId",trackId);
+            deleteData.append("id",storageId);
+            axios.post(`/api/like/delete`,deleteData).then(res=>{
+                console.log(res.data);
+                setLike(trackLike.filter(likedTrack => likedTrack.trackId !== trackId));
+                e.target.classList.remove(styles.onClickHeart);
+                e.target.classList.add(styles.NonClickHeart);
+            }).catch((e)=>{
+                console.log(e);
+            });            
+        }        
     }
 
   return (
@@ -26,42 +71,61 @@ const Carousel = () => {
         <OwlCarousel
             className={styles.OwlCarousel}
             loop 
-            margin={10}
+            margin={20}
             nav={false}
             dots={false}
-            autoplay
-            autoplayTimeout={10000}  
+            mouseDrag={false}
+            // autoplay
+            // autoplayTimeout={10000}  
             autoWidth={true}
-            autoplayHoverPause 
+            // autoplayHoverPause 
             responsive={{
                 768: {
-                    items: 5
+                    items: 4
                 },
               }}
             ref={carouselRef}
         >
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 1" />
-            <div className={styles.carouselTitle}>여기다 넣으면 잘 됨</div>
-            <div className={styles.carouselSinger}>IU</div>
-        </div> 
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 2" />제목2번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 3" />제목3번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 4" />제목4번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 5" />제목5번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 6" />제목6번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 7" />제목7번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 8" />제목8번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 9" />제목9번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 10" />제목10번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 11" />제목11번</div>
-        <div className={styles.item}><img src="http://placehold.it/150x150" alt="Image 12" />제목12번</div>
+              {trackInfo && trackInfo.map((track, index) => {
+                  const trackImage = track.track.trackImages && track.track.trackImages.length > 0
+                    ? `/tracks/image/${track.track.trackImages[0].imagePath}`
+                    : "http://placehold.it/150x150";
+                    //setLikeState(trackLike.some(trackLike => trackLike.trackId === track.track.trackId));
+                    //settingLike(track.track.trackId);
+                    return (
+                        <div className={styles.item} key={index}>
+                            <div className={styles.imgHover}>
+                                <img className={styles.trackImg} src={trackImage} alt={`Track ${index + 1} - ${track.track.title}`} />
+                                <div className={styles.hoverNaviheart} >
+                                        <img 
+                                        src={heart} 
+                                        alt="" 
+                                        className={
+                                            trackLike.some(trackLike => trackLike.trackId === track.track.trackId) 
+                                            ? styles.onClickHeart : styles.NonClickHeart} 
+                                        onClick={(e)=>{handleFavorite(track.track.trackId,trackLike.some(trackLike => trackLike.trackId === track.track.trackId),e)}}/>
+                                    
+                                </div>
+                                <div className={styles.hoverNaviplaylist}>
+                                    <img src={playlist} alt="" className={styles.NonClickPlaylist} onClick={() => openModal(track)} />
+                                </div>
+                            </div>
+                            <div className={styles.carouselContents}> 
+                                <div className={styles.carouselTitle}>{track.track.title}</div>
+                                <div className={styles.carouselSinger}>{track.track.writer}</div>
+                            </div>
+                        </div>
+                    );
+                })}
+             
         </OwlCarousel>
         <div className={styles.carouselButton}>
             <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button> 
             <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button> 
-        </div>        
+        </div>  
+            {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} />}
     </div>
   );
-}
+});
 
 export default Carousel;
