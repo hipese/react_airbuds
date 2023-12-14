@@ -15,7 +15,7 @@ import { DropdownDivider } from "react-bootstrap";
 
 const TopNavigator = () => {
 
-    const { loginID, setLoginID } = useContext(LoginContext)
+    const { loginID, setLoginID } = useContext(LoginContext);
 
     const nameRef = useRef();
     const emailRef = useRef();
@@ -348,7 +348,6 @@ const TopNavigator = () => {
         })
 
         if (formValues) {
-            console.log(formValues);
             // 로그인 axios
             let formData = new FormData();
             formData.append("id", formValues.id);
@@ -423,7 +422,7 @@ const TopNavigator = () => {
                                         <Link className={styles.linkurl} to="/Upload"><div>업로드</div></Link>
                                     </Col>
                                     <Col>
-                                        Profile
+                                        <Link className={styles.linkurl} to={`/Mypage/${loginID}`}><div>Profile</div></Link>
                                     </Col>
                                     <Col>
                                         <div className={styles.linkurl} onClick={handleLogoutClick}><div>로그아웃</div></div>
