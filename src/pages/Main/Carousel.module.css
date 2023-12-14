@@ -83,10 +83,14 @@
     color: #c9c9c9;
     font-size: 0.8rem;
     font-weight: 500;
+    width: 230px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .carouselTitle {
-    width: 180px;
+    width: 230px;
     color: black;
     font-size: 1rem;
     font-weight: 500;
