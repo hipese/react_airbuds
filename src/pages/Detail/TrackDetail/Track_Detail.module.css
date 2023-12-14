@@ -10,6 +10,10 @@
     align-items: center;
 }
 
+.track_image{
+    margin-bottom: 10px;
+}
+
 .profileImage {
     width: 80px;
     height: 80px;
@@ -27,6 +31,7 @@
 .innerContainer2 {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 10px;
 }
 
 .profileContainer{

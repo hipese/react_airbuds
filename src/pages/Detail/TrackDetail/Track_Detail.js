@@ -1,16 +1,18 @@
 import { Avatar } from '@mui/material';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import styles from './Track_Detail.module.css';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
+import { LoginContext } from '../../../App';
 
 
 const Track_Detail = () => {
     const { trackId } = useParams();
     const [track, setTrack] = useState({});
+    const { loginID, setLoginID } = useContext(LoginContext);
 
     useEffect(() => {
         axios.get(`/api/track/bytrack_id/${trackId}`).then(resp => {
@@ -35,7 +37,7 @@ const Track_Detail = () => {
                     <p>2 months ago</p>
                 </div>
             </div>
-            <div className="relative">
+            <div className={styles.track_image}>
                 {track.trackImages && track.trackImages.length > 0 && (
                     <img
                         alt=""
@@ -49,19 +51,14 @@ const Track_Detail = () => {
                         width="1792"
                     />
                 )}
-                <div className={styles.absoluteBottomLeft}>
-
-                </div>
             </div>
             <div className={styles.innerContainer2}>
                 <div className={styles.profileContainer}>
                     <div className={styles.profileImage}>
                         <Avatar alt="Profile" src="/static/images/avatar/1.jpg" sx={{ width: '100%', height: '100%' }} />
                     </div>
-                    <div>
-                        <p>User Name</p>
-                        <p>I just wanna talk to you 10N1</p>
-                        <p>#tag1 #tag2 #tag3</p>
+                    <div className={styles.user_info}>
+                        <p>{loginID}</p>
                     </div>
                 </div>
                 <div className={styles.flexItemsCenterSpaceX2}>

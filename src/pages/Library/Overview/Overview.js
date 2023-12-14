@@ -6,7 +6,7 @@ import styles from "./Overview.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
-import { CurrentTrackContext, LoginContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../App';
+import { AutoPlayContext, CurrentTrackContext, LoginContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../App';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { Link } from 'react-router-dom';
 
@@ -18,9 +18,9 @@ const Overview = () => {
   const { track_info, setTrack_info } = useContext(TrackInfoContext);
   const { tracks, setTracks } = useContext(TrackContext);
   const { loginID, setLoginID } = useContext(LoginContext);
+  const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
 
   useEffect(() => {
-    console.log(loginID);
 
     if (!loginID) {
       return;
@@ -62,9 +62,18 @@ const Overview = () => {
 
   // 특정 트랙을 재생 목록에 추가하는 함수
   const addTrackToPlaylist = (track) => {
+
+    axios.post(`/api/cplist`, {
+      trackId: track.trackId,
+      id: loginID
+    }).then(resp => {
+
+    })
+
+    setAutoPlayAfterSrcChange(true);
+
     // 트랙에서 관련 정보 추출
     const { filePath, imagePath, title, writer } = track;
-    console.log(track);
     // TrackInfoContext를 선택한 트랙 정보로 업데이트
     setTrack_info({
       filePath,

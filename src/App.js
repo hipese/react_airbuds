@@ -13,6 +13,7 @@ export const PlayingContext = createContext();
 export const CurrentTrackContext = createContext();
 export const TrackInfoContext = createContext();
 export const TrackContext = createContext();
+export const AutoPlayContext = createContext();
 function App() {
   const [loginID, setLoginID] = useState("");
   const [audioFiles, setAudioFiles] = useState([
@@ -26,11 +27,12 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [tracks, setTracks] = useState([]);
+  const [autoPlayAfterSrcChange, setAutoPlayAfterSrcChange] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     axios.get("/api/member/isLogined").then(resp => {
       setLoginID(resp.data);
-    }).catch(()=>{})
+    }).catch(() => { })
   }, [])
 
   return (
@@ -41,11 +43,13 @@ function App() {
             <PlayingContext.Provider value={{ isPlaying, setIsPlaying }}>
               <TrackInfoContext.Provider value={{ track_info, setTrack_info }}>
                 <TrackContext.Provider value={{ tracks, setTracks }}>
-                  <CookiesProvider>
-                    <Routes>
-                      <Route path="/*" element={<Groovy />} />
-                    </Routes>
-                  </CookiesProvider>
+                  <AutoPlayContext.Provider value={{ autoPlayAfterSrcChange, setAutoPlayAfterSrcChange }}>
+                    <CookiesProvider>
+                      <Routes>
+                        <Route path="/*" element={<Groovy />} />
+                      </Routes>
+                    </CookiesProvider>
+                  </AutoPlayContext.Provider>
                 </TrackContext.Provider>
               </TrackInfoContext.Provider>
             </PlayingContext.Provider>

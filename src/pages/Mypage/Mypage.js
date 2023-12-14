@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
-import styles from "./Music.module.css";
+import styles from "./Mypage.module.css";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -11,34 +11,14 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/system';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import None_track_info from "../Components/None_track_info";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-
-function CustomTabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
-
-CustomTabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-};
+import { Link, Route, Routes } from "react-router-dom";
+import Mytracks from "./Mytracks/Mytracks";
+import All from "./All/All";
+import Myalbums from "./Myalbums/Myalbums";
+import Myplaylists from "./Myplaylists/Myplaylists";
+import { LoginContext } from "../../App";
+import axios from "axios";
 
 function a11yProps(index) {
     return {
@@ -61,6 +41,18 @@ const VisuallyHiddenInput = styled('input')({
 
 const MusicWithTabs = () => {
     const [value, setValue] = React.useState(0);
+    const { loginID, setLoginID } = useContext(LoginContext);
+    const [tracks, setTracks] = useState([]);
+
+    useEffect(() => {
+        if (!loginID) {
+            return;
+        }
+
+        axios.get(`/api/track/findById/${loginID}`).then((resp) => {
+            setTracks(resp.data);
+        });
+    }, [loginID]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -92,47 +84,53 @@ const MusicWithTabs = () => {
                                 style: { backgroundColor: '#4CAF50' }  // 선택된 탭의 라벨 밑에 있는 줄의 색상
                             }}
                         >
-                            <Tab label="ALL" {...a11yProps(0)}
+                            <Tab label="ALL" component={Link} to="" {...a11yProps(0)}
                                 sx={{
                                     '&.Mui-selected': {
                                         color: '#4CAF50',  // 선택된 상태일 때의 라벨 색상
                                     },
                                 }} />
-                            <Tab label="Tracks" {...a11yProps(1)} />
-                            <Tab label="Albums" {...a11yProps(2)} />
-                            <Tab label="Playlists" {...a11yProps(3)} />
+                            <Tab label="Tracks" component={Link} to="tracks" {...a11yProps(1)} />
+                            <Tab label="Albums" component={Link} to="albums" {...a11yProps(2)} />
+                            <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)} />
                             <div className={styles.like_edit}>
-                            <FavoriteBorderIcon/>
-                            <Button variant="outlined" startIcon={<ModeEditIcon />}
-                                sx={{
-                                    width: '100px',
-                                    height: '30px',
-                                    color: '#212529',
-                                    borderColor: '#4CAF50',
-                                    marginTop: '10px',
-                                    marginBottom: '10px', 
-                                    '&:hover': {
+                                <FavoriteBorderIcon />
+                                <Button variant="outlined" startIcon={<ModeEditIcon />}
+                                    sx={{
+                                        width: '100px',
+                                        height: '30px',
+                                        color: '#212529',
                                         borderColor: '#4CAF50',
-                                        backgroundColor: '#4CAF50',
-                                    },
-                                }}>
-                                Edit
-                            </Button>
+                                        marginTop: '10px',
+                                        marginBottom: '10px',
+                                        '&:hover': {
+                                            borderColor: '#4CAF50',
+                                            backgroundColor: '#4CAF50',
+                                        },
+                                    }}>
+                                    Edit
+                                </Button>
                             </div>
                         </Tabs>
                     </Box>
-                    <CustomTabPanel value={value} index={0}>
+                    {/* <CustomTabPanel value={value} index={0}>
                         <None_track_info />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
-                        <None_track_info />
+
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
                         <None_track_info />
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={3}>
                         <None_track_info />
-                    </CustomTabPanel>
+                    </CustomTabPanel> */}
+                    <Routes>
+                        <Route path="/" element={<All />} />
+                        <Route path="/tracks" element={<Mytracks />} />
+                        <Route path="/albums" element={<Myalbums />} />
+                        <Route path="/playlists" element={<Myplaylists />} />
+                    </Routes>
                 </Box>
             </Grid>
             <Grid item xs={12} md={3}>
@@ -152,13 +150,12 @@ const MusicWithTabs = () => {
                     <div className={styles.infoItemLast}>
                         <Typography variant="h6" gutterBottom>
                             Tracks<br></br>
-                            30
+                            {tracks.length}
                         </Typography>
                     </div>
                 </div>
                 <div className={styles.myreply}>
                     나의 최근 댓글
-
                 </div>
             </Grid>
         </Grid>

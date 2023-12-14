@@ -118,7 +118,7 @@ const TopNavigator = () => {
                                         <Link className={styles.linkurl} to="/Upload"><div>업로드</div></Link>
                                     </Col>
                                     <Col>
-                                        Profile
+                                        <Link className={styles.linkurl} to="/Mypage"><div>Profile</div></Link>
                                     </Col>
                                     <Col>
                                         <div className={styles.linkurl} onClick={handleLogoutClick}><div>로그아웃</div></div>
