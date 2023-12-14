@@ -1,3 +1,15 @@
+.container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.container2 {
+    width: 70%;
+}
+
 .flexContainer {
     display: flex;
     justify-content: space-between;
@@ -10,35 +22,56 @@
     align-items: center;
 }
 
-.track_image{
+.track_info {
     margin-bottom: 10px;
+    width: 100%;
+    height: 300px;
+    color: white;
+    display: flex;
+}
+
+.track_image {
+    background-color: #1e1e1e;
+}
+
+.track_title_writer {
+    background-color: #1e1e1e;
 }
 
 .profileImage {
     width: 80px;
     height: 80px;
     margin-right: 10px;
-}
+    display: flex;
 
-.absoluteBottomLeft {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    padding: 1rem;
-    /* 예시에 따라 조절 가능한 값 */
 }
 
 .innerContainer2 {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+    margin-top: 20px;
 }
 
-.profileContainer{
+.profileContainer {
     display: flex;
 }
 
 .flexItemsCenterSpaceX2 {
     display: flex;
     align-items: center;
+    margin-right: auto;
 }
+
+.play_button {
+    color: #4CAF50;
+    cursor: pointer;
+    transition: 0.2s;
+    /* hover 시 애니메이션 효과를 위한 설정 추가 */
+  }
+  
+  .play_button:hover {
+
+    /* hover 시 확대 효과 */
+    color: #FF4081;
+  }

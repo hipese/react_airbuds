@@ -14,10 +14,11 @@ import {
     TrackContext,
     TrackInfoContext,
 } from "../../../App";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import WaveSurferPlayer from "../../Components/WaveSurferPlayer";
 
 const Mytracks = () => {
+    const { loginId } = useParams();
     const [track, setTrack] = useState([]);
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
     const { isPlaying, setIsPlaying } = useContext(PlayingContext);
@@ -33,7 +34,7 @@ const Mytracks = () => {
             return;
         }
 
-        axios.get(`/api/track/findById/${loginID}`).then((resp) => {
+        axios.get(`/api/track/findById/${loginId}`).then((resp) => {
             const tracksWithImages = resp.data.map((track) => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
                 return { ...track, imagePath };

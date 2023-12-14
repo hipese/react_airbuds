@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
 import styles from "./Mypage.module.css";
-import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
@@ -12,7 +11,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/system';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useParams } from "react-router-dom";
 import Mytracks from "./Mytracks/Mytracks";
 import All from "./All/All";
 import Myalbums from "./Myalbums/Myalbums";
@@ -40,6 +39,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const MusicWithTabs = () => {
+    const { loginId } = useParams();
     const [value, setValue] = React.useState(0);
     const { loginID, setLoginID } = useContext(LoginContext);
     const [tracks, setTracks] = useState([]);
@@ -49,7 +49,7 @@ const MusicWithTabs = () => {
             return;
         }
 
-        axios.get(`/api/track/findById/${loginID}`).then((resp) => {
+        axios.get(`/api/track/findById/${loginId}`).then((resp) => {
             setTracks(resp.data);
         });
     }, [loginID]);
@@ -66,7 +66,7 @@ const MusicWithTabs = () => {
                 </Grid>
                 <Grid item md={7}>
                     <Typography variant="h2" gutterBottom>
-                        Groovy
+                        {loginId}
                     </Typography>
                     <Typography variant="h5" gutterBottom>
                         &nbsp;'s Groovy Space
