@@ -44,7 +44,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
     // 선택된 트랙의 인덱스를 저장하는 상태 변수 추가
     const [selectedDate, setSelectedDate] = useState(dayjs());
-    const [playListType, setPlayListType] = useState(null);
+    const [playListType, setPlayListType] = useState('');
     const [order, setOrder] = useState([]);
     const [albumTitle, setAlbumTitle] = useState("익명의 앨범");
     const [writer, setWriter] = useState("익명의 제작자");
@@ -142,7 +142,12 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         formData.append('login', loginID.loginID);
 
 
-        if (playListType === "앨범") {
+
+        if(playListType===""){
+            const isSelect=alert("재생목록유형을 선택해주세요");
+            return;
+        }
+        else if (playListType === "앨범") {
             axios.post("/api/album", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -180,6 +185,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
             return;
         }
         setFiles([]);
+        setSelectTag([]);
     }
 
 
@@ -344,9 +350,9 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                 </Col>
                 <Col sm='12' md='8' style={{ marginBottom: '20px', padding: '0' }}>
                     <Row style={{ marginBottom: '20px', width: '100%' }}>
-                        {playListType !== '싱글' && playListType !== null && (
+                        {playListType !== '싱글' && playListType !== null && playListType !== '' && (
                             <>
-                                <Col sm='12' style={{ marginBottom: '20px' }}>제목</Col>
+                                <Col sm='12' style={{ marginBottom: '20px' }}>앨범제목</Col>
                                 <Col sm='12' style={{ marginBottom: '20px' }}>
                                     <Input
                                         placeholder="앨범 제목을 입력하세요"
@@ -484,12 +490,11 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                     </Stack>
                                 </Row>
                             )}
+                            <hr />
                         </Col>
                     </Fragment>
                 ))}
             </Row>
-
-            <hr />
             <Col sm="12">
                 <input
                     type="file"
