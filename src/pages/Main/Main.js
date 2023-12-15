@@ -121,7 +121,7 @@ const Main = () => {
                         <div key={index}>
                             <div className={styles.carouselTitle}>{filterTag.tagName}</div>
                             <div className={styles.carousel}>
-                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike}/>
+                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike} trackInfoByTag={trackInfoByTag} />
                             </div>
                         </div>
                     ))}

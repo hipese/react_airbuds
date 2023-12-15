@@ -3,9 +3,23 @@ import styles from './CarouselModal.module.css';
 import X from '../assets/x.png';
 import axios from 'axios';
 
-const CarouselModal = ({ onClose, trackInfo }) => {
+const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoByTag }) => {
+    console.log(trackLike);
+    console.log(trackInfoByTag);
+    const [isClosing, setIsClosing] = useState(false);
     const [playlistTitle, setPlaylistTitle] = useState("");
     const [playlistVisibility, setPlaylistVisibility] = useState('public');
+
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        }
+    }, []);
+    const handleModalClick = (e) => {
+        e.stopPropagation();
+    };
     
     const handleTitleChange = (e) => {
         setPlaylistTitle(e.target.value);
@@ -15,21 +29,30 @@ const CarouselModal = ({ onClose, trackInfo }) => {
         setPlaylistVisibility(e.target.value);
     };
 
+    const handleClose = () => {
+        setIsClosing(true);
+        setTimeout(() => {
+            onClose();
+        }, 500);
+    };
+
     const handleSubmit = async () => {
+        if(!playlistTitle) return alert("플레이리스트 제목을 입력해주세요.");   
+
         const playlistData = {
             playlistPlTitle: playlistTitle,
             playlistVisibility: playlistVisibility,
-            playlistTrackId: trackInfo.track.trackId,
-            playlistTitle: trackInfo.track.title,
-            playlistImagePath: trackInfo.track.trackImages[0].imagePath,
-            playlistDuration: trackInfo.track.duration,
-            playlistFilePath: trackInfo.track.filePath,
-            playlistWriteId: trackInfo.track.writeId,
-            playlistWriter: trackInfo.track.writer,
-        }
+            playlistTrack: [{
+                playlistTrackId: trackInfo.track.trackId,
+                playlistTitle: trackInfo.track.title,
+                playlistImagePath: trackInfo.track.trackImages[0].imagePath,
+                playlistDuration: trackInfo.track.duration,
+                playlistFilePath: trackInfo.track.filePath,
+                playlistWriter: trackInfo.track.writer
+            }]
+        };
         try {
-            const response = await axios.post("/api/playlist", playlistData);
-            console.log(response);
+            await axios.post("/api/playlist", playlistData);
             onClose();
         } catch (err) {
             console.log("Error Sending Playlist Data: ", err);
@@ -37,9 +60,9 @@ const CarouselModal = ({ onClose, trackInfo }) => {
     }
 
     return (
-        <div className={styles.modalBackground}>
-            <div className={styles.modalContent}>
-                <div className={styles.modalClose} onClick={onClose}><img src={X} alt="" /></div>
+        <div className={styles.modalBackground} onClick={handleClose}>
+            <div className={`${isClosing ? styles.modalContentClosing : styles.modalContent}`} onClick={handleModalClick}>
+                <div className={styles.modalClose} onClick={handleClose}><img src={X} alt="" /></div>
                 <ul className={styles.modalTitle}>
                     <li className={styles.playlistCreate}>플레이리스트 생성</li>
                     <li className={styles.playlistAdd}>플레이리스트 추가</li>
@@ -69,12 +92,12 @@ const CarouselModal = ({ onClose, trackInfo }) => {
                     <li className={styles.playlist}></li>
                     <li className={styles.playlist}></li>
                     <li className={styles.playlist}></li>
-                    <li className={styles.playlist}></li>
                 </ul>
                 <div className={styles.playlistHr}></div>
-                {/* <div className={styles.playlistLike}>
-                    <div className={styles.pllikeTitle}>좋아요 한 노래</div>
-                </div> */}
+                <div className={styles.playlistLike}>
+                    <div className={styles.pllikeTitle}>추후 개발 예정</div>
+                </div>
+
             </div>
         </div>
     );

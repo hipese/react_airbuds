@@ -11,7 +11,7 @@ import CarouselModal from "./CarouselModal/CarouselModal";
 import { LoginContext } from '../../App';
 import axios from 'axios';
 
-const Carousel = React.memo(({ trackInfo,trackLike,setLike}) => {
+const Carousel = React.memo(({ trackInfo,trackLike,setLike,trackInfoByTag}) => {
     const carouselRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTrack, setSelectedTrack] = useState(null);
@@ -35,6 +35,7 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike}) => {
     }
     const closeModal = () => {
         setIsModalOpen(false);
+        setSelectedTrack(null);
     }
 
     const handleFavorite = (trackId, isLiked,e) => {
@@ -123,7 +124,7 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike}) => {
             <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button> 
             <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button> 
         </div>  
-            {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} />}
+          {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} trackLike={trackLike} trackInfoByTag={trackInfoByTag} />}
     </div>
   );
 });

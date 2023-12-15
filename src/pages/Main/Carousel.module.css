@@ -47,7 +47,7 @@
 .owlPrev {
     position: absolute;
     top: -180px;
-    background-color: transparent;
+    background-color: white;
     border-radius: 50%;
     border: 1px solid black;
     left: 3px;
@@ -64,7 +64,7 @@
 .owlNext {
     position: absolute;
     top: -180px;
-    background-color: transparent;
+    background-color: white;
     border-radius: 50%;
     border: 1px solid black;
     right: 3px;
