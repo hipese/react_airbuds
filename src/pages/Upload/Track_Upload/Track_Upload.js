@@ -31,6 +31,13 @@ const Track_Upload = () => {
             setTracks(resp.data)
         })
     }
+
+    // 앨범 불러오는 기능
+    const handleAlbum=()=>{
+        axios.get("/api/album/findByLogin").then(resp=>{
+            console.log(resp.data);
+        })
+    }
     
     // 선택한 id값의 음원 정보를 삭제하는 기능
     const handleDelete = (trackId) => {
@@ -123,6 +130,7 @@ const Track_Upload = () => {
 
             <button onClick={handlelist}>목록 보여주기</button>
 
+            <Button onClick={handleAlbum}>앨범 불러오기</Button>
 
             <div>
                 {tracks.map((track, index) => (
