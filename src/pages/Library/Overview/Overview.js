@@ -94,61 +94,62 @@ const Overview = () => {
   return (
     <>
       {loginID ? (
-        <><div className={styles.carouselTitle1}>최근에 재생한 노래들</div><div className={styles.carousel}>
-          <div className={styles.Carousel}>
-            <OwlCarousel
-              className={styles.OwlCarousel}
-              loop
-              margin={10}
-              nav={false}
-              dots={false}
-              autoplay
-              autoplayTimeout={10000}
-              autoWidth={true}
-              autoplayHoverPause
-              responsive={{
-                768: {
-                  items: 5
-                },
-              }}
-              ref={carouselRef}
-            >
-              {track.map((track, index) => (
-                <div
-                  className={styles.item}
-                  key={index}
-                >
-                  <div>
-                    <Link to={`/Detail/${track.trackId}`}>
-                      <img src={`/tracks/image/${track.imagePath}`} alt={`Image ${index + 1}`} />
-                      <div className={styles.carouselTitle}>{track.title}</div>
-                      <div className={styles.carouselSinger}>
-                        {track.writer}
-                      </div>
-                    </Link>
-                  </div>
-
-                  <div className={styles.play_button}
-                    onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
+        <><div className={styles.carouselTitle1}>최근에 재생한 노래들</div>
+          <div className={styles.carousel}>
+            <div className={styles.Carousel}>
+              <OwlCarousel
+                className={styles.OwlCarousel}
+                loop
+                margin={10}
+                nav={false}
+                dots={false}
+                autoplay
+                autoplayTimeout={10000}
+                autoWidth={true}
+                autoplayHoverPause
+                responsive={{
+                  768: {
+                    items: 5
+                  },
+                }}
+                ref={carouselRef}
+              >
+                {track.map((track, index) => (
+                  <div
+                    className={styles.item}
+                    key={index}
                   >
-                    <PlayCircleIcon sx={{ width: '40px', height: '40px' }} />
-                  </div>
-                  <div className={styles.audioPath}>{track.filePath}</div>
-                </div>
+                    <div>
+                      <Link to={`/Detail/${track.trackId}`}>
+                        <img src={`/tracks/image/${track.imagePath}`} alt={`Image ${index + 1}`} />
+                        <div className={styles.carouselTitle}>{track.title}</div>
+                        <div className={styles.carouselSinger}>
+                          {track.writer}
+                        </div>
+                      </Link>
+                    </div>
 
-              ))}
-              {/* 빈 아이템 추가 */}
-              {emptyItems}
-            </OwlCarousel>
-            <div className={styles.carouselButton}>
-              <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button>
-              <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button>
+                    <div className={styles.play_button}
+                      onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
+                    >
+                      <PlayCircleIcon sx={{ width: '40px', height: '40px' }} />
+                    </div>
+                    <div className={styles.audioPath}>{track.filePath}</div>
+                  </div>
+
+                ))}
+                {/* 빈 아이템 추가 */}
+                {emptyItems}
+              </OwlCarousel>
+              <div className={styles.carouselButton}>
+                <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button>
+                <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button>
+              </div>
             </div>
-          </div>
-        </div></>
+          </div></>
       ) : (
         <div className={styles.noneLogin}>
-          <None_login_info/>
+          <None_login_info />
         </div>
       )}
     </>

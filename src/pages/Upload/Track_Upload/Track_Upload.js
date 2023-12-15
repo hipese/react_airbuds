@@ -122,8 +122,6 @@ const Track_Upload = () => {
             </Row>
 
             <button onClick={handlelist}>목록 보여주기</button>
-
-
             <div>
                 {tracks.map((track, index) => (
                     <div key={index} >
