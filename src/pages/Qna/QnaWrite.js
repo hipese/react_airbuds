@@ -1,13 +1,16 @@
 import { Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 import style from './qna.module.css'
 import Reactquill from './ReactQuill';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import { LoginContext } from '../../App';
 const QnaWriteMain = () =>{
     //writer 추후 수정해야함
 
-    const [board, setBoard] = useState({qnaTitle:"",qnaWriter:"kwon", qnaCategory:"none",qnaPublic:1, qnaContents:"",qnaAnswerState:0,qnaWriteDate:new Date().toISOString(),files:[]});
+    const [board, setBoard] = useState({qnaTitle:"",qnaWriter:"", qnaCategory:"none",qnaPublic:1, qnaContents:"",qnaAnswerState:0,qnaWriteDate:new Date().toISOString(),files:[]});
+
+    const { loginID } = useContext(LoginContext);
 
     const navi = useNavigate();
     const handleChange = (e) => {
@@ -19,7 +22,7 @@ const QnaWriteMain = () =>{
         console.log(board);
         const formData = new FormData();
         formData.append("qnaTitle",board.qnaTitle);
-        formData.append("qnaWriter",board.qnaWriter);
+        formData.append("qnaWriter",loginID);
         formData.append("qnaCategory",board.qnaCategory);
         formData.append("qnaPublic",board.qnaPublic);
         formData.append("qnaContents",board.qnaContents);
