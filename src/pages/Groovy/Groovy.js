@@ -17,6 +17,7 @@ import AnnounceList from "../Announce/AnnounceList";
 import QnaList from "../Qna/qnaList";
 import Upload_Main from "../Upload/Upload_Main";
 import DashBoardMain from "../Dashboard/Dashboard";
+import Track_Detail from "../Detail/TrackDetail/Track_Detail";
 
 const Groovy = () => {
     return (
@@ -28,7 +29,7 @@ const Groovy = () => {
             </div>
             <Container className={styles.MainContainer} fluid>
                     <Routes>
-                        <Route path="/" element={<Main />} />
+                    <Route path="/" element={<Main />} />
                         <Route path="Feed/*" element={<Feed />} />
                         <Route path="Library/*" element={<Library />} />
                         <Route path="Playlist/*" element={<Playlist />} />
@@ -39,6 +40,7 @@ const Groovy = () => {
                         <Route path="Report/*" element={<Report />} />
                         <Route path="Admin/*" element={<Admin />} />
                         <Route path="Announce/*" element={<AnnounceList />} />
+                        <Route path="Detail/:trackId/*" element={<Track_Detail />} />
                         <Route path="QnA/*" element={<QnaList />} />
                         <Route path="Dashboard/*" element={<DashBoardMain/>} />
                     </Routes>
