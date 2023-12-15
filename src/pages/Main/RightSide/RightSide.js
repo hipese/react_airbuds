@@ -11,8 +11,6 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
     const { loginID } = useContext(LoginContext);
     
     const test =() => {
-        console.log(onlyLike);
-        console.log(loginID);
     }
 
     const findCommonTrack = (trackInfo, trackLike) => {
@@ -76,7 +74,7 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
                         ? `/tracks/image/${e.track.trackImages.imagePath}`
                         : "http://placehold.it/150x150";
                         return (
-                            <li className={styles.loveli}>
+                            <li key={i} className={styles.loveli}>
                                 <div className={styles.loveImg}>
                                     <img src={trackImage}></img>
                                 </div>
