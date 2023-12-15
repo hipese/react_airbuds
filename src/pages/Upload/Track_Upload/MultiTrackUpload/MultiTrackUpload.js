@@ -36,7 +36,6 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
     const [playListType, setPlayListType] = useState('');
     const [order, setOrder] = useState([]);
     const [albumTitle, setAlbumTitle] = useState("익명의 앨범");
-    const [writer, setWriter] = useState("익명의 제작자");
     const [titleImage, setTitleImage] = useState();
     const [writers, setWriters] = useState(['익명의 제작자']);
 
@@ -121,9 +120,9 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
     const handleSave = () => {
         const formData = new FormData();
 
-        console.log(files)
-        console.log(selectTag)
-        console.log(trackSelectTag);
+        // console.log(files)
+        // console.log(selectTag)
+        // console.log(trackSelectTag);
 
         // files 배열에 있는 각 파일을 formData에 추가
         files.forEach((fileData, index) => {
@@ -153,6 +152,11 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         formData.append('login', loginID.loginID);
 
 
+
+        if(titleImage==null){
+            const isSelect = alert("앨범이미지를 선택해주세요.");
+            return;
+        }
 
         if (playListType === "") {
             const isSelect = alert("재생목록유형을 선택해주세요");
@@ -233,7 +237,6 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                 image_path: imageFile.name // 모든 트랙에 새 이미지 파일 이름으로 image_path 설정
             })));
         }
-        console.log(files);
     };
 
 
@@ -357,6 +360,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                             style={{ display: 'none' }}
                             accept="image/*"
                         />
+                        <Button onClick={handleClickImage}>이미지변경</Button>
                     </div> : <div className={style.imageContainer}>
                         <img src={imageview} onClick={handleClickImage} />
                         <input
@@ -366,6 +370,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                             style={{ display: 'none' }}
                             accept="image/*"
                         />
+                        <Button onClick={handleClickImage}>이미지변경</Button>
                     </div>}
 
                 </Col>

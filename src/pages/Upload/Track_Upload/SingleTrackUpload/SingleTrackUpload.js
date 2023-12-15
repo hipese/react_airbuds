@@ -199,6 +199,7 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
                             style={{ display: 'none' }}
                             accept="image/*"
                         />
+                        <Button onClick={handleClickImage}>이미지변경</Button>
                     </div> : <div className={singlestyle.imageContainer}>
                         <img src={imageview} onClick={handleClickImage} />
                         <input
@@ -208,6 +209,7 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
                             style={{ display: 'none' }}
                             accept="image/*"
                         />
+                        <Button onClick={handleClickImage}>이미지변경</Button>
                     </div>}
 
                 </Col>
