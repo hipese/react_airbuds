@@ -38,32 +38,36 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike}) => {
     }
 
     const handleFavorite = (trackId, isLiked,e) => {
-        console.log(trackId);        
-        if(!isLiked){
-            const formData = new FormData();
-            formData.append("trackId",trackId);
-            formData.append("id",storageId);
-            axios.post(`/api/like`,formData).then(res=>{
-                console.log(res.data);
-                setLike([...trackLike, { trackId : trackId, id: storageId, likeSeq: res.data.likeSeq }]);
-                e.target.classList.add(styles.onClickHeart);
-                e.target.classList.remove(styles.NonClickHeart);
-            }).catch((e)=>{
-                console.log(e);
-            });
+        if(loginID !== ""){
+            if(!isLiked){
+                const formData = new FormData();
+                formData.append("trackId",trackId);
+                formData.append("id",storageId);
+                axios.post(`/api/like`,formData).then(res=>{
+                    console.log(res.data);
+                    setLike([...trackLike, { trackId : trackId, id: storageId, likeSeq: res.data.likeSeq }]);
+                    e.target.classList.add(styles.onClickHeart);
+                    e.target.classList.remove(styles.NonClickHeart);
+                }).catch((e)=>{
+                    console.log(e);
+                });
+            }else{
+                const deleteData = new FormData();
+                deleteData.append("trackId",trackId);
+                deleteData.append("id",storageId);
+                axios.post(`/api/like/delete`,deleteData).then(res=>{
+                    console.log(res.data);
+                    setLike(trackLike.filter(likedTrack => likedTrack.trackId !== trackId));
+                    e.target.classList.remove(styles.onClickHeart);
+                    e.target.classList.add(styles.NonClickHeart);
+                }).catch((e)=>{
+                    console.log(e);
+                });            
+            }
         }else{
-            const deleteData = new FormData();
-            deleteData.append("trackId",trackId);
-            deleteData.append("id",storageId);
-            axios.post(`/api/like/delete`,deleteData).then(res=>{
-                console.log(res.data);
-                setLike(trackLike.filter(likedTrack => likedTrack.trackId !== trackId));
-                e.target.classList.remove(styles.onClickHeart);
-                e.target.classList.add(styles.NonClickHeart);
-            }).catch((e)=>{
-                console.log(e);
-            });            
-        }        
+            alert("좋아요는 로그인을 해야 합니다.")
+            return;
+        }
     }
 
     
