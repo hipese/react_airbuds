@@ -8,7 +8,224 @@ import FunnelChart from './charts/funnel'
 import { Line } from "@nivo/line";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import axios from 'axios';
 
+const data = [{
+    "id": "10대",
+    "color": "hsl(166, 70%, 50%)",
+    "data": [
+      {
+        "x": "1월",
+        "y": 47
+      },
+      {
+        "x": "2월",
+        "y": 27
+      },
+      {
+        "x": "3월",
+        "y": 228
+      },
+      {
+        "x": "4월",
+        "y": 49
+      },
+      {
+        "x": "5월",
+        "y": 100
+      },
+      {
+        "x": "6월",
+        "y": 68
+      },
+      {
+        "x": "7월",
+        "y": 76
+      },
+      {
+        "x": "8월",
+        "y": 135
+      },
+      {
+        "x": "9월",
+        "y": 224
+      },
+      {
+        "x": "10월",
+        "y": 112
+      },
+      {
+        "x": "11월",
+        "y": 210
+      },
+      {
+        "x": "12월",
+        "y": 54
+      }
+    ]
+  },
+  {
+    "id": "20대",
+    "color": "hsl(166, 70%, 50%)",
+    "data": [
+      {
+        "x": "1월",
+        "y": 47
+      },
+      {
+        "x": "2월",
+        "y": 27
+      },
+      {
+        "x": "3월",
+        "y": 228
+      },
+      {
+        "x": "4월",
+        "y": 49
+      },
+      {
+        "x": "5월",
+        "y": 100
+      },
+      {
+        "x": "6월",
+        "y": 68
+      },
+      {
+        "x": "7월",
+        "y": 76
+      },
+      {
+        "x": "8월",
+        "y": 135
+      },
+      {
+        "x": "9월",
+        "y": 224
+      },
+      {
+        "x": "10월",
+        "y": 112
+      },
+      {
+        "x": "11월",
+        "y": 210
+      },
+      {
+        "x": "12월",
+        "y": 54
+      }
+    ]
+  },
+  {
+    "id": "30대",
+    "color": "hsl(166, 70%, 50%)",
+    "data": [
+      {
+        "x": "1월",
+        "y": 47
+      },
+      {
+        "x": "2월",
+        "y": 27
+      },
+      {
+        "x": "3월",
+        "y": 228
+      },
+      {
+        "x": "4월",
+        "y": 49
+      },
+      {
+        "x": "5월",
+        "y": 100
+      },
+      {
+        "x": "6월",
+        "y": 68
+      },
+      {
+        "x": "7월",
+        "y": 76
+      },
+      {
+        "x": "8월",
+        "y": 135
+      },
+      {
+        "x": "9월",
+        "y": 224
+      },
+      {
+        "x": "10월",
+        "y": 112
+      },
+      {
+        "x": "11월",
+        "y": 210
+      },
+      {
+        "x": "12월",
+        "y": 54
+      }
+    ]
+  },
+  {
+    "id": "40대",
+    "color": "hsl(166, 70%, 50%)",
+    "data": [
+      {
+        "x": "1월",
+        "y": 47
+      },
+      {
+        "x": "2월",
+        "y": 27
+      },
+      {
+        "x": "3월",
+        "y": 228
+      },
+      {
+        "x": "4월",
+        "y": 49
+      },
+      {
+        "x": "5월",
+        "y": 100
+      },
+      {
+        "x": "6월",
+        "y": 68
+      },
+      {
+        "x": "7월",
+        "y": 76
+      },
+      {
+        "x": "8월",
+        "y": 135
+      },
+      {
+        "x": "9월",
+        "y": 224
+      },
+      {
+        "x": "10월",
+        "y": 112
+      },
+      {
+        "x": "11월",
+        "y": 210
+      },
+      {
+        "x": "12월",
+        "y": 54
+      }
+    ]    
+  }];
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -118,10 +335,47 @@ const DashBoardDisplay = () => {
     const [visitor,setVisitor] = React.useState(40);
     const [streaming,setStreaming] = React.useState(23);
     const [report,setReport] = React.useState(58);
+    const [formdReport,setFormdReport] = React.useState([]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const groupByYear = (javaData) => {
+        const groupedData = javaData.reduce((result, item) => {
+            const year = item.year;
+            if (!result[year]) {
+            result[year] = [];
+            }
+            result[year].push(item);
+            return result;
+        }, {});
+        
+        return groupedData;
+    };
+
+    const transformToReactData = (groupedData) => {
+        const reactData = Object.entries(groupedData).map(([year, data]) => ({
+            id: parseInt(year),
+            color : `hsl(166, 70%, 50%)`,
+            data: data.map(item => ({
+            x: `${item.month}월`,
+            y: item.count,
+            })),
+        }));
+        
+        return reactData;
+    };
+
+    React.useEffect(()=>{
+        axios.get(`/api/dashboard`).then(res=>{
+            console.log(res.data);
+            const groupedData = groupByYear(res.data);
+            const reactData = transformToReactData(groupedData);
+            setFormdReport(reactData);
+            console.log(reactData);
+        })
+    },[]);
     
     return(
         <div className={`${style.dashcontainer} ${style.ma}`}>
@@ -147,13 +401,13 @@ const DashBoardDisplay = () => {
                                 <Typography fontSize={13}>
                                     Daliy Visitor
                                 </Typography>                        
-                                <Typography fontSize={40}>
+                                <Typography fontSize={40} paddingLeft={2}>
                                     {visitor}%
                                 </Typography>
+                                <div className={`${style.progressBar} ${style.pad5}`}>
+                                    <BorderLinearProgress variant="determinate" value={visitor > 100 ? 100 : visitor} />
+                                </div>
                             </div>                                                
-                            <div className={`${style.progressBar} ${style.pad5}`}>
-                                <BorderLinearProgress variant="determinate" value={visitor > 100 ? 100 : visitor} />
-                            </div>
                         </div>
                     </Tooltip>
                 </Grid>
@@ -167,10 +421,11 @@ const DashBoardDisplay = () => {
                                 <Typography fontSize={40} paddingLeft={2}>
                                     {streaming}%
                                 </Typography>
+                                <div className={`${style.progressBar} ${style.pad5}`}>
+                                    <RedLinearProgress variant='determinate' value={streaming > 100 ? 100 : streaming}/>
+                                </div>
                             </div>                                                
-                            <div className={`${style.progressBar} ${style.pad5}`}>
-                                <RedLinearProgress variant='determinate' value={streaming > 100 ? 100 : streaming}/>
-                            </div>
+                            
                         </div>
                     </Tooltip>
                 </Grid>
@@ -179,15 +434,16 @@ const DashBoardDisplay = () => {
                         <div className={`${style.dashBox}`}>
                             <div className={`${style.pad10}`}>
                                 <Typography fontSize={13}>
-                                    Today Streaming
+                                    Today Report
                                 </Typography>                        
                                 <Typography fontSize={40} paddingLeft={2}>
                                     {report}%
                                 </Typography>
+                                <div className={`${style.progressBar} ${style.pad5}`}>
+                                    <BlueLinearProgress variant='determinate' value={report > 100 ? 100 : report}/>
+                                </div>
                             </div>                                                
-                            <div className={`${style.progressBar} ${style.pad5}`}>
-                                <BlueLinearProgress variant='determinate' value={report > 100 ? 100 : report}/>
-                            </div>
+                            
                         </div>
                     </Tooltip>
                 </Grid>
@@ -211,7 +467,7 @@ const DashBoardDisplay = () => {
                                 className={`${style.center} ${style.w100}`}
                             >                    
                                 <div className={`${style.dashLBox}`}>
-                                    <LineChart/>
+                                    <LineChart data={data}/>
                                 </div>   
                             </Box>
                         </Grid>
@@ -241,7 +497,7 @@ const DashBoardDisplay = () => {
                                 className={`${style.center} ${style.w100}`}
                             >                    
                                 <div className={`${style.dashLBox}`}>
-                                    <LineChart/>
+                                    <LineChart data={formdReport}/>
                                 </div>   
                             </Box>
                         </Grid>
