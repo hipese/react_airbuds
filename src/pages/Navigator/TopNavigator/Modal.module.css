@@ -1,0 +1,122 @@
+.swal2PopUpHeWid {
+    height: 600px !important;
+    width: 450px !important;
+}
+
+.text {
+    width: 260px;
+    height: 370px;
+    margin: auto !important;
+    text-align: start !important;
+}
+
+.text>hr {
+    margin-bottom: 25px;
+}
+
+.text>label,
+p {
+    font-size: 15px;
+    margin: 0px !important;
+    padding-bottom: 7px;
+}
+
+.text>input {
+    width: 260px;
+    height: 40px;
+    margin: 0px !important;
+    margin-bottom: 10px !important;
+    font-size: 15px;
+}
+
+.text>button {
+    width: 260px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    height: 40px;
+    text-align: center;
+    border: none;
+    background-size: 300% 100%;
+    border-radius: 50px;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
+    /* box-shadow: 0 4px 15px 0 rgba(23, 168, 108, 0.75); */
+}
+
+.text>button:hover {
+    background-position: 100% 0;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.text>button:focus {
+    outline: none;
+}
+
+.title {
+    font-size: 20px;
+}
+
+.confirm {
+    width: 80px;
+    font-size: 16px !important;
+    font-weight: 600;
+    color: #fff !important;
+    cursor: pointer !important;
+    height: 40px;
+    text-align: center;
+    border: none !important;
+    background-size: 300% 100% !important;
+    -o-transition: all .4s ease-in-out !important;
+    -webkit-transition: all .4s ease-in-out !important;
+    transition: all .4s ease-in-out !important;
+    background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed) !important;
+}
+
+.confirm:hover{
+    background-position: 100% 0 !important;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.confirm:focus {
+    outline: none;
+}
+
+.cancel {
+    width: 80px;
+    font-size: 16px !important;
+    font-weight: 600;
+    color: #fff !important;
+    cursor: pointer !important;
+    height: 40px;
+    text-align: center;
+    border: none !important;
+    background-size: 300% 100% !important;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376) !important;
+}
+
+.cancel:hover{
+    background-position: 100% 0 !important;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.cancel:focus {
+    outline: none;
+}
+
+.custom-swal-container>div {
+    width: 260px;
+    margin: auto;
+}
