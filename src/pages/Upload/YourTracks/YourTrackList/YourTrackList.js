@@ -43,8 +43,22 @@ const YourTrackList = () => {
     const handleClose = () => setOpen(false);
 
 
+    // 업데이트를 반영하기 위한 함수
+    const handleTrackUpdated = (updatedTrack) => {
+        setTrack((prevTracks) => {
+          return prevTracks.map((t) => {
+            if (t.trackId === updatedTrack.trackId) {
+              return updatedTrack; // Return updated track data
+            }
+            return t; // Return unmodified track data
+          });
+        });
+      };
+
+
     const handleEditClick = (track) => {
         setSelectedTrack(track);
+        console.log(track);
         handleOpen(); // 모달 열기
     };
 
@@ -150,7 +164,13 @@ const YourTrackList = () => {
                                         aria-labelledby="modal-modal-title"
                                         aria-describedby="modal-modal-description"
                                     >
-                                        <UpdateModal track={selectedTrack}  setSelectedTrack={setSelectedTrack} />
+                                        <UpdateModal
+                                            selectedTrack={selectedTrack}
+                                            setSelectedTrack={setSelectedTrack}
+                                            setTrack={setTrack}
+                                            onTrackUpdated={handleTrackUpdated}
+                                            onClose={handleClose}
+                                        />
                                     </Modal>
                                 )}
                             </div>
