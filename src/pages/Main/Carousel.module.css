@@ -22,15 +22,20 @@
     position: relative;
 }
 
+.nonImageHover {
+    border: 1px solid #e0e0e0;
+    width: 230px !important;
+    height: 230px !important;
+    position: relative;
+}
+
 .imgHover:hover {
     border: 1px solid #999999;
     background: linear-gradient(to top, rgb(0, 0, 0) 0%, white 40%) !important;
-    transition: all 0.8s ease-in-out;
 }
 
 .imgHover:hover .trackImg {
-    opacity: 0.9;
-    transition: all 0.8s ease-in-out;
+    opacity: 0.8;
 }
 
 .trackImg {
@@ -103,37 +108,29 @@
 .imgHover:hover .hoverNaviheart {
     opacity: 1;
     visibility: visible;
-    transform: translateY(-10px);
-    transition: all 0.8s ease-in-out;
     cursor: pointer;
 }
 
 .imgHover:hover .hoverNaviplaylist {
     opacity: 1;
     visibility: visible;
-    transform: translateY(-10px);
-    transition: all 0.8s ease-in-out;
     cursor: pointer;
 }
 
 .hoverNaviheart {
     position: absolute;
-    bottom: 0px;
+    bottom: 10px;
     right: 45px;
-    transition: all 0.8s ease-in-out;
     opacity: 0;
     visibility: hidden;
-    translate: translateY(100%);
 }
 
 .hoverNaviplaylist {
     position: absolute;
-    bottom: -2px;
+    bottom: 10px;
     right: 10px;
-    transition: all 0.8s ease-in-out;
     opacity: 0;
     visibility: hidden;
-    translate: translateY(100%);
 
 }
 

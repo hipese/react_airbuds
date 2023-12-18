@@ -11,7 +11,7 @@ import CarouselModal from "./CarouselModal/CarouselModal";
 import { LoginContext } from '../../App';
 import axios from 'axios';
 
-const Carousel = React.memo(({ trackInfo,trackLike,setLike,trackInfoByTag}) => {
+const Carousel = React.memo(({ trackInfo,trackLike,setLike,trackInfoAll}) => {
     const carouselRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTrack, setSelectedTrack] = useState(null);
@@ -71,8 +71,6 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike,trackInfoByTag}) => {
         }
     }
 
-    
-
 return (
     <div className={styles.Carousel}>
         <OwlCarousel
@@ -99,23 +97,29 @@ return (
                     : "http://placehold.it/150x150";
                     //setLikeState(trackLike.some(trackLike => trackLike.trackId === track.track.trackId));
                     //settingLike(track.track.trackId);
+                
+                    const hoverClass = loginID ? styles.imgHover : styles.nonImageHover;
                     return (
                         <div className={styles.item} key={index}>
-                            <div className={styles.imgHover}>
+                            <div className={hoverClass}>
                                 <img className={styles.trackImg} src={trackImage} alt={`Track ${index + 1} - ${track.track.title}`} />
-                                <div className={styles.hoverNaviheart} >
-                                        <img 
-                                        src={heart} 
-                                        alt="" 
-                                        className={
-                                            trackLike.some(trackLike => trackLike.trackId === track.track.trackId) 
-                                            ? styles.onClickHeart : styles.NonClickHeart} 
-                                        onClick={(e)=>{handleFavorite(track.track.trackId,trackLike.some(trackLike => trackLike.trackId === track.track.trackId),e)}}/>
-                                    
-                                </div>
-                                <div className={styles.hoverNaviplaylist}>
-                                    <img src={playlist} alt="" className={styles.NonClickPlaylist} onClick={() => openModal(track)} />
-                                </div>
+                                {loginID && (
+                                    <>
+                                        <div className={styles.hoverNaviheart}>
+                                            <img 
+                                                src={heart} 
+                                                alt="" 
+                                                className={
+                                                    trackLike.some(trackLike => trackLike.trackId === track.track.trackId) 
+                                                    ? styles.onClickHeart : styles.NonClickHeart} 
+                                                onClick={(e) => {handleFavorite(track.track.trackId, trackLike.some(trackLike => trackLike.trackId === track.track.trackId), e)}}
+                                            />
+                                        </div>
+                                        <div className={styles.hoverNaviplaylist}>
+                                            <img src={playlist} alt="" className={styles.NonClickPlaylist} onClick={() => openModal(track)} />
+                                        </div>
+                                    </>
+                                )}
                             </div>
                             <div className={styles.carouselContents}> 
                                 <div className={styles.carouselTitle}>{track.track.title}</div>
@@ -130,7 +134,7 @@ return (
             <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button> 
             <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button> 
         </div>  
-          {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} trackLike={trackLike} trackInfoByTag={trackInfoByTag} />}
+          {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} trackLike={trackLike}  trackInfoAll={trackInfoAll}/>}
     </div>
   );
 });

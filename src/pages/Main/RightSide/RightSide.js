@@ -37,7 +37,6 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
         const only3Music = uniqueTitlesArray.filter((e,i) => i < 3);
 
         setOnlyLike(only3Music);
-        console.log(uniqueTitlesArray);
     },[trackLike]);
     return (
         <div className={styles.positionFixed}>

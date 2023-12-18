@@ -10,9 +10,6 @@ const Playlist = () => {
                 <div className={styles.leftSide}>
                     zz
                 </div>
-                <div className={styles.rightSide}>
-                    <RightSide />
-                </div>
             </div>
         </div>
     );
