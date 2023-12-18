@@ -18,6 +18,7 @@ import Myalbums from "./Myalbums/Myalbums";
 import Myplaylists from "./Myplaylists/Myplaylists";
 import { LoginContext } from "../../App";
 import axios from "axios";
+import PersonIcon from '@mui/icons-material/Person';
 
 function a11yProps(index) {
     return {
@@ -43,6 +44,8 @@ const MusicWithTabs = () => {
     const [value, setValue] = React.useState(0);
     const { loginID, setLoginID } = useContext(LoginContext);
     const [tracks, setTracks] = useState([]);
+    const [isFollowed,setFollow] = useState(false);
+    const [followNumber,setFollowNumber] = useState({});
 
     useEffect(() => {
         if (!loginID) {
@@ -52,11 +55,64 @@ const MusicWithTabs = () => {
         axios.get(`/api/track/findById/${loginId}`).then((resp) => {
             setTracks(resp.data);
         });
+        checkFollowState();
+        checkFollowNumber();
     }, [loginID]);
+
+    const checkFollowState = () => {
+        const formData = new FormData();
+        formData.append("memberId",loginID);
+        formData.append("singerId",loginId);
+
+        axios.post(`/api/like/isfollow`,formData).then(res=>{
+            setFollow(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
+    const checkFollowNumber = () => {
+        axios.get(`/api/like/nums/${loginId}`).then(res=>{
+            setFollowNumber(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const handleFollowBtn = (state) => {
+        if(loginID != ""){
+            console.log(state);
+            if(!state){
+                const formData = new FormData();
+                formData.append("memberId",loginID);
+                formData.append("singerId",loginId)
+                axios.post(`/api/like/follow`,formData).then(res=>{
+                    checkFollowState();
+                    checkFollowNumber();
+                }).catch((e)=>{
+                    console.log(e);
+                });
+            }else{
+                const formData = new FormData();
+                formData.append("memberId",loginID);
+                formData.append("singerId",loginId)
+                axios.post(`/api/like/followDelete`,formData).then(res=>{
+                    checkFollowState();
+                    checkFollowNumber();
+                }).catch((e)=>{
+                    console.log(e);
+                });
+            }
+            
+        }else{
+            alert("로그인 필요");
+            return;
+        }
+    }
 
     return (
         <Grid container>
@@ -94,7 +150,46 @@ const MusicWithTabs = () => {
                             <Tab label="Albums" component={Link} to="albums" {...a11yProps(2)} />
                             <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)} />
                             <div className={styles.like_edit}>
-                                <FavoriteBorderIcon />
+                                {!isFollowed ? <Button variant="outlined" startIcon={<PersonIcon/>}
+                                    sx={{
+                                        width: '100px',
+                                        height: '30px',
+                                        color: '#212529',
+                                        borderColor: '#4CAF50',
+                                        marginTop: '10px',
+                                        marginBottom: '10px',
+                                        marginRight: '10px',
+                                        '&:hover': {
+                                            borderColor: '#4CAF50',
+                                            backgroundColor: '#4CAF50',
+                                            color : "white"
+                                        },
+                                    }}
+                                    onClick={()=>{handleFollowBtn(isFollowed)}}>
+                                    Follow
+                                </Button>
+                                :
+                                <Button variant="outlined" startIcon={<PersonIcon/>}
+                                    sx={{
+                                        width: '100px',
+                                        height: '30px',
+                                        color: 'white',
+                                        borderColor: '#4CAF50',
+                                        backgroundColor : '#4CAF50',
+                                        marginTop: '10px',
+                                        marginBottom: '10px',
+                                        marginRight: '10px',
+                                        '&:hover': {
+                                            backgroundColor: 'white',
+                                            borderColor: '#4CAF50',
+                                            color: '#212529',
+                                        },
+                                    }}
+                                    onClick={()=>{handleFollowBtn(isFollowed)}}>
+                                    Follow
+                                </Button>
+                                }
+                                
                                 <Button variant="outlined" startIcon={<ModeEditIcon />}
                                     sx={{
                                         width: '100px',
@@ -138,13 +233,13 @@ const MusicWithTabs = () => {
                     <div className={styles.infoItem}>
                         <Typography variant="h6" gutterBottom>
                             Followers<br></br>
-                            100
+                            {followNumber.followers}
                         </Typography>
                     </div>
                     <div className={styles.infoItem}>
                         <Typography variant="h6" gutterBottom>
                             Following<br></br>
-                            50
+                            {followNumber.followings}
                         </Typography>
                     </div>
                     <div className={styles.infoItemLast}>
