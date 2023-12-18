@@ -15,7 +15,6 @@ import {
     TrackInfoContext,
 } from "../../../App";
 import { Link, useParams } from "react-router-dom";
-import WaveSurferPlayer from "../../Components/WaveSurferPlayer";
 
 const Mytracks = () => {
     const { loginId } = useParams();
