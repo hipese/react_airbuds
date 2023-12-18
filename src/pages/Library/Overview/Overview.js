@@ -31,7 +31,7 @@ const Overview = () => {
   const storedDataString = localStorage.getItem('loginID');
 
   useEffect(() => {
-    axios.get(`/api/cplist/${storedDataString}`).then(resp => {
+    axios.get(`/api/cplist/all/${storedDataString}`).then(resp => {
   
       const allTracks = [];
   
