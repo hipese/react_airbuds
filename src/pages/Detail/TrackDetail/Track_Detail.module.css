@@ -125,7 +125,7 @@
 }
 
 .replyoutput{
-    margin-bottom: 100px !important;
+    margin-bottom: 10px !important;
     width: 100%;
 }
 
@@ -147,4 +147,11 @@
 .editContainer{
     display: flex;
     align-items: center;
+}
+
+.pageNation{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 100px !important;
 }

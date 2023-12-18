@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Routes, Route, Link } from "react-router-dom";
 import Overview from "./Overview/Overview";
+import History from "./History/History";
 
 
 function CustomTabPanel(props) {
@@ -84,8 +85,8 @@ const Library = () => {
                     {/* <Route path="/likes" element={<Likes />} />
                     <Route path="/playlist" element={<Playlist />} />
                     <Route path="/albums" element={<Albums />} />
-                    <Route path="/following" element={<Following />} />
-                    <Route path="/history" element={<History />} /> */}
+                    <Route path="/following" element={<Following />} /> */}
+                    <Route path="/history" element={<History />} />
                 </Routes>
             </Box>
         </Grid>
