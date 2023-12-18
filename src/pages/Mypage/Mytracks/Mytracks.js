@@ -44,6 +44,7 @@ const Mytracks = () => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
                 return { ...track, imagePath };
             });
+            console.log(tracksWithImages);
             setTrack(tracksWithImages);
         });        
     }, [loginID]);
