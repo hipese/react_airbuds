@@ -13,6 +13,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { Pagination, PaginationItem } from "@mui/material";
 
 const theme = createTheme({
     components: {
@@ -43,6 +44,8 @@ const Track_Detail = () => {
     const [selectedSeq, setSelectedSeq] = useState(null);
     const [editMode, setEditMode] = useState(null);
     const [editedReply, setEditedReply] = useState({ trackId: trackId, writer: "", contents: "", writeDate: "" });
+    const COUNT_PER_PAGE = 10;
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         axios.get(`/api/track/bytrack_id/${trackId}`).then(resp => {
@@ -58,6 +61,17 @@ const Track_Detail = () => {
             console.log(e);
         });
     }, [loginID]);
+
+    const totalItems = replyList.length;
+    const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);
+
+    const onPageChange = (e, page) => {
+        setCurrentPage(page);
+    };
+
+    const startIndex = (currentPage - 1) * COUNT_PER_PAGE;
+    const endIndex = Math.min(startIndex + COUNT_PER_PAGE, totalItems);
+    const visibleSignList = replyList.slice(startIndex, endIndex);
 
     // 특정 트랙을 재생 목록에 추가하는 함수
     const addTrackToPlaylist = (track) => {
@@ -100,7 +114,11 @@ const Track_Detail = () => {
             console.log(resp.data);
             // setReplyList(prev => ([...prev, reply]))
             setReply((prev) => ({ ...prev, contents: "" }));
-            setReplyList(prev => ([...prev, reply]))
+            axios.get(`/api/reply/${trackId}`).then(resp => {
+                setReplyList(resp.data);
+            }).catch((e) => {
+                console.log(e);
+            });
         }).catch((e) => {
             console.log(e);
         });
@@ -266,7 +284,7 @@ const Track_Detail = () => {
                         </Grid>
                     </Grid>
                     <Grid item className={styles.replyoutput}>
-                        {replyList.map((comment, index) => (
+                        {visibleSignList.map((comment, index) => (
                             <Grid item key={index} className={styles.commentContainer}>
                                 {editMode === comment.seq ? ( // Show input field in edit mode
                                     <Grid item xs={12} md={12} className={styles.editContainer}>
@@ -318,7 +336,7 @@ const Track_Detail = () => {
                                 ) : (
                                     // Display text in view mode
                                     <div className={styles.reply_info}>
-                                        <Typography variant="body1">{comment.writer}</Typography>
+                                        <Typography variant="h6">{comment.writer}</Typography>
                                         <Typography variant="body1">{comment.contents}</Typography>
                                         <Typography variant="caption">{comment.writeDate}</Typography>
                                     </div>
@@ -370,6 +388,22 @@ const Track_Detail = () => {
                                 </div>
                             </Grid>
                         ))}
+                    </Grid>
+                    <Grid item xs={12} md={12} className={styles.pageNation}>
+                        <Pagination
+                            count={totalPages}
+                            page={currentPage}
+                            onChange={onPageChange}
+                            size="medium"
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                padding: "15px 0",
+                            }}
+                            renderItem={(item) => (
+                                <PaginationItem {...item} sx={{ fontSize: 12 }} />
+                            )}
+                        />
                     </Grid>
                 </Grid>
             </Grid>

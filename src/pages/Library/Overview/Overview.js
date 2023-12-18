@@ -20,23 +20,40 @@ const Overview = () => {
   const { tracks, setTracks } = useContext(TrackContext);
   const { loginID, setLoginID } = useContext(LoginContext);
   const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
+  const storedDataString = localStorage.getItem('loginID');
 
   useEffect(() => {
-
-    if (!loginID) {
-      return;
-    }
-
-    axios.get(`/api/track/findById/${loginID}`).then(resp => {
+    axios.get(`/api/cplist/${storedDataString}`).then(resp => {
       console.log(loginID);
-      const tracksWithImages = resp.data.map(track => {
-        const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
-        return { ...track, imagePath };
-      });
 
-      setTrack(tracksWithImages);
+      const allTracks = [];
+
+      resp.data.forEach((trackItem, outerIndex) => {
+        trackItem.tracks.forEach((innerTrack, innerIndex) => {
+          const imagePath = innerTrack.trackImages.length > 0 ? innerTrack.trackImages[0].imagePath : null;
+
+          // 트랙 제목이 고유한지 확인한 후 배열에 추가
+          const isDuplicate = allTracks.some(track => track.title === innerTrack.title);
+          if (!isDuplicate) {
+            allTracks.push({ ...innerTrack, imagePath });
+          }
+        });
+      });
+      console.log(allTracks);
+      // 최대 12개의 트랙으로 제한
+      const limitedTracks = allTracks.slice(0, 12);
+      
+
+      // 기존 track 배열 업데이트
+      setTrack(limitedTracks);
     });
   }, [loginID]);
+
+
+
+  // useEffect(() => {
+  //   console.log(storedDataString)
+  // }, [storedDataString]);
 
   const carouselRef = useRef(null);
 
@@ -53,13 +70,13 @@ const Overview = () => {
   };
 
   // 최대 12개까지의 빈 아이템을 생성
-  const emptyItems = Array.from({ length: Math.max(0, 12 - tracks.length) }, (_, index) => (
-    <div key={`empty-${index}`} className={styles.item}>
-      <img src="http://placehold.it/150x150" alt={`Empty Image ${index + 1}`} />
-      <div className={styles.carouselTitle}>빈 곡</div>
-      <div className={styles.carouselSinger}>Unknown Artist</div>
-    </div>
-  ));
+  // const emptyItems = Array.from({ length: Math.max(0, 12 - tracks.length) }, (_, index) => (
+  //   <div key={`empty-${index}`} className={styles.item}>
+  //     <img src="http://placehold.it/150x150" alt={`Empty Image ${index + 1}`} />
+  //     <div className={styles.carouselTitle}>빈 곡</div>
+  //     <div className={styles.carouselSinger}>Unknown Artist</div>
+  //   </div>
+  // ));
 
   // 특정 트랙을 재생 목록에 추가하는 함수
   const addTrackToPlaylist = (track) => {
@@ -138,8 +155,8 @@ const Overview = () => {
                   </div>
 
                 ))}
-                {/* 빈 아이템 추가 */}
-                {emptyItems}
+                {/* 빈 아이템 추가
+                {emptyItems} */}
               </OwlCarousel>
               <div className={styles.carouselButton}>
                 <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button>
