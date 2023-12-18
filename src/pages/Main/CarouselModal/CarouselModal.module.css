@@ -1,3 +1,41 @@
+@Keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+}
+
+.modalContentClosing {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
+    width: 800px;
+    height: 85%;
+    z-index: 1001;
+    position: absolute;
+    top: 60px;
+    overflow-y: auto;
+    animation: slideUp 0.5s forwards;
+}
+
 .modalBackground {
     position: fixed;
     top: 0;
@@ -7,6 +45,7 @@
     background-color: rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;
+    align-items: center;
     z-index: 1000;
 }
 
@@ -17,11 +56,11 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
     max-width: 800px;
     width: 90%;
-    height: 80%;
+    height: 85%;
     z-index: 1001;
     position: absolute;
-    top: 80px;
-    overflow-y: auto;
+    top: 60px;
+    animation: slideDown 0.5s forwards;
 }
 
 .modalClose {
@@ -38,22 +77,29 @@
     border-bottom: 1px solid #dee2e6;
     list-style: none;
     display: flex;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    position: relative;
 }
 
 .playlistCreate {
     font-size: 1.8rem;
     font-weight: 500;
     margin-right: 30px;
+    cursor: pointer;
 }
 
 .playlistAdd {
     font-size: 1.8rem;
     font-weight: 500;
+    cursor: pointer;
+}
+
+.selectedTab {
+    color: coral;
 }
 
 .playlistTitle {
-    margin-top: 30px;
+    margin-top: 15px;
 }
 
 .plTitle {
@@ -116,14 +162,15 @@ input[type='radio'] {
     width: 80px;
     height: 40px;
     border-radius: 5px;
-    border: none;
-    background-color: coral;
-    color: white;
+    border: 1px solid coral;
+    background-color: white;
+    color: coral;
 }
 
 .submitBtn:hover {
     cursor: pointer;
-    background-color: #ff4400;
+    background-color: coral;
+    color: white;
 }
 
 .addPlaylist {
@@ -131,14 +178,14 @@ input[type='radio'] {
     border-right: 1px solid #e6e6e6;
     border-left: 1px solid #e6e6e6;
     border-radius: 3px;
-    margin-top: 25px;
-    margin-bottom: 35px;
+    margin-top: 15px;
+    margin-bottom: 30px;
     list-style: none;
     padding: 0px;
 }
 
 .playlist {
-    height: 40px;
+    height: 45px;
     border-bottom: 1px solid #e6e6e6;
     padding: 5px 10px 5px 10px;
 
@@ -151,8 +198,8 @@ input[type='radio'] {
 }
 
 .playlistImg {
-    width: 35px;
-    height: 100%;
+    width: 33px;
+    height: 33px;
     margin-right: 10px;
 }
 
@@ -188,10 +235,6 @@ input[type='radio'] {
     color: #000000;
 }
 
-
-
-
-
 .playlistHr {
     border: 3px solid #e9e9e9;
     margin-left: -30px;
@@ -201,6 +244,106 @@ input[type='radio'] {
 .pllikeTitle {
     font-size: 1.1rem;
     font-weight: 500;
-    margin-top: 25px;
-    margin-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.likeMusic {
+    width: 100%;
+    height: 300px;
+    position: relative;
+    list-style: none;
+    padding: 0px;
+}
+
+.likeMusicLi {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    border-bottom: 1px solid #e6e6e6;
+    padding: 10px 0px 10px 0px;
+}
+
+.likeMusicImg {
+    width: 80px !important;
+    height: 75px !important;
+}
+
+.likeMusicImg img {
+    width: 100%;
+    height: 100%;
+}
+
+.likeWriterAndTitle {
+    width: 72%;
+    height: 100%;
+    padding-left: 20px;
+}
+
+.likeMusicWriter {
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #aaaaaa;
+    white-space: nowrap;
+}
+
+.likeMusicTitle {
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.likeAdd {
+    width: 120px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.groupAdd {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.likeAddBtn {
+    width: 100%;
+    height: 50%;
+    border: 1px solid coral;
+    color: coral;
+    border-radius: 5px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.likeAddBtns {
+    width: 100%;
+    height: 50%;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    background-color: coral;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.likeAddBtn:hover {
+    cursor: pointer;
+    background-color: coral;
+    color: white;
+}
+
+.likeAddBtns:hover {
+    cursor: pointer;
+    background-color: rgb(255, 68, 0);
 }

@@ -16,8 +16,8 @@ const Main = () => {
     const { loginID, setLoginID } = useContext(LoginContext);
     const storageId = localStorage.getItem("loginID");
     const [isFavorite, setFavorite] = useState(0);
+    const [trackInfoAll, setTrackInfoAll] = useState([]);
     const [loading, setLoading] = useState(true);
-
     const [flag, setFlag] = useState(true);
 
 
@@ -25,7 +25,6 @@ const Main = () => {
     useEffect(() => {
         axios.get("/api/track/recent")
             .then((res) => {
-                console.log(loginID);
                 setRecentMusic(res.data);
                 if (res.data.length > 0 && res.data[0].trackImages && res.data[0].trackImages.length > 0) {
                     setSelectImage(res.data[0].trackImages[0].imagePath);
@@ -54,7 +53,7 @@ const Main = () => {
 
     const loadingLikes = async () => {
         axios.get(`/api/like/${storageId}`).then(res=>{
-            setLike(res.data);            
+            setLike(res.data);
         }).catch((e)=>{
             console.log(e);
         });
@@ -62,7 +61,16 @@ const Main = () => {
 
     useEffect(()=>{
         loadingLikes();
-    },[isFavorite]);
+    }, [isFavorite]);
+
+    useEffect(() => {
+        axios.get("/api/track").then((res) => {
+            setTrackInfoAll(res.data);
+            loadingLikes();
+        }).catch((err) => {
+            console.log(err);
+        });
+    }, [isFavorite]);
 
     useEffect(() => {
         if (Array.isArray(selectTitle)) {
@@ -137,7 +145,7 @@ const Main = () => {
                         <div key={index}>
                             <div className={styles.carouselTitle}>{filterTag.tagName}</div>
                             <div className={styles.carousel}>
-                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike} setFavorite={setFavorite} isFavorite={isFavorite}/>
+                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike} setFavorite={setFavorite} isFavorite={isFavorite} trackInfoAll={trackInfoAll}/>
                             </div>
                         </div>
                     ))}
