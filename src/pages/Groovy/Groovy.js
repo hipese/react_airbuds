@@ -16,8 +16,8 @@ import { Container, Row, Col } from "reactstrap";
 import AnnounceList from "../Announce/AnnounceList";
 import QnaList from "../Qna/qnaList";
 import Upload_Main from "../Upload/Upload_Main";
-import Track_Detail from "../Detail/TrackDetail/Track_Detail";
 import DashBoardMain from "../Dashboard/Dashboard";
+import Track_Detail from "../Detail/TrackDetail/Track_Detail";
 
 const Groovy = () => {
     return (
@@ -29,7 +29,7 @@ const Groovy = () => {
             </div>
             <Container className={styles.MainContainer} fluid>
                     <Routes>
-                        <Route path="/" element={<Main />} />
+                    <Route path="/" element={<Main />} />
                         <Route path="Feed/*" element={<Feed />} />
                         <Route path="Library/*" element={<Library />} />
                         <Route path="Playlist/*" element={<Playlist />} />

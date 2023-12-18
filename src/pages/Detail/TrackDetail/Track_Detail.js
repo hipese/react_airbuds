@@ -100,7 +100,11 @@ const Track_Detail = () => {
             console.log(resp.data);
             // setReplyList(prev => ([...prev, reply]))
             setReply((prev) => ({ ...prev, contents: "" }));
-            setReplyList(prev => ([...prev, reply]))
+            axios.get(`/api/reply/${trackId}`).then(resp => {
+                setReplyList(resp.data);
+            }).catch((e) => {
+                console.log(e);
+            });
         }).catch((e) => {
             console.log(e);
         });

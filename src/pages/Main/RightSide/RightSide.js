@@ -17,14 +17,14 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
         return trackInfo.filter(infoItem =>
             trackLike.some(likeItem => likeItem.trackId === infoItem.track.trackId)
         );
-    };    
-
-    useEffect(()=>{
+    };
+    const sideLoading = async () => {
         const tagObjectsArray = Object.values(trackInfoByTag);
         const newArr = [];
         tagObjectsArray.forEach( item => newArr.push(...item));
 
         const commonTracks = findCommonTrack(newArr, trackLike);
+        console.log("rightside commonetrack",commonTracks);
 
         const uniqueTitlesArray = commonTracks.reduce((result, item) => {
             const existingItem = result.find(existing => existing.track.title === item.track.title);
@@ -34,14 +34,26 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
             return result;
         }, []);
 
-        const only3Music = uniqueTitlesArray.filter((e,i) => i < 3);
+        const sortedData = uniqueTitlesArray.sort((a, b) => b.track.trackId - a.track.trackId);
 
-        setOnlyLike(only3Music);
-        console.log(uniqueTitlesArray);
+        const threeData = sortedData.filter((e,i)=>i < 3);
+
+        await new Promise(()=>{
+            setOnlyLike(threeData);
+        });
+    }
+
+    const handletest =() => {
+        console.log(trackLike);
+    }
+
+    useEffect(()=>{        
+        console.log("right side tracklike",trackLike);
+        sideLoading();        
     },[trackLike]);
     return (
         <div className={styles.positionFixed}>
-            <div className={styles.followArtist}><GroupAddIcon className={styles.followIcon} />팔로우한 아티스트<div className={styles.viewAll}>더보기</div></div>
+            <div className={styles.followArtist}><GroupAddIcon className={styles.followIcon} />팔로우한 아티스트<div className={styles.viewAll} onClick={handletest}>더보기</div></div>
             <ul className={styles.followul}>
                 <li className={styles.followli}>
                     <div className={styles.followImg}></div>
@@ -71,12 +83,12 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
                     <ul className={styles.loveul}>
                         {onlyLike.map((e,i) => {
                         const trackImage = e.track.trackImages && e.track.trackImages.length > 0
-                        ? `/tracks/image/${e.track.trackImages.imagePath}`
+                        ? `/tracks/image/${e.track.trackImages[0].imagePath}`
                         : "http://placehold.it/150x150";
                         return (
                             <li key={i} className={styles.loveli}>
                                 <div className={styles.loveImg}>
-                                    <img src={trackImage}></img>
+                                    <img src={trackImage} width={50} height={50}></img>
                                 </div>
                                 <div>
                                     <div className={styles.loveSinger}>{e.track.title}</div>
