@@ -63,6 +63,12 @@
     width: 100%;
 }
 
+.activeLink {
+    background-color: black;
+    text-decoration: none;
+    color: #2ECC71;
+}
+
 .linkurl:hover {
     color: rgb(255, 255, 255);
     text-decoration: none;
