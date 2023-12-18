@@ -10,223 +10,6 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import axios from 'axios';
 
-const data = [{
-    "id": "10대",
-    "color": "hsl(166, 70%, 50%)",
-    "data": [
-      {
-        "x": "1월",
-        "y": 47
-      },
-      {
-        "x": "2월",
-        "y": 27
-      },
-      {
-        "x": "3월",
-        "y": 228
-      },
-      {
-        "x": "4월",
-        "y": 49
-      },
-      {
-        "x": "5월",
-        "y": 100
-      },
-      {
-        "x": "6월",
-        "y": 68
-      },
-      {
-        "x": "7월",
-        "y": 76
-      },
-      {
-        "x": "8월",
-        "y": 135
-      },
-      {
-        "x": "9월",
-        "y": 224
-      },
-      {
-        "x": "10월",
-        "y": 112
-      },
-      {
-        "x": "11월",
-        "y": 210
-      },
-      {
-        "x": "12월",
-        "y": 54
-      }
-    ]
-  },
-  {
-    "id": "20대",
-    "color": "hsl(166, 70%, 50%)",
-    "data": [
-      {
-        "x": "1월",
-        "y": 47
-      },
-      {
-        "x": "2월",
-        "y": 27
-      },
-      {
-        "x": "3월",
-        "y": 228
-      },
-      {
-        "x": "4월",
-        "y": 49
-      },
-      {
-        "x": "5월",
-        "y": 100
-      },
-      {
-        "x": "6월",
-        "y": 68
-      },
-      {
-        "x": "7월",
-        "y": 76
-      },
-      {
-        "x": "8월",
-        "y": 135
-      },
-      {
-        "x": "9월",
-        "y": 224
-      },
-      {
-        "x": "10월",
-        "y": 112
-      },
-      {
-        "x": "11월",
-        "y": 210
-      },
-      {
-        "x": "12월",
-        "y": 54
-      }
-    ]
-  },
-  {
-    "id": "30대",
-    "color": "hsl(166, 70%, 50%)",
-    "data": [
-      {
-        "x": "1월",
-        "y": 47
-      },
-      {
-        "x": "2월",
-        "y": 27
-      },
-      {
-        "x": "3월",
-        "y": 228
-      },
-      {
-        "x": "4월",
-        "y": 49
-      },
-      {
-        "x": "5월",
-        "y": 100
-      },
-      {
-        "x": "6월",
-        "y": 68
-      },
-      {
-        "x": "7월",
-        "y": 76
-      },
-      {
-        "x": "8월",
-        "y": 135
-      },
-      {
-        "x": "9월",
-        "y": 224
-      },
-      {
-        "x": "10월",
-        "y": 112
-      },
-      {
-        "x": "11월",
-        "y": 210
-      },
-      {
-        "x": "12월",
-        "y": 54
-      }
-    ]
-  },
-  {
-    "id": "40대",
-    "color": "hsl(166, 70%, 50%)",
-    "data": [
-      {
-        "x": "1월",
-        "y": 47
-      },
-      {
-        "x": "2월",
-        "y": 27
-      },
-      {
-        "x": "3월",
-        "y": 228
-      },
-      {
-        "x": "4월",
-        "y": 49
-      },
-      {
-        "x": "5월",
-        "y": 100
-      },
-      {
-        "x": "6월",
-        "y": 68
-      },
-      {
-        "x": "7월",
-        "y": 76
-      },
-      {
-        "x": "8월",
-        "y": 135
-      },
-      {
-        "x": "9월",
-        "y": 224
-      },
-      {
-        "x": "10월",
-        "y": 112
-      },
-      {
-        "x": "11월",
-        "y": 210
-      },
-      {
-        "x": "12월",
-        "y": 54
-      }
-    ]    
-  }];
-
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
     borderRadius: 5,
@@ -336,6 +119,7 @@ const DashBoardDisplay = () => {
     const [streaming,setStreaming] = React.useState(23);
     const [report,setReport] = React.useState(58);
     const [formdReport,setFormdReport] = React.useState([]);
+    const [formdMusic,setFormdMusic] = React.useState([]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -354,34 +138,61 @@ const DashBoardDisplay = () => {
         return groupedData;
     };
 
-    const transformToReactData = (groupedData) => {
-        const reactData = Object.entries(groupedData).map(([year, data]) => ({
-            id: parseInt(year),
-            color : `hsl(166, 70%, 50%)`,
-            data: data.map(item => ({
-            x: `${item.month}월`,
-            y: item.count,
-            })),
-        }));
+    // const transformToLineData = (groupedData) => {
+    //     const reactData = Object.entries(groupedData).map(([year, data]) => ({
+    //         id: parseInt(year),
+    //         color : `hsl(166, 70%, 50%)`,
+    //         data: data.map(item => ({
+    //         x: `${item.month}월`,
+    //         y: item.count,
+    //         })),
+    //     }));
         
-        return reactData;
+    //     return reactData;
+    // };
+    const transformToLineData = (groupedData) => {
+        const reactData = Object.entries(groupedData).map(([year, data]) => {
+        const months = Array.from({ length: 12 }, (_, index) => index + 1); // 1부터 12까지의 숫자 배열 생성
+    
+        const transformedData = months.map(month => {
+        const monthData = data.find(item => item.month === month);
+            return {
+                x: `${month}월`,
+                y: monthData ? monthData.count : 0,
+            };
+            });
+        
+            return {
+            id: parseInt(year),
+            color: `hsl(166, 70%, 50%)`,
+            data: transformedData,
+            };
+        });
+    
+    return reactData;
     };
 
     React.useEffect(()=>{
-        axios.get(`/api/dashboard`).then(res=>{
+        axios.get(`/api/dashboard/report`).then(res=>{
             console.log(res.data);
             const groupedData = groupByYear(res.data);
-            const reactData = transformToReactData(groupedData);
+            const reactData = transformToLineData(groupedData);
             setFormdReport(reactData);
-            console.log(reactData);
-        })
+            console.log('report',reactData);
+        });
+
+        axios.get(`/api/dashboard/music`).then(res=>{
+            const groupedData = groupByYear(res.data);
+            const reactData = transformToLineData(groupedData);
+            console.log("music",reactData);
+            setFormdMusic(reactData);
+        });
+
     },[]);
     
     return(
-        <div className={`${style.dashcontainer} ${style.ma}`}>
+        <Box className={`${style.dashcontainer} ${style.ma}`}>
             <div id="title" className={`${style.pad10}`}>
-                
-                
                 <Typography fontSize={13}>
                     Dashboard   <Button onClick={toggleDrawer('left', true)}>Menu</Button>
                 </Typography>               
@@ -452,9 +263,9 @@ const DashBoardDisplay = () => {
                 <TabContext value={value}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
-                        <Tab label="Member" value="1" />
+                        <Tab label="Report" value="1" />
                         <Tab label="Music" value="2" />
-                        <Tab label="Report" value="3" />
+                        <Tab label="Member" value="3" />
                     </TabList>
                     </Box>
                     <TabPanel value="1">
@@ -467,13 +278,28 @@ const DashBoardDisplay = () => {
                                 className={`${style.center} ${style.w100}`}
                             >                    
                                 <div className={`${style.dashLBox}`}>
-                                    <LineChart data={data}/>
+                                    <LineChart data={formdReport} theme={"Report"}/>
+                                </div>   
+                            </Box>
+                        </Grid>                        
+                    </TabPanel>
+                    <TabPanel value="2">
+                        <Grid container spacing={3} sx={{width:"100%"}}>
+                            <Box
+                                component={Grid}
+                                item
+                                xs={12}
+                                // display={{ xs: "none", md: "flex" }}
+                                className={`${style.center} ${style.w100}`}
+                            >                    
+                                <div className={`${style.dashLBox}`}>                                    
+                                    <LineChart data={formdMusic} theme={"Music"}/>
                                 </div>   
                             </Box>
                         </Grid>
                     </TabPanel>
-                    <TabPanel value="2">
-                    <Grid container spacing={3} sx={{width:"100%"}}>
+                    <TabPanel value="3">
+                        <Grid container spacing={3} sx={{width:"100%"}}>
                             <Box
                                 component={Grid}
                                 item
@@ -487,24 +313,9 @@ const DashBoardDisplay = () => {
                             </Box>
                         </Grid>
                     </TabPanel>
-                    <TabPanel value="3">
-                    <Grid container spacing={3} sx={{width:"100%"}}>
-                            <Box
-                                component={Grid}
-                                item
-                                xs={12}
-                                // display={{ xs: "none", md: "flex" }}
-                                className={`${style.center} ${style.w100}`}
-                            >                    
-                                <div className={`${style.dashLBox}`}>
-                                    <LineChart data={formdReport}/>
-                                </div>   
-                            </Box>
-                        </Grid>
-                    </TabPanel>
                 </TabContext>
             </Box>
-        </div>
+        </Box>
     )
 }
 

@@ -11,7 +11,7 @@ import CarouselModal from "./CarouselModal/CarouselModal";
 import { LoginContext } from '../../App';
 import axios from 'axios';
 
-const Carousel = React.memo(({ trackInfo,trackLike,setLike,trackInfoAll}) => {
+const Carousel = React.memo(({ trackInfo,trackLike,setLike,setFavorite,isFavorite, trackInfoAll}) => {
     const carouselRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTrack, setSelectedTrack] = useState(null);
@@ -42,11 +42,12 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike,trackInfoAll}) => {
         if(loginID !== ""){
             if(!isLiked){
                 const formData = new FormData();
-                formData.append("trackId",trackId);
-                formData.append("id",storageId);
+                formData.append("likeSeq",0);
+                formData.append("userId",storageId);
+                formData.append("trackId",trackId);                
                 axios.post(`/api/like`,formData).then(res=>{
-                    console.log(res.data);
-                    setLike([...trackLike, { trackId : trackId, id: storageId, likeSeq: res.data.likeSeq }]);
+                    setLike([...trackLike, { trackId : trackId, userId: storageId, likeSeq: res.data}]);
+                    setFavorite(isFavorite+1);
                     e.target.classList.add(styles.onClickHeart);
                     e.target.classList.remove(styles.NonClickHeart);
                 }).catch((e)=>{
@@ -55,10 +56,12 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike,trackInfoAll}) => {
             }else{
                 const deleteData = new FormData();
                 deleteData.append("trackId",trackId);
-                deleteData.append("id",storageId);
+                deleteData.append("userId",storageId);
                 axios.post(`/api/like/delete`,deleteData).then(res=>{
-                    console.log(res.data);
-                    setLike(trackLike.filter(likedTrack => likedTrack.trackId !== trackId));
+                    const newLikeList = trackLike.filter(e => e.trackId !== trackId);
+                    console.log("carousel delete",newLikeList);
+                    setLike(newLikeList);
+                    setFavorite(isFavorite+1);
                     e.target.classList.remove(styles.onClickHeart);
                     e.target.classList.add(styles.NonClickHeart);
                 }).catch((e)=>{

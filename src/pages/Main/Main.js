@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import OwlCarousel from "./Carousel"
 import RightSide from "./RightSide/RightSide";
 import { LoginContext } from "../../App";
+import { Box, CircularProgress } from "@mui/material";
 
 const Main = () => {
     const [recentMusic, setRecentMusic] = useState([]);
@@ -16,8 +17,10 @@ const Main = () => {
     const storageId = localStorage.getItem("loginID");
     const [isFavorite, setFavorite] = useState(0);
     const [trackInfoAll, setTrackInfoAll] = useState([]);
-
+    const [loading, setLoading] = useState(true);
     const [flag, setFlag] = useState(true);
+
+
     
     useEffect(() => {
         axios.get("/api/track/recent")
@@ -35,6 +38,7 @@ const Main = () => {
             .then((res) => {
                 if(Array.isArray(res.data)) {
                     setSelectTitle(res.data);
+                    setLoading(false);                                     
                 } else {
                     setSelectTitle([]);
                     console.log("Data is not an array:", res.data);
@@ -95,6 +99,18 @@ const Main = () => {
         }
     }
 
+    const CircularIndeterminate = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    };
+
+    if (loading) {
+        return <CircularIndeterminate />;
+    }
+
     
     return (
         <div className={styles.container}>
@@ -129,7 +145,7 @@ const Main = () => {
                         <div key={index}>
                             <div className={styles.carouselTitle}>{filterTag.tagName}</div>
                             <div className={styles.carousel}>
-                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike} trackInfoAll={trackInfoAll} />
+                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike} setFavorite={setFavorite} isFavorite={isFavorite} trackInfoAll={trackInfoAll}/>
                             </div>
                         </div>
                     ))}
