@@ -24,7 +24,6 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
         tagObjectsArray.forEach( item => newArr.push(...item));
 
         const commonTracks = findCommonTrack(newArr, trackLike);
-        console.log("rightside commonetrack",commonTracks);
 
         const uniqueTitlesArray = commonTracks.reduce((result, item) => {
             const existingItem = result.find(existing => existing.track.title === item.track.title);
@@ -43,17 +42,12 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
         });
     }
 
-    const handletest =() => {
-        console.log(trackLike);
-    }
-
     useEffect(()=>{        
-        console.log("right side tracklike",trackLike);
         sideLoading();        
     },[trackLike]);
     return (
         <div className={styles.positionFixed}>
-            <div className={styles.followArtist}><GroupAddIcon className={styles.followIcon} />팔로우한 아티스트<div className={styles.viewAll} onClick={handletest}>더보기</div></div>
+            <div className={styles.followArtist}><GroupAddIcon className={styles.followIcon} />팔로우한 아티스트<div className={styles.viewAll}>더보기</div></div>
             <ul className={styles.followul}>
                 <li className={styles.followli}>
                     <div className={styles.followImg}></div>
@@ -92,7 +86,7 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
                                 </div>
                                 <div>
                                     <div className={styles.loveSinger}>{e.track.title}</div>
-                                    <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson} onClick={test}>{e.track.writer ? e.track.writer : "unknown"}</div>
+                                    <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson}>{e.track.writer ? e.track.writer : "unknown"}</div>
                                 </div>
                             </li>
                         )
