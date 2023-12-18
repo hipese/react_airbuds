@@ -8,6 +8,7 @@ import Track_Upload from './Track_Upload/Track_Upload';
 import TestMusicList from './TestMusicList/TestMusicList';
 import { Link, Route, Routes } from 'react-router-dom';
 import YourTracks from './YourTracks/YourTracks';
+import MyAlbums from './MyAlbums/MyAlbums';
 
 
 function CustomTabPanel(props) {
@@ -62,7 +63,7 @@ export default function Upload_Main() {
       <Routes>
         <Route path="/" element={<Track_Upload />} />
         <Route path="/yourtracks" element={<YourTracks/>} />
-        <Route path="/myAlbums" element={<YourTracks/>} />
+        <Route path="/myAlbums" element={<MyAlbums/>} />
       </Routes>
     </Box>
   );
