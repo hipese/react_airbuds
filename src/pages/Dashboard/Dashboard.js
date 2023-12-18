@@ -8,7 +8,7 @@ import FunnelChart from './charts/funnel'
 import { Line } from "@nivo/line";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-
+import axios from 'axios';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -118,16 +118,81 @@ const DashBoardDisplay = () => {
     const [visitor,setVisitor] = React.useState(40);
     const [streaming,setStreaming] = React.useState(23);
     const [report,setReport] = React.useState(58);
+    const [formdReport,setFormdReport] = React.useState([]);
+    const [formdMusic,setFormdMusic] = React.useState([]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const groupByYear = (javaData) => {
+        const groupedData = javaData.reduce((result, item) => {
+            const year = item.year;
+            if (!result[year]) {
+            result[year] = [];
+            }
+            result[year].push(item);
+            return result;
+        }, {});
+        
+        return groupedData;
+    };
+
+    // const transformToLineData = (groupedData) => {
+    //     const reactData = Object.entries(groupedData).map(([year, data]) => ({
+    //         id: parseInt(year),
+    //         color : `hsl(166, 70%, 50%)`,
+    //         data: data.map(item => ({
+    //         x: `${item.month}월`,
+    //         y: item.count,
+    //         })),
+    //     }));
+        
+    //     return reactData;
+    // };
+    const transformToLineData = (groupedData) => {
+        const reactData = Object.entries(groupedData).map(([year, data]) => {
+        const months = Array.from({ length: 12 }, (_, index) => index + 1); // 1부터 12까지의 숫자 배열 생성
+    
+        const transformedData = months.map(month => {
+        const monthData = data.find(item => item.month === month);
+            return {
+                x: `${month}월`,
+                y: monthData ? monthData.count : 0,
+            };
+            });
+        
+            return {
+            id: parseInt(year),
+            color: `hsl(166, 70%, 50%)`,
+            data: transformedData,
+            };
+        });
+    
+    return reactData;
+    };
+
+    React.useEffect(()=>{
+        axios.get(`/api/dashboard/report`).then(res=>{
+            console.log(res.data);
+            const groupedData = groupByYear(res.data);
+            const reactData = transformToLineData(groupedData);
+            setFormdReport(reactData);
+            console.log('report',reactData);
+        });
+
+        axios.get(`/api/dashboard/music`).then(res=>{
+            const groupedData = groupByYear(res.data);
+            const reactData = transformToLineData(groupedData);
+            console.log("music",reactData);
+            setFormdMusic(reactData);
+        });
+
+    },[]);
     
     return(
-        <div className={`${style.dashcontainer} ${style.ma}`}>
+        <Box className={`${style.dashcontainer} ${style.ma}`}>
             <div id="title" className={`${style.pad10}`}>
-                
-                
                 <Typography fontSize={13}>
                     Dashboard   <Button onClick={toggleDrawer('left', true)}>Menu</Button>
                 </Typography>               
@@ -147,13 +212,13 @@ const DashBoardDisplay = () => {
                                 <Typography fontSize={13}>
                                     Daliy Visitor
                                 </Typography>                        
-                                <Typography fontSize={40}>
+                                <Typography fontSize={40} paddingLeft={2}>
                                     {visitor}%
                                 </Typography>
+                                <div className={`${style.progressBar} ${style.pad5}`}>
+                                    <BorderLinearProgress variant="determinate" value={visitor > 100 ? 100 : visitor} />
+                                </div>
                             </div>                                                
-                            <div className={`${style.progressBar} ${style.pad5}`}>
-                                <BorderLinearProgress variant="determinate" value={visitor > 100 ? 100 : visitor} />
-                            </div>
                         </div>
                     </Tooltip>
                 </Grid>
@@ -167,10 +232,11 @@ const DashBoardDisplay = () => {
                                 <Typography fontSize={40} paddingLeft={2}>
                                     {streaming}%
                                 </Typography>
+                                <div className={`${style.progressBar} ${style.pad5}`}>
+                                    <RedLinearProgress variant='determinate' value={streaming > 100 ? 100 : streaming}/>
+                                </div>
                             </div>                                                
-                            <div className={`${style.progressBar} ${style.pad5}`}>
-                                <RedLinearProgress variant='determinate' value={streaming > 100 ? 100 : streaming}/>
-                            </div>
+                            
                         </div>
                     </Tooltip>
                 </Grid>
@@ -179,15 +245,16 @@ const DashBoardDisplay = () => {
                         <div className={`${style.dashBox}`}>
                             <div className={`${style.pad10}`}>
                                 <Typography fontSize={13}>
-                                    Today Streaming
+                                    Today Report
                                 </Typography>                        
                                 <Typography fontSize={40} paddingLeft={2}>
                                     {report}%
                                 </Typography>
+                                <div className={`${style.progressBar} ${style.pad5}`}>
+                                    <BlueLinearProgress variant='determinate' value={report > 100 ? 100 : report}/>
+                                </div>
                             </div>                                                
-                            <div className={`${style.progressBar} ${style.pad5}`}>
-                                <BlueLinearProgress variant='determinate' value={report > 100 ? 100 : report}/>
-                            </div>
+                            
                         </div>
                     </Tooltip>
                 </Grid>
@@ -196,9 +263,9 @@ const DashBoardDisplay = () => {
                 <TabContext value={value}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
-                        <Tab label="Member" value="1" />
+                        <Tab label="Report" value="1" />
                         <Tab label="Music" value="2" />
-                        <Tab label="Report" value="3" />
+                        <Tab label="Member" value="3" />
                     </TabList>
                     </Box>
                     <TabPanel value="1">
@@ -211,13 +278,28 @@ const DashBoardDisplay = () => {
                                 className={`${style.center} ${style.w100}`}
                             >                    
                                 <div className={`${style.dashLBox}`}>
-                                    <LineChart/>
+                                    <LineChart data={formdReport} theme={"Report"}/>
+                                </div>   
+                            </Box>
+                        </Grid>                        
+                    </TabPanel>
+                    <TabPanel value="2">
+                        <Grid container spacing={3} sx={{width:"100%"}}>
+                            <Box
+                                component={Grid}
+                                item
+                                xs={12}
+                                // display={{ xs: "none", md: "flex" }}
+                                className={`${style.center} ${style.w100}`}
+                            >                    
+                                <div className={`${style.dashLBox}`}>                                    
+                                    <LineChart data={formdMusic} theme={"Music"}/>
                                 </div>   
                             </Box>
                         </Grid>
                     </TabPanel>
-                    <TabPanel value="2">
-                    <Grid container spacing={3} sx={{width:"100%"}}>
+                    <TabPanel value="3">
+                        <Grid container spacing={3} sx={{width:"100%"}}>
                             <Box
                                 component={Grid}
                                 item
@@ -231,24 +313,9 @@ const DashBoardDisplay = () => {
                             </Box>
                         </Grid>
                     </TabPanel>
-                    <TabPanel value="3">
-                    <Grid container spacing={3} sx={{width:"100%"}}>
-                            <Box
-                                component={Grid}
-                                item
-                                xs={12}
-                                // display={{ xs: "none", md: "flex" }}
-                                className={`${style.center} ${style.w100}`}
-                            >                    
-                                <div className={`${style.dashLBox}`}>
-                                    <LineChart/>
-                                </div>   
-                            </Box>
-                        </Grid>
-                    </TabPanel>
                 </TabContext>
             </Box>
-        </div>
+        </Box>
     )
 }
 

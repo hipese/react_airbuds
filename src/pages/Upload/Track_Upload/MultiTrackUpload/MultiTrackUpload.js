@@ -18,13 +18,26 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { LoginContext } from "../../../../App";
+import AlbumTagList from "../AlbumTagList/AlbumTagList";
 
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Seoul");
 
 const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag, setSelectTag }) => {
 
     const loginID = useContext(LoginContext);
 
     const [trackSelectTag, setTrackSelectTag] = useState([]);
+
+    // 선택된 트랙의 인덱스를 저장하는 상태 변수 추가
+    const [selectedDate, setSelectedDate] = useState(dayjs());
+    const [playListType, setPlayListType] = useState('');
+    const [order, setOrder] = useState([]);
+    const [albumTitle, setAlbumTitle] = useState("익명의 앨범");
+    const [titleImage, setTitleImage] = useState();
+    const [writers, setWriters] = useState(['익명의 제작자']);
 
     useEffect(() => {
         // files 배열의 각 파일에 대해 tags 속성만 추출하여 새로운 배열 생성
@@ -33,24 +46,21 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
     }, [files]);
 
-    console.log(trackSelectTag);
-    console.log(files);
+    useEffect(() => {
+        // 새로운 order 배열을 생성하고 각 파일의 기본 순서를 설정
+        const newOrder = files.map((_, index) => index + 1);
+        setOrder(newOrder);
+    }, [files]);
 
-    dayjs.extend(utc);
-    dayjs.extend(timezone);
-
-    dayjs.tz.setDefault("Asia/Seoul");
-
-    // 선택된 트랙의 인덱스를 저장하는 상태 변수 추가
-    const [selectedDate, setSelectedDate] = useState(dayjs());
-    const [playListType, setPlayListType] = useState(null);
-    const [order, setOrder] = useState([]);
-    const [albumTitle, setAlbumTitle] = useState("익명의 앨범");
+    // console.log(trackSelectTag);
+    // console.log(files);
 
     const currentDatePicker = dayjs();
 
     const handleChange = (event) => {
-        setPlayListType(event.target.value);
+        const newPlayListType = event.target.value;
+        setPlayListType(newPlayListType);
+
     };
 
     // 이미지 변경을 위한 input
@@ -110,24 +120,49 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
     const handleSave = () => {
         const formData = new FormData();
 
-        console.log(files)
-
+        // console.log(files)
+        // console.log(selectTag)
+        // console.log(trackSelectTag);
 
         // files 배열에 있는 각 파일을 formData에 추가
-        files.forEach((fileData) => {
+        files.forEach((fileData, index) => {
             formData.append(`file`, fileData.file);
             formData.append(`name`, fileData.name);
             formData.append('duration', fileData.duration);
             formData.append('image_path', fileData.image_path);
-            formData.append('writer', fileData.writer);
-            formData.append('tag', selectTag);
+            formData.append(`writer`, fileData.writer);
+            if (fileData.imageFile) {
+                formData.append('imagefile', fileData.imageFile);
+            }
+            // 각 파일에 대한 태그 ID 배열 추출 및 추가
+            if (trackSelectTag[index]) {
+                const tagIds = trackSelectTag[index].map(tag => tag.tagId);
+                tagIds.forEach(tagId => {
+                    formData.append(`tags[${index}]`, tagId);
+                });
+            }
+        });
+        formData.append("titleImage", titleImage);
+        formData.append('order', order);
+        selectTag.forEach(tag => {
+            formData.append('albumselectTag', tag.id);
         });
         formData.append('releaseDate', selectedDate ? selectedDate.toISOString() : '');
         formData.append('albumTitle', albumTitle);
         formData.append('login', loginID.loginID);
 
 
-        if (playListType === "앨범") {
+
+        if(titleImage==null){
+            const isSelect = alert("앨범이미지를 선택해주세요.");
+            return;
+        }
+
+        if (playListType === "") {
+            const isSelect = alert("재생목록유형을 선택해주세요");
+            return;
+        }
+        else if (playListType === "앨범") {
             axios.post("/api/album", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -136,6 +171,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                 console.log("성공");
                 setFiles([]);
                 setSelectTag([]);
+                setTrackSelectTag([])
 
             }).catch(resp => {
                 console.log("실패")
@@ -164,7 +200,9 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
             return;
         }
         setFiles([]);
+        setSelectTag([]);
     }
+
 
 
     const handleAlbumTitleChange = (e) => {
@@ -186,31 +224,38 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
     const handleImageChange = (e) => {
         const imageFile = e.target.files[0];
         if (imageFile) {
-            // 선택된 파일의 URL 생성 (렌더링에 사용)
-            const newImagePath = URL.createObjectURL(imageFile);
+            const newImagePath = URL.createObjectURL(imageFile) // URL에 타임스탬프 추가
 
-            // 보여주기용 이미지 값 설정
-            setImageview(newImagePath);
+            setImageview(newImagePath); // 보여주기용 이미지 값 설정
 
-            // 실제 이미지 파일을 files 배열에 추가
-            setFiles(currentFiles => {
-                const updatedFiles = [...currentFiles];
-                if (updatedFiles.length > 0) {
-                    // 첫 번째 요소에 이미지 파일 추가
-                    updatedFiles[0] = { ...updatedFiles[0], image_path: imageFile.name, imageFile: imageFile };
-                }
-                return updatedFiles;
-            });
+            setTitleImage(imageFile); // titleImage 상태 업데이트
+
+            // files 배열의 모든 요소에 새 이미지 파일과 이미지 경로 업데이트
+            setFiles(currentFiles => currentFiles.map(file => ({
+                ...file,
+                imageFile: imageFile, // 모든 트랙에 동일한 이미지 파일 설정
+                image_path: imageFile.name // 모든 트랙에 새 이미지 파일 이름으로 image_path 설정
+            })));
         }
     };
 
 
+    // 작성자 이름 변경 핸들러
     const handleWriterChange = (index, newWriter) => {
         setFiles(currentFiles => {
+            // 현재 파일 목록 복사
             const updatedFiles = [...currentFiles];
+
+            // 선택된 파일의 writer 업데이트
             updatedFiles[index] = { ...updatedFiles[index], writer: newWriter };
+
             return updatedFiles;
         });
+    };
+
+    // 추가된 input과 setWriter에 값을 삭제하는 기능
+    const handleRemoveWriter = (index) => {
+        setWriters(prevWriters => prevWriters.filter((_, idx) => idx !== index));
     };
 
 
@@ -250,6 +295,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
 
 
+    // 각각의 태그요소를 선택해서 file.tags에 넣어주는 함수
     const handleTrackTagSelection = (fileIndex, selectedTag) => {
         // trackSelectTag 업데이트
         setTrackSelectTag(currentTags => {
@@ -271,27 +317,35 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         }));
     };
 
-
+    // 각각의 태그요소를 선택해서 그 요소의 id값이 같을 경우에만 삭제해주는 함수
     const handleTrackTagDelete = (fileIndex, tagToDelete) => {
         // trackSelectTag 배열 업데이트
         setTrackSelectTag(currentTags => currentTags.map((tags, idx) => {
             if (idx === fileIndex) {
-                // 선택된 파일의 태그 배열에서 tagToDelete와 일치하지 않는 태그만 필터링
-                return tags.filter(tag => tag.id !== tagToDelete.id);
+                return tags.filter(tag => tag.tagId !== tagToDelete.tagId); // tagId가 일치하지 않는 태그만 필터링
             }
             return tags;
         }));
-    
+
         // files 배열 업데이트
         setFiles(currentFiles => currentFiles.map((file, idx) => {
             if (idx === fileIndex) {
-                // 선택된 파일의 태그 배열에서 tagToDelete와 일치하지 않는 태그만 필터링
-                const updatedTags = file.tags.filter(tag => tag.id !== tagToDelete.id);
+                const updatedTags = file.tags.filter(tag => tag.tagId !== tagToDelete.tagId); // tagId가 일치하지 않는 태그만 필터링
                 return { ...file, tags: updatedTags };
             }
             return file;
         }));
     };
+
+    const handleFileDelete = (fileIndex) => {
+        // files 배열에서 선택된 인덱스의 파일을 제거
+        setFiles(currentFiles => currentFiles.filter((_, idx) => idx !== fileIndex));
+
+        // trackSelectTag 배열에서도 해당 인덱스의 태그 목록을 제거
+        setTrackSelectTag(currentTags => currentTags.filter((_, idx) => idx !== fileIndex));
+    };
+
+
 
     return (
         <div className={style.uploadDetail}>
@@ -306,6 +360,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                             style={{ display: 'none' }}
                             accept="image/*"
                         />
+                        <Button onClick={handleClickImage}>이미지변경</Button>
                     </div> : <div className={style.imageContainer}>
                         <img src={imageview} onClick={handleClickImage} />
                         <input
@@ -315,24 +370,29 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                             style={{ display: 'none' }}
                             accept="image/*"
                         />
+                        <Button onClick={handleClickImage}>이미지변경</Button>
                     </div>}
 
                 </Col>
-                <Col sm='12' md='8' style={{ marginBottom: '20px', padding: '0' }}>
+                <Col sm='12' md='8' style={{ padding: '0' }}>
                     <Row style={{ marginBottom: '20px', width: '100%' }}>
-                        <Col sm='12' style={{ marginBottom: '20px' }}>제목</Col>
-                        <Col sm='12' style={{ marginBottom: '20px' }}>
-                            <Input
-                                placeholder="앨범 제목을 입력하세요"
-                                className={style.detail_input}
-                                type="text"
-                                value={albumTitle}
-                                onChange={handleAlbumTitleChange}
-                            />
-                        </Col>
+                        {playListType !== '싱글' && playListType !== null && playListType !== '' && (
+                            <>
+                                <Col sm='12' style={{ marginBottom: '20px' }}>앨범제목</Col>
+                                <Col sm='12' style={{ marginBottom: '20px' }}>
+                                    <Input
+                                        placeholder="앨범 제목을 입력하세요"
+                                        className={style.detail_input}
+                                        type="text"
+                                        value={albumTitle}
+                                        onChange={handleAlbumTitleChange}
+                                    />
+                                </Col>
+                            </>
+                        )}
                         <Col sm='12' md='6' style={{ marginBottom: '10px' }}>
                             <Row style={{ marginBottom: '10px' }}>
-                                <Col sm='12' style={{ marginBottom: '10px' }}> 플레이리스트</Col>
+                                <Col sm='12' style={{ marginBottom: '10px' }}> 재생목록유형</Col>
                                 <Col sm='12' style={{ marginBottom: '10px' }}>
                                     <Box sx={{ minWidth: 120 }}>
                                         <FormControl fullWidth sx={{
@@ -377,7 +437,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                 <Fragment>
                                     <Col sm='12' style={{ marginBottom: '10px' }}>AlbumTag</Col>
                                     <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
-                                        <MusicTagList onSelectTag={handleTagSelection} />
+                                        <AlbumTagList onSelectTag={handleTagSelection} />
                                     </Col>
                                     <Col sm='12' md='8' style={{ marginBottom: '10px' }}>
                                         <Row className={style.chipRow}>
@@ -395,16 +455,6 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                 </Fragment>
                             )
                         }
-                        <Col sm='12' style={{ marginBottom: '10px' }}>writer</Col>
-                        <Col sm='12' style={{ marginBottom: '10px' }}>
-                            <Input
-                                className={style.detail_input}
-                                type="text"
-                                placeholder="제작자를 입력해주세요"
-                                value={files[0].writer || ''} // 초기값 설정
-                                onChange={(e) => handleWriterChange(0, e.target.value)}
-                            />
-                        </Col>
                     </Row>
                 </Col>
             </Row>
@@ -425,9 +475,10 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                 placeholder="순서를 입력하세요"
                                 value={order[index] || index + 1}
                                 onChange={(e) => handleTrackOrderChange(index, e.target.value)}
+                                readOnly="true"
                             />
                         </Col>
-                        <Col sm="6" style={{ marginBottom: '10px' }}>
+                        <Col sm="5" style={{ marginBottom: '10px' }}>
                             <Input
                                 className={style.detail_input_filename}
                                 type="text"
@@ -436,8 +487,11 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                 onChange={(e) => handleFileNameChange(index, e.target.value)}
                             />
                         </Col>
-                        <Col sm="4" md="4" style={{ marginBottom: '10px' }}>
+                        <Col sm="12" md="3" style={{ marginBottom: '10px' }}>
                             <MusicTagList onSelectTag={(tag) => handleTrackTagSelection(index, tag)} />
+                        </Col>
+                        <Col sm="12" md="2" style={{ marginBottom: '10px' }}>
+                            <Button onClick={() => handleFileDelete(index)}>삭제</Button>
                         </Col>
                         <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
                             {trackSelectTag[index] && trackSelectTag[index].length > 0 && (
@@ -454,11 +508,19 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                 </Row>
                             )}
                         </Col>
+                        <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
+                            <Input
+                                className={style.detail_input}
+                                type="text"
+                                placeholder="제작자를 입력하세요"
+                                value={file.writer}
+                                onChange={(e) => handleWriterChange(index, e.target.value)}
+                            />
+                            <hr />
+                        </Col>
                     </Fragment>
                 ))}
             </Row>
-
-            <hr />
             <Col sm="12">
                 <input
                     type="file"

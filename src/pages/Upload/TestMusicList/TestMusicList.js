@@ -1,11 +1,13 @@
 
 import { useState, useRef, useEffect, useContext } from "react"
 import axios from "axios";
+import { MusicContext } from "../../../App";
 
 const TestMusicList = () => {
 
+
     // 데이터베이스에 음원목록을 가져오는 변수
-    const [tracks, setTracks] = useState([]);
+    const [tracks, setTracks] = useContext(MusicContext);
 
     const testText = "잉여";
 
