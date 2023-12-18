@@ -6,26 +6,26 @@ import { ResponsiveLine } from '@nivo/line'
 // website examples showcase many properties,
 // you'll often use just a few of them.
   
-const MyResponsiveLine = ({data}) => (
+const MyResponsiveLine = ({data,theme}) => (
     <ResponsiveLine
         data={data}
         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
         xScale={{ type: 'point' }}
         yScale={{
             type: 'linear',
-            min: 'auto',
+            min: 0,
             max: 'auto',
-            stacked: true,
+            stacked: false,
             reverse: false
         }}
-        yFormat=" >-.2f"
+        
         axisTop={null}
         axisRight={null}
         axisBottom={{
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'transportation',
+            legend: theme,
             legendOffset: 36,
             legendPosition: 'middle'
         }}
