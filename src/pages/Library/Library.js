@@ -9,6 +9,8 @@ import Box from '@mui/material/Box';
 import { Routes, Route, Link } from "react-router-dom";
 import Overview from "./Overview/Overview";
 import History from "./History/History";
+import Likes from "./Likes/Likes";
+import Following from "./Following/Following";
 
 
 function CustomTabPanel(props) {
@@ -73,19 +75,69 @@ const Library = () => {
                                     textDecoration: 'none', // 밑줄 제거
                                 },
                             }} />
-                        <Tab label="Likes" component={Link} to="likes" {...a11yProps(1)} />
-                        <Tab label="Playlists" component={Link} to="playlist" {...a11yProps(2)} />
-                        <Tab label="Albums" component={Link} to="albums" {...a11yProps(3)} />
-                        <Tab label="Following" component={Link} to="following" {...a11yProps(4)} />
-                        <Tab label="History" component={Link} to="history" {...a11yProps(5)} />
+                        <Tab label="Likes" component={Link} to="likes" {...a11yProps(1)}
+                         sx={{
+                            '&.Mui-selected': {
+                                color: '#4CAF50',
+                                textDecoration: 'none', // 밑줄 제거
+                            },
+                            '&:hover': {
+                                color: '#4CAF50',
+                                textDecoration: 'none', // 밑줄 제거
+                            },
+                        }} />
+                        <Tab label="Playlists" component={Link} to="playlist" {...a11yProps(2)}
+                         sx={{
+                            '&.Mui-selected': {
+                                color: '#4CAF50',
+                                textDecoration: 'none', // 밑줄 제거
+                            },
+                            '&:hover': {
+                                color: '#4CAF50',
+                                textDecoration: 'none', // 밑줄 제거
+                            },
+                        }} />
+                        <Tab label="Albums" component={Link} to="albums" {...a11yProps(3)}
+                         sx={{
+                            '&.Mui-selected': {
+                                color: '#4CAF50',
+                                textDecoration: 'none', // 밑줄 제거
+                            },
+                            '&:hover': {
+                                color: '#4CAF50',
+                                textDecoration: 'none', // 밑줄 제거
+                            },
+                        }} />
+                        <Tab label="Following" component={Link} to="following" {...a11yProps(4)}
+                         sx={{
+                            '&.Mui-selected': {
+                                color: '#4CAF50',
+                                textDecoration: 'none', // 밑줄 제거
+                            },
+                            '&:hover': {
+                                color: '#4CAF50',
+                                textDecoration: 'none', // 밑줄 제거
+                            },
+                        }} />
+                        <Tab label="History" component={Link} to="history" {...a11yProps(5)}
+                         sx={{
+                            '&.Mui-selected': {
+                                color: '#4CAF50',
+                                textDecoration: 'none', // 밑줄 제거
+                            },
+                            '&:hover': {
+                                color: '#4CAF50',
+                                textDecoration: 'none', // 밑줄 제거
+                            },
+                        }} />
                     </Tabs>
                 </Box>
                 <Routes>
                     <Route path="/" element={<Overview />} />
-                    {/* <Route path="/likes" element={<Likes />} />
-                    <Route path="/playlist" element={<Playlist />} />
-                    <Route path="/albums" element={<Albums />} />
-                    <Route path="/following" element={<Following />} /> */}
+                    <Route path="/likes" element={<Likes />} />
+                    {/* <Route path="/playlist" element={<Playlist />} />
+                    <Route path="/albums" element={<Albums />} /> */}
+                    <Route path="/following" element={<Following />} /> 
                     <Route path="/history" element={<History />} />
                 </Routes>
             </Box>

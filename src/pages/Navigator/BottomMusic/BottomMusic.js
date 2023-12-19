@@ -24,16 +24,28 @@ const BottomMusic = () => {
             return;
         }
 
-        axios.get(`/api/track/findById/${loginID}`).then(resp => {
-            const tracksWithImages = resp.data.map(track => {
-                const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
-                const newTracks = resp.data.map(track => "/tracks/" + track.filePath);
-                const updatedAudioFiles = [...audioFiles, ...newTracks];
-                setAudioFiles(updatedAudioFiles);
-                return { ...track, imagePath };
+        axios.get(`/api/cplist/all`).then(resp => {
+            const allTracks = [];
+            const updatedAudioFiles = [];
+
+            resp.data.forEach((trackItem, outerIndex) => {
+                trackItem.tracks.forEach((innerTrack, innerIndex) => {
+                    const imagePath = innerTrack.trackImages.length > 0 ? innerTrack.trackImages[0].imagePath : null;
+                    const newTrackPath = "/tracks/" + innerTrack.filePath;
+                    updatedAudioFiles.push(newTrackPath);
+                    allTracks.push({ ...innerTrack, imagePath });
+                });
             });
-            setTracks(tracksWithImages);
-            const firstTrackInfo = tracksWithImages[0];
+            // const tracksWithImages = resp.data.map(track => {
+            //     const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+            //     const newTracks = resp.data.map(track => "/tracks/" + track.filePath);
+            //     const updatedAudioFiles = [...audioFiles, ...newTracks];
+            //     setAudioFiles(updatedAudioFiles);
+            //     return { ...track, imagePath };
+            // });
+            setAudioFiles(updatedAudioFiles);
+            setTracks(allTracks);
+            const firstTrackInfo = allTracks[0];
             setTrack_info({
                 title: firstTrackInfo?.title ?? '알 수 없는 제목',
                 writer: firstTrackInfo?.writer ?? '알 수 없는 작곡가',
@@ -42,20 +54,9 @@ const BottomMusic = () => {
         });
     }, [loginID]);
 
-
-    // useEffect(() => {
-    //     console.log(isPlaying);
-    // }, [isPlaying]);
-
-    // if (audioFiles.length === 0) {
-    //     return null; // If empty, don't render anything
-    // };
-
-
     const handlePlay = () => {
         setIsPlaying(true);
         setLoading(true);
-        //console.log(currentTrack);
     };
 
     const handlePause = () => {
@@ -108,13 +109,8 @@ const BottomMusic = () => {
         setCurrentTrack(previousTrack);
     };
 
-
-
     const handleEnded = () => {
-        // Callback for when the audio ends
-        // Automatically move to the next track
         handleNextTrack();
-        // You can also add additional logic here
     };
 
     return (

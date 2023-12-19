@@ -58,14 +58,8 @@
     margin-right: 10px;
 }
 
-.endMessage {
+.endMessage{
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.title {
-    font-size: 1.8rem;
-    font-weight: 500;
-    margin-top: 30px;
 }
