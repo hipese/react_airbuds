@@ -29,8 +29,6 @@ const Mytracks = () => {
     const { loginID, setLoginID } = useContext(LoginContext);
     const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
     const [trackPlayingStatus, setTrackPlayingStatus] = useState({});
-    const localItem = localStorage.getItem("loginID");
-    const storageId = JSON.parse(localItem);
     const [isFavorite, setFavorite] = useState(0);
     const [trackLike,setLike] = useState([]);
     const [trackCount,setTrackCount] = useState([]);
@@ -89,10 +87,10 @@ const Mytracks = () => {
             if(!isLiked){
                 const formData = new FormData();
                 formData.append("likeSeq",0);
-                formData.append("userId",storageId.value);
+                formData.append("userId",loginID);
                 formData.append("trackId",trackId);                
                 axios.post(`/api/like`,formData).then(res=>{
-                    setLike([...trackLike, { trackId : trackId, userId: storageId.value, likeSeq: res.data}]);
+                    setLike([...trackLike, { trackId : trackId, userId: loginID, likeSeq: res.data}]);
                     setFavorite(isFavorite+1);
                     e.target.classList.add(styles.onClickHeart);
                     e.target.classList.remove(styles.NonClickHeart);
@@ -102,7 +100,7 @@ const Mytracks = () => {
             }else{
                 const deleteData = new FormData();
                 deleteData.append("trackId",trackId);
-                deleteData.append("userId",storageId);
+                deleteData.append("userId",loginID);
                 axios.post(`/api/like/delete`,deleteData).then(res=>{
                     const newLikeList = trackLike.filter(e => e.trackId !== trackId);
                     console.log("carousel delete",newLikeList);
@@ -126,7 +124,7 @@ const Mytracks = () => {
     };
     
     const loadingLikes = async () => {
-        axios.get(`/api/like/${storageId.value}`).then(res=>{
+        axios.get(`/api/like/${loginID}`).then(res=>{
             console.log(res.data);
             setLike(res.data);            
         }).catch((e)=>{
