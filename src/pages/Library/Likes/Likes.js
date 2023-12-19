@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import 'owl.carousel/dist/assets/owl.carousel.css';
-import 'owl.carousel/dist/assets/owl.theme.default.css';
-import styles from "./History.module.css";
+import styles from "./Likes.module.css";
 import axios from "axios";
 import { AutoPlayContext, CurrentTrackContext, LoginContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../App';
 import { Link } from 'react-router-dom';
@@ -18,7 +16,7 @@ const LoadingSpinner = () => (
     </Box>
 );
 
-const History = () => {
+const Likes = () => {
     const [loading, setLoading] = useState(true);
     const [track, setTrack] = useState([]);
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
@@ -33,7 +31,12 @@ const History = () => {
     const containerRef = useRef(null);  // 컨테이너 div를 위한 Ref
 
     useEffect(() => {
-        axios.get(`/api/cplist`).then(resp => {
+
+        if (!loginID) {
+            return;
+        }
+
+        axios.get(`/api/like/order`).then(resp => {
 
             const allTracks = [];
 
@@ -48,6 +51,9 @@ const History = () => {
             // 기존 track 배열 업데이트
             setTrack(allTracks);
             setLoading(false);
+        }).catch(error => {
+            console.error('데이터를 불러오는 중 오류 발생:', error);
+            setLoading(false);
         });
     }, [loginID]);
 
@@ -59,7 +65,7 @@ const History = () => {
     const handleScrollToBottom = () => {
         if (hasMore) {
             // 다음 데이터를 불러오기 위한 API 호출
-            axios.get(`/api/cplist`, {
+            axios.get(`/api/like/order`, {
                 params: {
                     page: page + 1, // 페이지 번호 증가
                 },
@@ -77,6 +83,7 @@ const History = () => {
                 // Update the status and increase the page by merging the existing tracks and the new tracks
                 setTrack(prevTracks => [...prevTracks, ...newTracks]);
 
+                // 받아온 데이터가 비어 있다면 setHasMore(false) 호출
                 if (newTracks.length < 6) {
                     setHasMore(false);
                 }
@@ -231,5 +238,4 @@ const formatDurationFromHHMMSS = (duration) => {
     return `${hours}:${minutes}:${seconds}`;
 };
 
-
-export default History;
+export default Likes;

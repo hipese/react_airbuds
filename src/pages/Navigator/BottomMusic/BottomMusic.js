@@ -24,7 +24,7 @@ const BottomMusic = () => {
             return;
         }
 
-        axios.get(`/api/cplist/all/${loginID}`).then(resp => {
+        axios.get(`/api/cplist/all`).then(resp => {
             const allTracks = [];
             const updatedAudioFiles = [];
 
@@ -45,7 +45,6 @@ const BottomMusic = () => {
             // });
             setAudioFiles(updatedAudioFiles);
             setTracks(allTracks);
-            console.log(audioFiles);
             const firstTrackInfo = allTracks[0];
             setTrack_info({
                 title: firstTrackInfo?.title ?? '알 수 없는 제목',
@@ -55,13 +54,9 @@ const BottomMusic = () => {
         });
     }, [loginID]);
 
-
-
-
     const handlePlay = () => {
         setIsPlaying(true);
         setLoading(true);
-        //console.log(currentTrack);
     };
 
     const handlePause = () => {
@@ -114,13 +109,8 @@ const BottomMusic = () => {
         setCurrentTrack(previousTrack);
     };
 
-
-
     const handleEnded = () => {
-        // Callback for when the audio ends
-        // Automatically move to the next track
         handleNextTrack();
-        // You can also add additional logic here
     };
 
     return (

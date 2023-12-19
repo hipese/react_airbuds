@@ -187,7 +187,6 @@ const Track_Detail = () => {
     };
 
     const handleThumbUpClick = () => {
-        // Toggle the liked state
         setLiked((prevLiked) => !prevLiked);
     };
 
@@ -243,7 +242,7 @@ const Track_Detail = () => {
                             <Grid item xs={12} md={12} className={styles.user_info}>
                                 <Avatar alt="Profile" src="/static/images/avatar/1.jpg" sx={{ width: '80px', height: '80px' }} />
                                 <Typography variant="body1">
-                                    {loginID ? loginID : '로그인해주세요'}
+                                    {track.writeId}
                                 </Typography>
                                 <div className={styles.like}>
                                     <FavoriteBorderIcon />
@@ -341,7 +340,6 @@ const Track_Detail = () => {
                                         </Button>
                                     </Grid>
                                 ) : (
-                                    // Display text in view mode
                                     <div className={styles.reply_info}>
                                         <Typography variant="h6">{comment.writer}</Typography>
                                         <Typography variant="body1">{comment.contents}</Typography>
