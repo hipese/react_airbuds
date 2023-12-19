@@ -26,8 +26,9 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, handleUpdateAlbum, onC
 
     // 선택된 태그를 가져오는 방법
     const [selectTag, setSelectTag] = useState([]);
-    const [files,setFiles]=useState([]);
-    const [albumTag,setAlbumTag]=useState([]);
+    const [imageView,setImageView] =useState("/tracks/image/"+albumUpdate.coverImagePath);
+    const [files, setFiles] = useState([]);
+    const [albumTag, setAlbumTag] = useState([]);
 
     const handleCancle = () => {
         onClose();
@@ -76,9 +77,33 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, handleUpdateAlbum, onC
         }
     };
 
+    // 이미지 변경을 위한 input
+    const hiddenFileInput = useRef(null);
+
+    const handleClickImage = () => {
+        hiddenFileInput.current.click();
+    };
+
+    const handleImageChange = (e) => {
+        const imageFile = e.target.files[0];
+        if (imageFile) {
+            const newImagePath = URL.createObjectURL(imageFile) // URL에 타임스탬프 추가
+
+            setImageView(newImagePath); // 보여주기용 이미지 값 설정
+
+
+            // files 배열의 모든 요소에 새 이미지 파일과 이미지 경로 업데이트
+            setFiles(currentFiles => currentFiles.map(file => ({
+                ...file,
+                imageFile: imageFile, // 모든 트랙에 동일한 이미지 파일 설정
+                image_path: imageFile.name // 모든 트랙에 새 이미지 파일 이름으로 image_path 설정
+            })));
+        }
+    };
+
 
     const handleTrackTagSelection = (fileIndex, selectedTag) => {
-        
+
         // files 배열 내의 해당 파일의 tags 업데이트
         setFiles(currentFiles => currentFiles.map((file, idx) => {
             if (idx === fileIndex) {
@@ -95,7 +120,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, handleUpdateAlbum, onC
         setFiles(currentFiles => currentFiles.filter((_, idx) => idx !== fileIndex));
 
         // trackSelectTag 배열에서도 해당 인덱스의 태그 목록을 제거
-        
+
     };
 
 
@@ -112,7 +137,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, handleUpdateAlbum, onC
 
 
     const handleTrackTagDelete = (fileIndex, tagToDelete) => {
-        
+
 
         // files 배열 업데이트
         setFiles(currentFiles => currentFiles.map((file, idx) => {
@@ -130,10 +155,17 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, handleUpdateAlbum, onC
             <Row>
                 <Col sx='12' md='4'>
                     <img
-                        src={"/tracks/image/" + albumUpdate.coverImagePath}
+                        src={albumUpdate.coverImagePath ? imageView: "/assets/groovy2.png"}
                         alt={albumUpdate.title}
                         className={styles.albumImage}
                     />
+                    <input
+                            type="file"
+                            ref={hiddenFileInput}
+                            onChange={handleImageChange}
+                            style={{ display: 'none' }}
+                            accept="image/*"
+                        />
                 </Col>
                 <Col sx='12' md='8'>
                     <Row>
@@ -157,41 +189,42 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, handleUpdateAlbum, onC
                             </Row>
                         </Col>
                     </Row>
-                    <Row style={{ marginBottom: '10px' }}>
+                </Col>
+                
+                <Col sm="2" style={{ marginBottom: '10px' }}>
+                    트랙순서
+                </Col>
+                <Col sm="10" style={{ marginBottom: '10px' }}>
+                    트랙제목
+                </Col>
+                {files.map((file, index) => (
+                    <Fragment key={index}>
                         <Col sm="2" style={{ marginBottom: '10px' }}>
-                            트랙순서
+                            <Input
+                                className={styles.detail_input_filename}
+                                type="text"
+                                placeholder="순서를 입력하세요"
+                                value={[index] || index + 1}
+                                readOnly="true"
+                            />
                         </Col>
-                        <Col sm="10" style={{ marginBottom: '10px' }}>
-                            트랙제목
+                        <Col sm="5" style={{ marginBottom: '10px' }}>
+                            <Input
+                                className={styles.detail_input_filename}
+                                type="text"
+                                placeholder="제목을 입력하세요"
+                                value={file.name || ''} // 각 파일의 이름 사용
+                            // onChange={(e) => handleFileNameChange(index, e.target.value)}
+                            />
                         </Col>
-                        {files.map((file, index) => (
-                            <Fragment key={index}>
-                                <Col sm="2" style={{ marginBottom: '10px' }}>
-                                    <Input
-                                        className={styles.detail_input_filename}
-                                        type="text"
-                                        placeholder="순서를 입력하세요"
-                                        value={[index] || index + 1}
-                                        readOnly="true"
-                                    />
-                                </Col>
-                                <Col sm="5" style={{ marginBottom: '10px' }}>
-                                    <Input
-                                        className={styles.detail_input_filename}
-                                        type="text"
-                                        placeholder="제목을 입력하세요"
-                                        value={file.name || ''} // 각 파일의 이름 사용
-                                        // onChange={(e) => handleFileNameChange(index, e.target.value)}
-                                    />
-                                </Col>
-                                <Col sm="12" md="3" style={{ marginBottom: '10px' }}>
-                                    <MusicTagList onSelectTag={(tag) => handleTrackTagSelection(index, tag)} />
-                                </Col>
-                                <Col sm="12" md="2" style={{ marginBottom: '10px' }}>
-                                    <Button onClick={() => handleFileDelete(index)}>삭제</Button>
-                                </Col>
-                                <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
-                                    {/* {trackSelectTag[index] && trackSelectTag[index].length > 0 && (
+                        <Col sm="12" md="3" style={{ marginBottom: '10px' }}>
+                            <MusicTagList onSelectTag={(tag) => handleTrackTagSelection(index, tag)} />
+                        </Col>
+                        <Col sm="12" md="2" style={{ marginBottom: '10px' }}>
+                            <Button onClick={() => handleFileDelete(index)}>삭제</Button>
+                        </Col>
+                        <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
+                            {/* {trackSelectTag[index] && trackSelectTag[index].length > 0 && (
                                         <Row className={styles.chipRow}>
                                             <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
                                                 {trackSelectTag[index].map((tag, tagIndex) => (
@@ -204,37 +237,34 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, handleUpdateAlbum, onC
                                             </Stack>
                                         </Row>
                                     )} */}
-                                </Col>
-                                <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
-                                    <Input
-                                        className={styles.detail_input}
-                                        type="text"
-                                        placeholder="제작자를 입력하세요"
-                                        value={file.writer}
-                                        // onChange={(e) => handleWriterChange(index, e.target.value)}
-                                    />
-                                    <hr />
-                                </Col>
-                            </Fragment>
-                        ))}
-                    </Row>
-                    <Col sm="12">
-                        <input
-                            type="file"
-                            ref={hiddenAudioInput}
-                            onChange={handleAudioFileChange}
-                            style={{ display: 'none' }}
-                            accept="audio/*"
-                        />
-                        <Button onClick={handleAddTrackClick}>다른 트렉 추가하기</Button></Col>
-                    <hr />
-                    <Col>
-                        <Button onClick={handleCancle}>Close</Button>
-                        <Button color="primary">저장하기</Button>
-                    </Col>
-                </Col>
+                        </Col>
+                        <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
+                            <Input
+                                className={styles.detail_input}
+                                type="text"
+                                placeholder="제작자를 입력하세요"
+                                value={file.writer}
+                            // onChange={(e) => handleWriterChange(index, e.target.value)}
+                            />
+                            <hr />
+                        </Col>
+                    </Fragment>
+                ))}
             </Row>
-        
+            <Col sm="12">
+                <input
+                    type="file"
+                    ref={hiddenAudioInput}
+                    onChange={handleAudioFileChange}
+                    style={{ display: 'none' }}
+                    accept="audio/*"
+                />
+                <Button onClick={handleAddTrackClick}>다른 트렉 추가하기</Button></Col>
+            <hr />
+            <Col>
+                <Button onClick={handleCancle}>Close</Button>
+                <Button color="primary">저장하기</Button>
+            </Col>
         </Box>
     );
 });
