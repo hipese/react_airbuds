@@ -47,6 +47,11 @@ const MusicWithTabs = () => {
     const [isFollowed,setFollow] = useState(false);
     const [followNumber,setFollowNumber] = useState({});
 
+    useEffect(()=>{
+        checkFollowState();
+        checkFollowNumber();
+    },[loginId]);
+
     useEffect(() => {
         if (!loginID) {
             return;
@@ -150,7 +155,13 @@ const MusicWithTabs = () => {
                             <Tab label="Albums" component={Link} to="albums" {...a11yProps(2)} />
                             <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)} />
                             <div className={styles.like_edit}>
-                                {!isFollowed ? <Button variant="outlined" startIcon={<PersonIcon/>}
+                                {
+                                    loginID == loginId ?
+                                    ""
+                                    :
+                                    !isFollowed ?
+                                    //팔로우 안한 상태일때.
+                                    <Button variant="outlined" startIcon={<PersonIcon/>}
                                     sx={{
                                         width: '100px',
                                         height: '30px',
@@ -169,6 +180,7 @@ const MusicWithTabs = () => {
                                     Follow
                                 </Button>
                                 :
+                                //팔로우 한 상태일때.
                                 <Button variant="outlined" startIcon={<PersonIcon/>}
                                     sx={{
                                         width: '100px',

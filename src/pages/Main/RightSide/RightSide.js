@@ -4,13 +4,16 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import Like from "../assets/like.png"
 import { LoginContext } from "../../../App";
+import { useNavigate } from "react-router";
 
 const RightSide = ({trackLike,trackInfoByTag}) => {
 
     const [onlyLike, setOnlyLike] = useState([]);
     const { loginID } = useContext(LoginContext);
+    const navi = useNavigate();
     
     const test =() => {
+        navi("/dashboard");
     }
 
     const findCommonTrack = (trackInfo, trackLike) => {
@@ -47,7 +50,7 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
     },[trackLike]);
     return (
         <div className={styles.positionFixed}>
-            <div className={styles.followArtist}><GroupAddIcon className={styles.followIcon} />팔로우한 아티스트<div className={styles.viewAll}>더보기</div></div>
+            <div className={styles.followArtist}><GroupAddIcon className={styles.followIcon} />팔로우한 아티스트<div className={styles.viewAll} onClick={test}>더보기</div></div>
             <ul className={styles.followul}>
                 <li className={styles.followli}>
                     <div className={styles.followImg}></div>

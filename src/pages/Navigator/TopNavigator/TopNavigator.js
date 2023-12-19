@@ -310,6 +310,15 @@ const TopNavigator = () => {
         }
     };
 
+    const setExpireLocalStorage = (value, expireTime) => {
+        const expire = expireTime * 60 * 1000;
+        const obj = {
+            value : value,
+            expire : Date.now() + expire
+        }
+        return JSON.stringify(obj);;
+    }
+
     const handleLoginClick = async () => {
         const { value: formValues } = await Swal.fire({
             title: 'Welcome Back',
@@ -359,7 +368,8 @@ const TopNavigator = () => {
             formData.append("password", formValues.password);
             axios.post("/api/member/login", formData).then(resp => {
                 setLoginID(formValues.id);
-                localStorage.setItem("loginID", formValues.id);
+                const storeItem = setExpireLocalStorage(formValues.id,30);
+                localStorage.setItem("loginID", storeItem);
             }).catch(err => {
                 if (err.response.status == 401) {
                     Swal.fire({
