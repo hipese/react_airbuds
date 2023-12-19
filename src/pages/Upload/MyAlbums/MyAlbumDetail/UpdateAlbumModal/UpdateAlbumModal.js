@@ -23,19 +23,14 @@ const ModalStyle = {
 
 const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClose }, ref) => {
 
+
     console.log(albumUpdate);
-  
-    // useEffect(() => {
-    //     axios.get(`/api/album/findByLogin`).then(resp=>{
-    //         console.log(resp.data)
-    //         setMyAlbumsInfo(resp.data);
-    //         setLoading(false); 
-    //     })
-       
-    // }, [loginID]);
 
     // 선택된 태그를 가져오는 방법
-    const [selectTag, setSelectTag] = useState([]);
+    const [trackTags, setTrackTags] = useState([]);
+    const [backUpAlbum, setBackUpAlbum] = useState(albumUpdate);
+
+
     const [imageView, setImageView] = useState("/tracks/image/" + albumUpdate.coverImagePath);
     const [prevImage, setPrevImage] = useState(albumUpdate.coverImagePath);
     const [files, setFiles] = useState([]);
@@ -43,17 +38,45 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     const [albumTag, setAlbumTag] = useState([]);
     const [insertFile, setInsertFile] = useState([]);
 
+    const [deleteTrack, setDeleteTrack] = useState([]);
+
     const handleCancle = () => {
         onClose();
     }
 
+    useEffect(() => {
+        const loadTrackTags = async () => {
+            // Temporary array to hold new tags
+            let newTags = [];
 
+            let i = 0;
+            for (const track of albumUpdate.tracks) {
+                console.log(i + "회차");
+                const response = await axios.get(`/api/trackTag/selectTagById/${track.trackId}`);
+                newTags.push({ trackId: track.trackId, tags: response.data });
+                i++;
+            }
+
+            // Concatenate new tags with existing tags
+            setTrackTags(prevTags => [...prevTags, ...newTags]);
+        };
+        loadTrackTags();
+    }, []);
+
+    console.log(trackTags)
     // 새로운 음원 파일을 추가하기 위한 ref
     const hiddenAudioInput = useRef(null);
 
     const handleAddTrackClick = () => {
         hiddenAudioInput.current.click();
     };
+
+
+    const handleUpdate = () => {
+        const formData = new FormData();
+
+    }
+
 
     // 음원 변경
     const handleAudioFileChange = (e) => {
@@ -103,7 +126,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
             const newImagePath = URL.createObjectURL(imageFile) // URL에 타임스탬프 추가
 
             setImageView(newImagePath); // 보여주기용 이미지 값 설정
-            
+
 
             // files 배열의 모든 요소에 새 이미지 파일과 이미지 경로 업데이트
             setFiles(currentFiles => currentFiles.map(file => ({
@@ -117,24 +140,42 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     const handleAlbumTitleChange = (e) => {
         const newTitle = e.target.value;
         setAlbumUpdate((prevAlbum) => {
-          return {
-            ...prevAlbum,
-            title: newTitle
-          };
+            return {
+                ...prevAlbum,
+                title: newTitle
+            };
         });
-      };
+    };
 
-      const handleWriterChange = (index, newWriter) => {
+    const handleTitleNameChange = (index, newTitle) => {
         setAlbumUpdate((prevAlbumUpdate) => {
-            
+
             const updatedTracks = prevAlbumUpdate.tracks.map((track, idx) => {
                 if (idx === index) {
-                    
+
+                    return { ...track, title: newTitle };
+                }
+                return track;
+            });
+
+            return {
+                ...prevAlbumUpdate,
+                tracks: updatedTracks
+            };
+        });
+    };
+
+    const handleWriterChange = (index, newWriter) => {
+        setAlbumUpdate((prevAlbumUpdate) => {
+
+            const updatedTracks = prevAlbumUpdate.tracks.map((track, idx) => {
+                if (idx === index) {
+
                     return { ...track, writer: newWriter };
                 }
-                return track; 
+                return track;
             });
-    
+
             return {
                 ...prevAlbumUpdate,
                 tracks: updatedTracks
@@ -143,21 +184,24 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     };
 
 
-    const handleTrackTagSelection = (fileIndex, selectedTag) => {
-
-        // files 배열 내의 해당 파일의 tags 업데이트
-        setFiles(currentFiles => currentFiles.map((file, idx) => {
-            if (idx === fileIndex) {
-                // 기존 태그 목록 복사 후 새 태그 추가
-                const updatedTags = file.tags ? [...file.tags, selectedTag] : [selectedTag];
-                return { ...file, tags: updatedTags };
-            }
-            return file;
+    const handleTrackTagChange = (trackId, newTags) => {
+        setTrackTags((prevTags) => ({
+            ...prevTags,
+            [trackId]: newTags
         }));
     };
 
     const handleTagDelete = (tagToDelete) => {
-        setSelectTag((tags) => tags.filter((tag) => tag !== tagToDelete));
+        setAlbumUpdate((prevAlbumUpdate) => {
+            const updatedAlbumTags = prevAlbumUpdate.albumTag.filter(
+                (tag) => tag.albumTagList.tagId !== tagToDelete.albumTagList.tagId
+            );
+
+            return {
+                ...prevAlbumUpdate,
+                albumTag: updatedAlbumTags,
+            };
+        });
     };
 
     const handleFileDelete = (fileIndex) => {
@@ -171,32 +215,32 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     const handleTagSelection = (selectedTagObject) => {
         setAlbumUpdate((prevAlbumUpdate) => {
-          // Check if the tag is already in the albumTag list
-          const isTagPresent = prevAlbumUpdate.albumTag.some(
-            (tag) => tag.albumTagList.tagId === selectedTagObject.tagId
-          );
-      
-          // If not present, add it to the albumTag list
-          if (!isTagPresent) {
-            const newTag = {
-              id: null,
-              album: null, 
-              albumTagList: {
-                tagId: selectedTagObject.tagId,
-                tagName: selectedTagObject.tagName,
-              },
-            };
-      
-            return {
-              ...prevAlbumUpdate,
-              albumTag: [...prevAlbumUpdate.albumTag, newTag],
-            };
-          }
-      
-        
-          return prevAlbumUpdate;
+            // Check if the tag is already in the albumTag list
+            const isTagPresent = prevAlbumUpdate.albumTag.some(
+                (tag) => tag.albumTagList.tagId === selectedTagObject.tagId
+            );
+
+            // If not present, add it to the albumTag list
+            if (!isTagPresent) {
+                const newTag = {
+                    id: null,
+                    album: null,
+                    albumTagList: {
+                        tagId: selectedTagObject.tagId,
+                        tagName: selectedTagObject.tagName,
+                    },
+                };
+
+                return {
+                    ...prevAlbumUpdate,
+                    albumTag: [...prevAlbumUpdate.albumTag, newTag],
+                };
+            }
+
+
+            return prevAlbumUpdate;
         });
-      };
+    };
 
 
     const handleTrackTagDelete = (fileIndex, tagToDelete) => {
@@ -234,12 +278,12 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                 </Col>
                 <Col sx='12' md='8'>
                     <Row>
-                        <Col sx='12'  md='12'>앨범제목</Col>
-                        <Col sx='12'  md='12'>
-                            <Input type="text" 
-                            placeholder="제목을 입력하세요"
-                            value={albumUpdate.title}
-                            onChange={handleAlbumTitleChange}
+                        <Col sx='12' md='12'>앨범제목</Col>
+                        <Col sx='12' md='12'>
+                            <Input type="text"
+                                placeholder="제목을 입력하세요"
+                                value={albumUpdate.title}
+                                onChange={handleAlbumTitleChange}
                             ></Input>
                         </Col>
                         <Col sm='12' style={{ marginBottom: '10px' }}>AlbumTag</Col>
@@ -285,29 +329,25 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                                 type="text"
                                 placeholder="제목을 입력하세요"
                                 value={file.title || ''} // 각 파일의 이름 사용
-                            // onChange={(e) => handleFileNameChange(index, e.target.value)}
+                                onChange={(e) => handleTitleNameChange(index, e.target.value)}
                             />
                         </Col>
                         <Col sm="12" md="3" style={{ marginBottom: '10px' }}>
-                            <MusicTagList onSelectTag={(tag) => handleTrackTagSelection(index, tag)} />
+                            <MusicTagList onSelectTag={(tag) => handleTrackTagChange(index, tag)} />
                         </Col>
                         <Col sm="12" md="2" style={{ marginBottom: '10px' }}>
                             <Button onClick={() => handleFileDelete(index)}>삭제</Button>
                         </Col>
                         <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
-                            {/* {trackSelectTag[index] && trackSelectTag[index].length > 0 && (
-                                        <Row className={styles.chipRow}>
-                                            <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                                                {trackSelectTag[index].map((tag, tagIndex) => (
-                                                    <Chip
-                                                        key={tagIndex}
-                                                        label={tag.tagName}
-                                                        onDelete={() => handleTrackTagDelete(index, tag)}
-                                                    />
-                                                ))}
-                                            </Stack>
-                                        </Row>
-                                    )} */}
+                            {albumUpdate.tracks.map((track, index) => (
+                                <Row key={index} className={styles.chipRow}>
+                                    <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                        {trackTags[track.trackId]?.map((tagObj, tagIndex) => (
+                                            <Chip key={tagIndex} label={tagObj.musicTags.tagName} />
+                                        ))}
+                                    </Stack>
+                                </Row>
+                            ))}
                         </Col>
                         <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
                             <Input
