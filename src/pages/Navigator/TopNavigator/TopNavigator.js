@@ -425,7 +425,7 @@ const TopNavigator = () => {
                                         <Link className={styles.linkurl} to="/Upload"><div className={activeLink === 'Upload' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Upload')}>업로드</div></Link>
                                     </Col>
                                     <Col>
-                                        <Link className={styles.linkurl} to={`/Mypage/${loginID}`}><div>Profile</div></Link>
+                                        <Link className={styles.linkurl} to={`/Profile/${loginID}`}><div>프로필</div></Link>
                                     </Col>
                                     <Col>
                                         <div className={styles.linkurl} onClick={handleLogoutClick}><div className={activeLink === 'logout' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('logoutt')}>로그아웃</div></div>
