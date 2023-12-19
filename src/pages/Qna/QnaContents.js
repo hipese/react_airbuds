@@ -61,6 +61,14 @@ const QnaContents = () => {
             setReplyList(prev=>([...prev,reply]));
             setOpen(true);
             contentEditableRef.current.innerHTML = "";
+            const formData = new FormData();
+            formData.append("qnaSeq",seq);
+            formData.append("qnaAnswerState",1);
+            axios.put(`/api/qna/qnaState`,formData).then(res=>{
+                
+            }).catch((e)=>{
+                console.log(e);
+            })
         }).catch((e)=>{
             console.log(e);
         });
