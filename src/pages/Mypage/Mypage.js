@@ -76,9 +76,16 @@ const MusicWithTabs = () => {
             console.log(err); // 나중에 오류 알림으로 바꾸기
         })
 
+        checkTrackNumber();
         checkFollowState();
         checkFollowNumber();
-    }, [targetID]);
+    }, [targetID, loginID]);
+
+    const checkTrackNumber = () => {
+        axios.get(`/api/track/findById/${targetID}`).then((resp) => {
+            setTracks(resp.data);
+        });
+    }
 
     const checkFollowState = () => {
         const formData = new FormData();
@@ -215,7 +222,13 @@ const MusicWithTabs = () => {
                             <Tab label="Albums" component={Link} to="albums" {...a11yProps(2)} />
                             <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)} />
                             <div className={styles.like_edit}>
-                                {!isFollowed ? <Button variant="outlined" startIcon={<PersonIcon/>}
+                                {
+                                    loginID == targetID ?
+                                    ""
+                                    :
+                                    !isFollowed ?
+                                    //팔로우 안한 상태일때.
+                                    <Button variant="outlined" startIcon={<PersonIcon/>}
                                     sx={{
                                         width: '100px',
                                         height: '30px',
@@ -234,9 +247,10 @@ const MusicWithTabs = () => {
                                     Follow
                                 </Button>
                                 :
+                                //팔로우 한 상태일때.
                                 <Button variant="outlined" startIcon={<PersonIcon/>}
                                     sx={{
-                                        width: '100px',
+                                        width: '120px',
                                         height: '30px',
                                         color: 'white',
                                         borderColor: '#4CAF50',
@@ -251,25 +265,31 @@ const MusicWithTabs = () => {
                                         },
                                     }}
                                     onClick={()=>{handleFollowBtn(isFollowed)}}>
-                                    Follow
+                                    Followed
                                 </Button>
                                 }
-                                
-                                <Button variant="outlined" startIcon={<ModeEditIcon />}
-                                    sx={{
-                                        width: '100px',
-                                        height: '30px',
-                                        color: '#212529',
-                                        borderColor: '#4CAF50',
-                                        marginTop: '10px',
-                                        marginBottom: '10px',
-                                        '&:hover': {
-                                            borderColor: '#4CAF50',
-                                            backgroundColor: '#4CAF50',
-                                        },
-                                    }}>
-                                    Edit
-                                </Button>
+                                {
+                                    targetID === loginID ?
+                                        <Link to={`/Mypage`}>
+                                            <Button variant="outlined" startIcon={<ModeEditIcon />}
+                                                sx={{
+                                                    width: '100px',
+                                                    height: '30px',
+                                                    color: '#212529',
+                                                    borderColor: '#4CAF50',
+                                                    marginTop: '10px',
+                                                    marginBottom: '10px',
+                                                    '&:hover': {
+                                                        borderColor: '#4CAF50',
+                                                        backgroundColor: '#4CAF50',
+                                                    },
+                                                }}>
+                                                Edit
+                                            </Button>
+                                        </Link>
+                                        :
+                                        <></>
+                                }
                             </div>
                         </Tabs>
                     </Box>
@@ -298,13 +318,13 @@ const MusicWithTabs = () => {
                     <div className={styles.infoItem}>
                         <Typography variant="h6" gutterBottom>
                             Followers<br></br>
-                            {followNumber.followers}
+                            {followNumber.followers ? followNumber.followers : "0"}
                         </Typography>
                     </div>
                     <div className={styles.infoItem}>
                         <Typography variant="h6" gutterBottom>
                             Following<br></br>
-                            {followNumber.followings}
+                            {followNumber.followings ? followNumber.followings : "0"}
                         </Typography>
                     </div>
                     <div className={styles.infoItemLast}>

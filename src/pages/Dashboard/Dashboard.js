@@ -120,6 +120,8 @@ const DashBoardDisplay = () => {
     const [report,setReport] = React.useState(58);
     const [formdReport,setFormdReport] = React.useState([]);
     const [formdMusic,setFormdMusic] = React.useState([]);
+    const [formdmember,setFormdMember] = React.useState([]);
+    const [member,setMember] = React.useState([]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -170,7 +172,7 @@ const DashBoardDisplay = () => {
         });
     
     return reactData;
-    };
+    };   
 
     React.useEffect(()=>{
         axios.get(`/api/dashboard/report`).then(res=>{
@@ -178,14 +180,30 @@ const DashBoardDisplay = () => {
             const groupedData = groupByYear(res.data);
             const reactData = transformToLineData(groupedData);
             setFormdReport(reactData);
-            console.log('report',reactData);
+        }).catch((e)=>{
         });
 
         axios.get(`/api/dashboard/music`).then(res=>{
             const groupedData = groupByYear(res.data);
             const reactData = transformToLineData(groupedData);
-            console.log("music",reactData);
             setFormdMusic(reactData);
+        }).catch((e)=>{
+            console.log(e);
+        });
+
+        axios.get(`/api/dashboard/member`).then(res=>{
+            const transformedData = res.data.map(item => ({
+                id: item.ageGroup,
+                value: item.count,
+                label: item.ageGroup
+            }));
+
+            const sortedData = transformedData.sort((a, b) => {
+                return b.id.localeCompare(a.id);
+            });
+            setFormdMember(sortedData);
+        }).catch((e)=>{
+            console.log(e);
         });
 
     },[]);
@@ -212,7 +230,7 @@ const DashBoardDisplay = () => {
                                 <Typography fontSize={13}>
                                     Daliy Visitor
                                 </Typography>                        
-                                <Typography fontSize={40} paddingLeft={2}>
+                                <Typography fontSize={40} paddingLeft={4} className={`${style.visitortext}`}>
                                     {visitor}%
                                 </Typography>
                                 <div className={`${style.progressBar} ${style.pad5}`}>
@@ -308,7 +326,7 @@ const DashBoardDisplay = () => {
                                 className={`${style.center} ${style.w100}`}
                             >                    
                                 <div className={`${style.dashLBox}`}>
-                                    <FunnelChart/>
+                                    <FunnelChart data={formdmember}/>
                                 </div>   
                             </Box>
                         </Grid>
