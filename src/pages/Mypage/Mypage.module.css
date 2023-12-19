@@ -34,3 +34,12 @@
 .infoItem {
     border-right: 1px solid #ccc;
 }
+
+.target_id_container {
+    width: fit-content;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: whitesmoke;
+    border-radius: 10px;
+    opacity: 0.5;
+}
