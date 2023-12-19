@@ -63,7 +63,7 @@ const MyAlbumDetail = () => {
                         aria-describedby="modal-modal-description"
                     >
                         <UpdateAlbumModal 
-                        albumData={albumData} 
+                        albumUpdate={albumUpdate} 
                         onUpdateAlbum={handleUpdateAlbum}
                         onClose={handleClose} 
                         />
