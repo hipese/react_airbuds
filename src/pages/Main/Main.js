@@ -14,8 +14,6 @@ const Main = () => {
     const [trackInfoByTag, setTrackInfoByTag] = useState({});
     const [trackLike,setLike] = useState([]);
     const { loginID, setLoginID } = useContext(LoginContext);
-    const localItem = localStorage.getItem("loginID");
-    const storageId = JSON.parse(localItem);
     const [isFavorite, setFavorite] = useState(0);
     const [trackInfoAll, setTrackInfoAll] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -54,7 +52,7 @@ const Main = () => {
     }, [loginID]);
 
     const loadingLikes = async () => {
-        axios.get(`/api/like/${storageId.value}`).then(res=>{
+        axios.get(`/api/like/${loginID}`).then(res=>{
             setLike(res.data);
         }).catch((e)=>{
             console.log(e);
@@ -62,7 +60,7 @@ const Main = () => {
     }
 
     const loadingFollwings = async () => {
-        axios.get(`/api/like/follwingData/${storageId.value}`).then(res=>{
+        axios.get(`/api/like/follwingData/${loginID}`).then(res=>{
             console.log(res.data);
         }).catch((e)=>{
             console.log(e);
