@@ -11,6 +11,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/system';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import CheckIcon from '@mui/icons-material/Check';
 import { Link, Route, Routes, useParams } from "react-router-dom";
 import Mytracks from "./Mytracks/Mytracks";
 import All from "./All/All";
@@ -38,42 +39,142 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
+// function isDark(image) {
+//     const canvas = document.createElement('canvas');
+//     const context = canvas.getContext('2d');
+    
+//     // 캔버스 크기를 이미지 크기에 맞춥니다.
+//     canvas.width = image.width;
+//     canvas.height = image.height;
+  
+//     // 이미지를 캔버스에 그립니다.
+//     context.drawImage(image, 0, 0, image.width, image.height);
+  
+//     // 이미지의 픽셀 데이터를 추출합니다.
+//     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+//     const data = imageData.data;
+  
+//     let r = 0, g = 0, b = 0;
+  
+//     // 픽셀별로 색상 값을 누적합니다.
+//     for (let i = 0; i < data.length; i += 4) {
+//       r += data[i];
+//       g += data[i + 1];
+//       b += data[i + 2];
+//     }
+  
+//     // 평균 색상 값을 계산합니다.
+//     r = Math.floor(r / (data.length / 4));
+//     g = Math.floor(g / (data.length / 4));
+//     b = Math.floor(b / (data.length / 4));
+  
+//     const hsp = Math.sqrt(
+//         0.299 * (r * r) +
+//         0.587 * (g * g) +
+//         0.114 * (b * b)
+//       );
+//     return hsp < 127.5;
+//   }
+
 const MusicWithTabs = () => {
-    const { loginId } = useParams();
+
+    const InputFileUpload = () => {
+        return (
+            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} onChange={changeBackgroundHandler}>
+                Upload file
+                <VisuallyHiddenInput type="file" />
+            </Button>
+        );
+    }
+
+    const { targetID } = useParams();
     const [value, setValue] = React.useState(0);
-    const { loginID, setLoginID } = useContext(LoginContext);
+    const { loginID } = useContext(LoginContext);
     const [tracks, setTracks] = useState([]);
+    const [profileImage, setProfileImage] = useState("");
+    const [backgroundImage, setBackgroundImage] = useState("");
+    const [newBackgroundImage, setNewBackgroundImage] = useState();
+    const [backgroundState, setBackgroundState] = useState({backgroundColor : "whitesmoke"});
+    const [isBackgroundChanged, setIsBackgroundChanged] = useState(false);
 
     useEffect(() => {
-        if (!loginID) {
-            return;
-        }
-
-        axios.get(`/api/track/findById/${loginId}`).then((resp) => {
+        axios.get(`/api/track/findById/${targetID}`).then((resp) => {
             setTracks(resp.data);
         });
-    }, [loginID]);
+
+        // 프로필 이미지 + 배경 이미지 받아오기
+        axios.get(`/api/member/getProfiles/${targetID}`).then((resp) => {
+            console.log(resp.data);
+            setProfileImage(resp.data.profile_image);
+            setBackgroundImage(resp.data.background_image);
+        }).catch(err => {
+            console.log(err); // 나중에 오류 알림으로 바꾸기
+        })
+    }, [targetID]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    useEffect(() => {
+        if(backgroundImage !== null && backgroundImage !== "")
+            setBackgroundState({backgroundImage : `url(${backgroundImage})`, backgroundSize : "cover"});
+        else 
+            setBackgroundState({backgroundColor : "whitesmoke"});
+    }, [backgroundImage]);
+
+    const changeBackgroundHandler = (e) => {
+        const newImagePath = URL.createObjectURL(e.target.files[0]);
+        setNewBackgroundImage(e.target.files[0]);
+        setBackgroundImage(newImagePath);
+        setIsBackgroundChanged(true);
+    };
+
+    const uploadBackgroundHandler = () => {
+        const formData = new FormData();
+        formData.append( "newBgImage" ,newBackgroundImage);
+        axios.post("/api/member/uploadBackground", formData, {headers : {"Content-Type" : "multipart/form-data"}})
+        .then(resp => {
+            console.log(resp);
+            setIsBackgroundChanged(false);
+        }).catch(err => {
+            console.log(err);
+        });
+
+    };
+
     return (
         <Grid container>
-            <Grid item className={styles.user_info}>
+            <Grid item className={styles.user_info} style={backgroundState}>
                 <Grid item md={2}>
                     <Avatar alt="Remy Sharp" sx={{ width: 180, height: 180, marginLeft: 2 }} />
                 </Grid>
                 <Grid item md={7}>
                     <Typography variant="h2" gutterBottom>
-                        {loginId}
+                        {targetID}
                     </Typography>
                     <Typography variant="h5" gutterBottom>
                         &nbsp;'s Groovy Space
                     </Typography>
                 </Grid>
-                <Grid item md={3}>
-                    <InputFileUpload />
+                <Grid item md={3} style={{display : "flex", justifyContent:"center", alignItems : "center", flexDirection : "column"}}>
+                    {
+                        loginID !== null && targetID === loginID ?
+                        <InputFileUpload />
+                        :
+                        <></>
+                    }
+                    {
+                        isBackgroundChanged ?
+                        <><br></br>
+                            <Button component="label" variant="contained" startIcon={<CheckIcon />} onClick={uploadBackgroundHandler}>
+                                SAVE
+                            </Button>
+                            </>
+                             :
+                            <></>
+                    }
+                    
                 </Grid>
             </Grid>
             <Grid item xs={12} md={9} className={styles.Panel}>
@@ -94,22 +195,26 @@ const MusicWithTabs = () => {
                             <Tab label="Albums" component={Link} to="albums" {...a11yProps(2)} />
                             <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)} />
                             <div className={styles.like_edit}>
-                                <FavoriteBorderIcon />
-                                <Button variant="outlined" startIcon={<ModeEditIcon />}
-                                    sx={{
-                                        width: '100px',
-                                        height: '30px',
-                                        color: '#212529',
-                                        borderColor: '#4CAF50',
-                                        marginTop: '10px',
-                                        marginBottom: '10px',
-                                        '&:hover': {
-                                            borderColor: '#4CAF50',
-                                            backgroundColor: '#4CAF50',
-                                        },
-                                    }}>
-                                    Edit
-                                </Button>
+                                {
+                                    targetID == loginID ?
+                                        <Button variant="outlined" startIcon={<ModeEditIcon />}
+                                            sx={{
+                                                width: '100px',
+                                                height: '30px',
+                                                color: '#212529',
+                                                borderColor: '#4CAF50',
+                                                marginTop: '10px',
+                                                marginBottom: '10px',
+                                                '&:hover': {
+                                                    borderColor: '#4CAF50',
+                                                    backgroundColor: '#4CAF50',
+                                                },
+                                            }}>
+                                            Edit
+                                        </Button>
+                                        :
+                                        <FavoriteBorderIcon />
+                                }
                             </div>
                         </Tabs>
                     </Box>
@@ -159,15 +264,6 @@ const MusicWithTabs = () => {
                 </div>
             </Grid>
         </Grid>
-    );
-}
-
-const InputFileUpload = () => {
-    return (
-        <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-            Upload file
-            <VisuallyHiddenInput type="file" />
-        </Button>
     );
 }
 
