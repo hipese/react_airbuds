@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
-import styles from "./Overview.module.css";
+import styles from "./Following.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
@@ -18,7 +18,7 @@ const LoadingSpinner = () => (
   </Box>
 );
 
-const Overview = () => {
+const Following = () => {
   const [loading, setLoading] = useState(true);
   const [track, setTrack] = useState([]);
   const [track2, setTrack2] = useState([]);
@@ -46,7 +46,7 @@ const Overview = () => {
 
           allTracks.push({ ...innerTrack, imagePath });
         });
-      })
+      });
 
       // 최대 12개의 트랙으로 제한
       const limitedTracks = allTracks.slice(0, 12);
@@ -86,30 +86,17 @@ const Overview = () => {
   //   console.log(storedDataString)
   // }, [storedDataString]);
 
-  const carouselRef1 = useRef(null);
-  const carouselRef2 = useRef(null);
+  const carouselRef = useRef(null);
 
-  const goToPrev1 = () => {
-    if (carouselRef1.current) {
-      carouselRef1.current.prev();
+  const goToPrev = () => {
+    if (carouselRef.current) {
+      carouselRef.current.prev();
     }
   };
-  
-  const goToNext1 = () => {
-    if (carouselRef1.current) {
-      carouselRef1.current.next();
-    }
-  };
-  
-  const goToPrev2 = () => {
-    if (carouselRef2.current) {
-      carouselRef2.current.prev();
-    }
-  };
-  
-  const goToNext2 = () => {
-    if (carouselRef2.current) {
-      carouselRef2.current.next();
+
+  const goToNext = () => {
+    if (carouselRef.current) {
+      carouselRef.current.next();
     }
   };
 
@@ -179,7 +166,7 @@ const Overview = () => {
                       items: 5
                     },
                   }}
-                  ref={carouselRef1}
+                  ref={carouselRef}
                 >
                   {track.map((track, index) => (
                     <div
@@ -209,10 +196,10 @@ const Overview = () => {
                   {emptyItems} */}
                 </OwlCarousel>
                 <div className={styles.carouselButton}>
-                  <button className={styles.owlPrev} onClick={goToPrev1}>
+                  <button className={styles.owlPrev} onClick={goToPrev}>
                     <FontAwesomeIcon icon={faChevronLeft} />
                   </button>
-                  <button className={styles.owlNext} onClick={goToNext1}>
+                  <button className={styles.owlNext} onClick={goToNext}>
                     <FontAwesomeIcon icon={faChevronRight} />
                   </button>
                 </div>
@@ -236,7 +223,7 @@ const Overview = () => {
                       items: 5
                     },
                   }}
-                  ref={carouselRef2}
+                  ref={carouselRef}
                 >
                   {track2.map((track, index) => (
                     <div
@@ -266,10 +253,10 @@ const Overview = () => {
                   {emptyItems} */}
                 </OwlCarousel>
                 <div className={styles.carouselButton}>
-                  <button className={styles.owlPrev} onClick={goToPrev2}>
+                  <button className={styles.owlPrev} onClick={goToPrev}>
                     <FontAwesomeIcon icon={faChevronLeft} />
                   </button>
-                  <button className={styles.owlNext} onClick={goToNext2}>
+                  <button className={styles.owlNext} onClick={goToNext}>
                     <FontAwesomeIcon icon={faChevronRight} />
                   </button>
                 </div>
@@ -287,4 +274,4 @@ const Overview = () => {
 }
 
 
-export default Overview;
+export default Following;
