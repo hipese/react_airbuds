@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+    overflow-y: auto;
 }
 
 .container2 {
@@ -25,7 +26,7 @@
 .track_info {
     margin-bottom: 10px;
     width: 100%;
-    height: 300px;
+    height: 100%;
     color: white;
     display: flex;
 }
@@ -36,6 +37,12 @@
 
 .track_title_writer {
     background-color: #1e1e1e;
+    height: 300px;
+    
+}
+
+.track_title {
+    margin-bottom: 40px;
 }
 
 .profileImage {
@@ -51,10 +58,22 @@
     justify-content: space-between;
     margin-bottom: 10px;
     margin-top: 20px;
+    width: 100%;
 }
 
 .profileContainer {
     display: flex;
+    width: 100%;
+}
+
+.user_info{
+    display: flex;
+    align-items: center;
+}
+
+.like{
+    display: flex;
+    margin-left: auto;
 }
 
 .flexItemsCenterSpaceX2 {
@@ -63,15 +82,76 @@
     margin-right: auto;
 }
 
+.flexContainer2 {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin-left: 15px !important;
+    margin-right: 20px !important;
+}
+
 .play_button {
+    width: 200px;
+    height: 200px;
     color: #4CAF50;
     cursor: pointer;
     transition: 0.2s;
     /* hover 시 애니메이션 효과를 위한 설정 추가 */
-  }
-  
-  .play_button:hover {
+    margin-left: auto !important;
+    margin-right: 10% !important;
+}
 
+.play_button:hover {
+    transform: scale(1.2);
     /* hover 시 확대 효과 */
     color: #FF4081;
-  }
+}
+
+.reply_container{
+    width: 100%;
+    margin-bottom: 15px !important;
+}
+
+.commentContainer{
+    display: flex;
+    width: 100%;
+    margin-bottom: 15px !important;
+}
+
+.reply_input{
+    display: flex;
+    align-items: center;
+}
+
+.replyoutput{
+    margin-bottom: 10px !important;
+    width: 100%;
+}
+
+.button{
+    width: 50px;
+}
+
+.udContainer{
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.count{
+    font-size: 13px;
+}
+
+.editContainer{
+    display: flex;
+    align-items: center;
+}
+
+.pageNation{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 100px !important;
+}

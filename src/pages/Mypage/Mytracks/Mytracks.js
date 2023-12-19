@@ -16,6 +16,7 @@ import {
 } from "../../../App";
 import { Link, useParams } from "react-router-dom";
 import WaveSurferPlayer from "../../Components/WaveSurferPlayer";
+import heart from "../assets/heart.svg";
 
 const Mytracks = () => {
     const { loginId } = useParams();
@@ -28,6 +29,10 @@ const Mytracks = () => {
     const { loginID, setLoginID } = useContext(LoginContext);
     const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
     const [trackPlayingStatus, setTrackPlayingStatus] = useState({});
+    const storageId = localStorage.getItem("loginID");
+    const [isFavorite, setFavorite] = useState(0);
+    const [trackLike,setLike] = useState([]);
+    const [trackCount,setTrackCount] = useState([]);
 
     useEffect(() => {
         if (!loginID) {
@@ -39,8 +44,9 @@ const Mytracks = () => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
                 return { ...track, imagePath };
             });
+            console.log(tracksWithImages);
             setTrack(tracksWithImages);
-        });
+        });        
     }, [loginID]);
 
     const addTrackToPlaylist = (track) => {
@@ -77,6 +83,66 @@ const Mytracks = () => {
         setIsPlaying(true);
     };
 
+    const handleFavorite = (trackId, isLiked,e) => {
+        if(loginID !== ""){
+            if(!isLiked){
+                const formData = new FormData();
+                formData.append("likeSeq",0);
+                formData.append("userId",storageId);
+                formData.append("trackId",trackId);                
+                axios.post(`/api/like`,formData).then(res=>{
+                    setLike([...trackLike, { trackId : trackId, userId: storageId, likeSeq: res.data}]);
+                    setFavorite(isFavorite+1);
+                    e.target.classList.add(styles.onClickHeart);
+                    e.target.classList.remove(styles.NonClickHeart);
+                }).catch((e)=>{
+                    console.log(e);
+                });
+            }else{
+                const deleteData = new FormData();
+                deleteData.append("trackId",trackId);
+                deleteData.append("userId",storageId);
+                axios.post(`/api/like/delete`,deleteData).then(res=>{
+                    const newLikeList = trackLike.filter(e => e.trackId !== trackId);
+                    console.log("carousel delete",newLikeList);
+                    setLike(newLikeList);
+                    setFavorite(isFavorite+1);
+                    e.target.classList.remove(styles.onClickHeart);
+                    e.target.classList.add(styles.NonClickHeart);
+                }).catch((e)=>{
+                    console.log(e);
+                });            
+            }
+        }else{
+            alert("좋아요는 로그인을 해야 합니다.")
+            return;
+        }
+    }
+
+    const getLikeCount = (trackId) => {
+        const targetCount = trackCount.find(item => item.trackId === trackId);
+        return targetCount ? targetCount.count : 0;
+    };
+    
+    const loadingLikes = async () => {
+        axios.get(`/api/like/${storageId}`).then(res=>{
+            console.log(res.data);
+            setLike(res.data);            
+        }).catch((e)=>{
+            console.log(e);
+        });
+
+        axios.get(`/api/track/like_count/${loginId}`).then(res=>{
+            setTrackCount(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
+    useEffect(()=>{
+        loadingLikes();
+    },[isFavorite]);
+
     return (
         <div className={styles.container}>
             {track.map((track, index) => (
@@ -110,8 +176,15 @@ const Mytracks = () => {
                     </div>
                     <div className={styles.like_share}>
                         <div className={styles.like}>
-                            <FavoriteBorderIcon />
-                            16.9K
+                            {/* <FavoriteBorderIcon /> */}
+                            <img 
+                                src={heart} 
+                                alt="" 
+                                className={
+                                    trackLike.some(trackLike => trackLike.trackId === track.trackId) 
+                                    ? styles.onClickHeart : styles.NonClickHeart} 
+                                onClick={(e)=>{handleFavorite(track.trackId,trackLike.some(trackLike => trackLike.trackId === track.trackId),e)}}/>
+                                {" "+getLikeCount(track.trackId)}
                         </div>
                         <div className={styles.share}>
                             <RepeatIcon />

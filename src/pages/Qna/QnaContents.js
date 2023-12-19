@@ -12,9 +12,9 @@ const QnaContents = () => {
 
     const [selectedQna,setSelectedQna] = useState({});
     const [files,setFiles] = useState([]);
-    const [reply,setReply] = useState({qnaSeq:seq, answerWriter:"",answerContents:"",answerWriteDate:new Date().toISOString()});
+    const [reply,setReply] = useState({qnaSeq:seq, answerWriter:"",answerContents:"",answerWriteDate:""});
     const [replyList,setReplyList] = useState([]);
-    const [updateReply,setUpdateReply] = useState({qnaSeq:seq, answerWriter:"", answerSeq:null, answerContents:"",answerWriteDate:new Date().toISOString()});
+    const [updateReply,setUpdateReply] = useState({qnaSeq:seq, answerWriter:"", answerSeq:null, answerContents:"",answerWriteDate:""});
     const [tempReply,setTempReply] = useState("");
     const [isUpdateState,setUpdateState] = useState(false);
     const [isUpdateSeq,setUpdateSeq] = useState(0);

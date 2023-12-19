@@ -6,6 +6,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Track_Upload from './Track_Upload/Track_Upload';
 import TestMusicList from './TestMusicList/TestMusicList';
+import { Link, Route, Routes } from 'react-router-dom';
+import YourTracks from './YourTracks/YourTracks';
+import MyAlbums from './MyAlbums/MyAlbums';
 
 
 function CustomTabPanel(props) {
@@ -43,7 +46,7 @@ function a11yProps(index) {
 
 export default function Upload_Main() {
   const [value, setValue] = React.useState(0);
-
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -52,20 +55,16 @@ export default function Upload_Main() {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="upload" {...a11yProps(0)} />
-          <Tab label="yourtracks" {...a11yProps(1)} />
-          <Tab label="이건 뭐함" {...a11yProps(2)} />
+          <Tab label="upload" component={Link} to="" {...a11yProps(0)} />
+          <Tab label="yourtracks" component={Link} to="yourtracks" {...a11yProps(1)} />
+          <Tab label="myAlbums" component={Link} to="myAlbums" {...a11yProps(2)}  />
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0}>
-        <Track_Upload />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        sdsfsfsf
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <TestMusicList />
-      </CustomTabPanel>
+      <Routes>
+        <Route path="/" element={<Track_Upload />} />
+        <Route path="/yourtracks" element={<YourTracks/>} />
+        <Route path="/myAlbums" element={<MyAlbums/>} />
+      </Routes>
     </Box>
   );
 }

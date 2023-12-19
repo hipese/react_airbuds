@@ -7,28 +7,28 @@ import { ResponsiveFunnel } from '@nivo/funnel'
 // you'll often use just a few of them.
 const data = [
 {
-    "id": "step_sent",
-    "value": 87488,
+    "id": "50대 이상",
+    "value": 5 ,
     "label": "Sent"
 },
 {
-    "id": "step_viewed",
-    "value": 63850,
+    "id": "40대",
+    "value": 1,
     "label": "Viewed"
 },
 {
-    "id": "step_clicked",
-    "value": 44994,
+    "id": "30대",
+    "value": 1,
     "label": "Clicked"
 },
 {
-    "id": "step_add_to_card",
-    "value": 30278,
+    "id": "20대",
+    "value": 5,
     "label": "Add To Card"
 },
 {
-    "id": "step_purchased",
-    "value": 18709,
+    "id": "10대",
+    "value": 0,
     "label": "Purchased"
 }
 ];

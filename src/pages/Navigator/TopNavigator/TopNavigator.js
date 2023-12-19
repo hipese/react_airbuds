@@ -15,6 +15,11 @@ import { DropdownDivider } from "react-bootstrap";
 
 const TopNavigator = () => {
 
+    const [activeLink, setActiveLink] = useState("");
+    
+    const handleLinkClick = (e) => {
+        setActiveLink(e);
+    }
     const { loginID, setLoginID } = useContext(LoginContext);
 
     const nameRef = useRef();
@@ -389,16 +394,16 @@ const TopNavigator = () => {
                 <Col className={styles.header_left}>
                     <Row>
                         <Col>
-                            <Link className={styles.linksvg} to="/"><SVGComponent /></Link>
+                            <Link className={styles.linksvg} to="/"><div onClick={() => handleLinkClick('home')}><SVGComponent /></div></Link>
                         </Col>
                         <Col>
-                            <Link className={styles.linkurl} to="/"><div>홈</div></Link>
+                            <Link className={styles.linkurl} to="/"><div className={activeLink === 'home' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('home')}>홈</div></Link>
                         </Col>
                         <Col>
-                            <Link className={styles.linkurl} to="/Feed"><div>피드</div></Link>
+                            <Link className={styles.linkurl} to="/Feed"><div className={activeLink === 'Feed' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Feed')}>피드</div></Link>
                         </Col>
                         <Col>
-                            <Link className={styles.linkurl} to="/Library"><div>라이브러리</div></Link>
+                            <Link className={styles.linkurl} to="/Library"><div className={activeLink === 'Library' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Library')}>라이브러리</div></Link>
                         </Col>
                     </Row>
                 </Col>
@@ -416,25 +421,25 @@ const TopNavigator = () => {
                             loginID ?
                                 <>
                                     <Col>
-                                        <Link className={styles.linkurl} to="/Playlist"><div>플레이리스트</div></Link>
+                                        <Link className={styles.linkurl} to="/Playlist"><div className={activeLink === 'Playlist' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Playlist')}>플레이리스트</div></Link>
                                     </Col>
                                     <Col>
-                                        <Link className={styles.linkurl} to="/Upload"><div>업로드</div></Link>
+                                        <Link className={styles.linkurl} to="/Upload"><div className={activeLink === 'Upload' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Upload')}>업로드</div></Link>
                                     </Col>
                                     <Col>
                                         <Link className={styles.linkurl} to={`/Mypage/${loginID}`}><div>Profile</div></Link>
                                     </Col>
                                     <Col>
-                                        <div className={styles.linkurl} onClick={handleLogoutClick}><div>로그아웃</div></div>
+                                        <div className={styles.linkurl} onClick={handleLogoutClick}><div className={activeLink === 'logout' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('logoutt')}>로그아웃</div></div>
                                     </Col>
                                 </>
                                 :
                                 <>
                                     <Col>
-                                        <div className={styles.linkurl} onClick={handleLoginClick}><div>로그인</div></div>
+                                        <div className={styles.linkurl} onClick={handleLoginClick}><div className={activeLink === 'login' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('login')}>로그인</div></div>
                                     </Col>
                                     <Col>
-                                        <Link className={styles.linkurl} to="/Register"><div>회원가입</div></Link>
+                                        <Link className={styles.linkurl} to="/Register"><div className={activeLink === 'Register' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Register')}>회원가입</div></Link>
                                     </Col>
                                 </>
                         }

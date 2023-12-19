@@ -6,13 +6,12 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import axios from "axios";
 
-const MusicTagList = ({onSelectTag}) => {
+const AlbumTagList = ({onSelectTag}) => {
 
-    
     const [tagList, setTagList] = useState([]);
 
     useEffect(() => {
-        axios.get("/api/MusicTag").then(resp => {
+        axios.get("/api/albumTagList").then(resp => {
             setTagList(resp.data)
         })
 
@@ -37,7 +36,6 @@ const MusicTagList = ({onSelectTag}) => {
         if (selectedTag) {
             onSelectTag({ tagId: selectedTag.tagId, tagName: selectedTag.tagName });
         }
-        console.log(selectedTag);
     };
 
 
@@ -66,4 +64,4 @@ const MusicTagList = ({onSelectTag}) => {
 
 }
 
-export default MusicTagList;
+export default AlbumTagList;

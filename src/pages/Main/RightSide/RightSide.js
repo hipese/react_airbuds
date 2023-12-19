@@ -11,17 +11,14 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
     const { loginID } = useContext(LoginContext);
     
     const test =() => {
-        console.log(onlyLike);
-        console.log(loginID);
     }
 
     const findCommonTrack = (trackInfo, trackLike) => {
         return trackInfo.filter(infoItem =>
             trackLike.some(likeItem => likeItem.trackId === infoItem.track.trackId)
         );
-    };    
-
-    useEffect(()=>{
+    };
+    const sideLoading = async () => {
         const tagObjectsArray = Object.values(trackInfoByTag);
         const newArr = [];
         tagObjectsArray.forEach( item => newArr.push(...item));
@@ -36,10 +33,17 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
             return result;
         }, []);
 
-        const only3Music = uniqueTitlesArray.filter((e,i) => i < 3);
+        const sortedData = uniqueTitlesArray.sort((a, b) => b.track.trackId - a.track.trackId);
 
-        setOnlyLike(only3Music);
-        console.log(uniqueTitlesArray);
+        const threeData = sortedData.filter((e,i)=>i < 3);
+
+        await new Promise(()=>{
+            setOnlyLike(threeData);
+        });
+    }
+
+    useEffect(()=>{        
+        sideLoading();        
     },[trackLike]);
     return (
         <div className={styles.positionFixed}>
@@ -73,16 +77,16 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
                     <ul className={styles.loveul}>
                         {onlyLike.map((e,i) => {
                         const trackImage = e.track.trackImages && e.track.trackImages.length > 0
-                        ? `/tracks/image/${e.track.trackImages.imagePath}`
+                        ? `/tracks/image/${e.track.trackImages[0].imagePath}`
                         : "http://placehold.it/150x150";
                         return (
-                            <li className={styles.loveli}>
+                            <li key={i} className={styles.loveli}>
                                 <div className={styles.loveImg}>
-                                    <img src={trackImage}></img>
+                                    <img src={trackImage} width={50} height={50}></img>
                                 </div>
                                 <div>
                                     <div className={styles.loveSinger}>{e.track.title}</div>
-                                    <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson} onClick={test}>{e.track.writer ? e.track.writer : "unknown"}</div>
+                                    <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson}>{e.track.writer ? e.track.writer : "unknown"}</div>
                                 </div>
                             </li>
                         )

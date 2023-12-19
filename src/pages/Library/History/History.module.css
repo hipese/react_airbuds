@@ -1,6 +1,8 @@
 .container {
     overflow: auto;
-    height: 500px;
+    width: 80%;
+    margin-bottom: 150px;
+    height: 700px;
 }
 
 .track_info {
@@ -56,12 +58,8 @@
     margin-right: 10px;
 }
 
-.onClickHeart {
-    filter: invert(27%) sepia(94%) saturate(7461%) hue-rotate(356deg) brightness(100%) contrast(119%);
-    cursor: pointer;
-}
-
-.NonClickHeart {
-    filter: brightness(50%);
-    cursor: pointer;
+.endMessage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
