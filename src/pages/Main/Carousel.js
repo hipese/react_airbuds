@@ -16,8 +16,6 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike,setFavorite,isFavorit
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTrack, setSelectedTrack] = useState(null);
     const { loginID, setLoginID } = useContext(LoginContext);
-    const localItem = localStorage.getItem("loginID");
-    const storageId = JSON.parse(localItem);
 
     const goToPrev = () => {
         if (carouselRef.current) {
@@ -44,10 +42,10 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike,setFavorite,isFavorit
             if(!isLiked){
                 const formData = new FormData();
                 formData.append("likeSeq",0);
-                formData.append("userId",storageId.value);
+                formData.append("userId",loginID);
                 formData.append("trackId",trackId);                
                 axios.post(`/api/like`,formData).then(res=>{
-                    setLike([...trackLike, { trackId : trackId, userId: storageId.value, likeSeq: res.data}]);
+                    setLike([...trackLike, { trackId : trackId, userId: loginID, likeSeq: res.data}]);
                     setFavorite(isFavorite+1);
                     e.target.classList.add(styles.onClickHeart);
                     e.target.classList.remove(styles.NonClickHeart);
@@ -57,10 +55,9 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike,setFavorite,isFavorit
             }else{
                 const deleteData = new FormData();
                 deleteData.append("trackId",trackId);
-                deleteData.append("userId",storageId.value);
+                deleteData.append("userId",loginID);
                 axios.post(`/api/like/delete`,deleteData).then(res=>{
                     const newLikeList = trackLike.filter(e => e.trackId !== trackId);
-                    console.log("carousel delete",newLikeList);
                     setLike(newLikeList);
                     setFavorite(isFavorite+1);
                     e.target.classList.remove(styles.onClickHeart);

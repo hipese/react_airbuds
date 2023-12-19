@@ -48,6 +48,7 @@ const MusicWithTabs = () => {
     const [followNumber,setFollowNumber] = useState({});
 
     useEffect(()=>{
+        checkTrackNumber();
         checkFollowState();
         checkFollowNumber();
     },[loginId]);
@@ -57,12 +58,16 @@ const MusicWithTabs = () => {
             return;
         }
 
-        axios.get(`/api/track/findById/${loginId}`).then((resp) => {
-            setTracks(resp.data);
-        });
+        checkTrackNumber();
         checkFollowState();
         checkFollowNumber();
     }, [loginID]);
+
+    const checkTrackNumber = () => {
+        axios.get(`/api/track/findById/${loginId}`).then((resp) => {
+            setTracks(resp.data);
+        });
+    }
 
     const checkFollowState = () => {
         const formData = new FormData();
@@ -245,13 +250,13 @@ const MusicWithTabs = () => {
                     <div className={styles.infoItem}>
                         <Typography variant="h6" gutterBottom>
                             Followers<br></br>
-                            {followNumber.followers}
+                            {followNumber.followers ? followNumber.followers : "0"}
                         </Typography>
                     </div>
                     <div className={styles.infoItem}>
                         <Typography variant="h6" gutterBottom>
                             Following<br></br>
-                            {followNumber.followings}
+                            {followNumber.followings ? followNumber.followings : "0"}
                         </Typography>
                     </div>
                     <div className={styles.infoItemLast}>
