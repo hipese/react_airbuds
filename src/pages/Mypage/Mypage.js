@@ -40,43 +40,6 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-// function isDark(image) {
-//     const canvas = document.createElement('canvas');
-//     const context = canvas.getContext('2d');
-    
-//     // 캔버스 크기를 이미지 크기에 맞춥니다.
-//     canvas.width = image.width;
-//     canvas.height = image.height;
-  
-//     // 이미지를 캔버스에 그립니다.
-//     context.drawImage(image, 0, 0, image.width, image.height);
-  
-//     // 이미지의 픽셀 데이터를 추출합니다.
-//     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-//     const data = imageData.data;
-  
-//     let r = 0, g = 0, b = 0;
-  
-//     // 픽셀별로 색상 값을 누적합니다.
-//     for (let i = 0; i < data.length; i += 4) {
-//       r += data[i];
-//       g += data[i + 1];
-//       b += data[i + 2];
-//     }
-  
-//     // 평균 색상 값을 계산합니다.
-//     r = Math.floor(r / (data.length / 4));
-//     g = Math.floor(g / (data.length / 4));
-//     b = Math.floor(b / (data.length / 4));
-  
-//     const hsp = Math.sqrt(
-//         0.299 * (r * r) +
-//         0.587 * (g * g) +
-//         0.114 * (b * b)
-//       );
-//     return hsp < 127.5;
-//   }
-
 const MusicWithTabs = () => {
 
     const InputFileUpload = () => {
@@ -107,7 +70,6 @@ const MusicWithTabs = () => {
 
         // 프로필 이미지 + 배경 이미지 받아오기
         axios.get(`/api/member/getProfiles/${targetID}`).then((resp) => {
-            console.log(resp.data);
             setProfileImage(resp.data.profile_image);
             setBackgroundImage(resp.data.background_image);
         }).catch(err => {
@@ -206,12 +168,14 @@ const MusicWithTabs = () => {
                     <Avatar alt="Remy Sharp" sx={{ width: 180, height: 180, marginLeft: 2 }} />
                 </Grid>
                 <Grid item md={7}>
-                    <Typography variant="h2" gutterBottom>
-                        {targetID}
-                    </Typography>
-                    <Typography variant="h5" gutterBottom>
-                        &nbsp;'s Groovy Space
-                    </Typography>
+                    <Box className={styles.target_id_container}>
+                        <Typography variant="h2" gutterBottom>
+                            {targetID}
+                        </Typography>
+                        <Typography variant="h5" gutterBottom>
+                            &nbsp;'s Groovy Space
+                        </Typography>
+                    </Box>
                 </Grid>
                 <Grid item md={3} style={{display : "flex", justifyContent:"center", alignItems : "center", flexDirection : "column"}}>
                     {
