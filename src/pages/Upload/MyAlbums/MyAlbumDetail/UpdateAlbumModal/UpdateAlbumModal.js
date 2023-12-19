@@ -157,6 +157,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, handleUpdateAlbum, onC
                     <img
                         src={albumUpdate.coverImagePath ? imageView: "/assets/groovy2.png"}
                         alt={albumUpdate.title}
+                        onClick={handleClickImage}
                         className={styles.albumImage}
                     />
                     <input
@@ -166,6 +167,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, handleUpdateAlbum, onC
                             style={{ display: 'none' }}
                             accept="image/*"
                         />
+                    <Button onClick={handleClickImage}>이미지변경</Button>
                 </Col>
                 <Col sx='12' md='8'>
                     <Row>
