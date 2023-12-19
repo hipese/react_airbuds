@@ -1,12 +1,14 @@
-import { useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import style from './announce.module.css'
-import { Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Button, Grid, Typography } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { LoginContext } from "../../App";
 
 const AnnounceContentsMain = () => {
-    const loginID = "kwon";
+    const {loginID} = useContext(LoginContext);
     const {seq} = useParams();
+    const navi = useNavigate();
 
     const [detail,setDetail] = useState({});
 
@@ -17,6 +19,18 @@ const AnnounceContentsMain = () => {
             console.log(e);
         });
     },[]);
+
+    const handleToList = () => {
+        navi("/Announce");
+    }
+
+    const handleDeleteAnnounce = () => {
+        axios.delete(`/api/announce/${seq}`).then(res=>{
+            navi("/Announce");
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
     return(
         <div className={`${style.wrap}`}>
             <div className={`${style.announceContents} ${style.ma}`}>
@@ -48,9 +62,17 @@ const AnnounceContentsMain = () => {
                     <Grid container className={`${style.pl10} ${style.center}`}>
                         <Grid item xs={12} sm={4} className={`${style.rightAlign}`}>
                             
-                            { "kwon" == loginID ? <div className={`${style.btnEven}`}><button>삭제하기</button>
-                                                                <button>목록으로</button></div>
-                                                                :<button>목록으로</button>}
+                            { detail.announceWriter == loginID 
+                                ? <div className={`${style.btnEven}`}>
+                                    <Button variant="contained" onClick={handleDeleteAnnounce}>삭제하기</Button>
+                                    <Button variant="outlined" onClick={handleToList}>목록으로</Button>
+                                </div>
+                                :
+                                <div className={`${style.btnEven}`}>
+                                    <Button variant="outlined" onClick={handleToList}>목록으로</Button>
+                                </div>
+                            }
+
                         </Grid>
                     </Grid>
                     <hr/>

@@ -14,14 +14,13 @@ const Main = () => {
     const [trackInfoByTag, setTrackInfoByTag] = useState({});
     const [trackLike,setLike] = useState([]);
     const { loginID, setLoginID } = useContext(LoginContext);
-    const storageId = localStorage.getItem("loginID");
     const [isFavorite, setFavorite] = useState(0);
     const [trackInfoAll, setTrackInfoAll] = useState([]);
     const [loading, setLoading] = useState(true);
     const [flag, setFlag] = useState(true);
-
-
     
+
+
     useEffect(() => {
         axios.get("/api/track/recent")
             .then((res) => {
@@ -49,11 +48,20 @@ const Main = () => {
                 setSelectTitle([]);
             });
             loadingLikes();
+            loadingFollwings();
     }, [loginID]);
 
     const loadingLikes = async () => {
-        axios.get(`/api/like/${storageId}`).then(res=>{
+        axios.get(`/api/like/${loginID}`).then(res=>{
             setLike(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
+    const loadingFollwings = async () => {
+        axios.get(`/api/like/follwingData/${loginID}`).then(res=>{
+            console.log(res.data);
         }).catch((e)=>{
             console.log(e);
         });

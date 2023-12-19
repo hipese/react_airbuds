@@ -47,17 +47,27 @@ const MusicWithTabs = () => {
     const [isFollowed,setFollow] = useState(false);
     const [followNumber,setFollowNumber] = useState({});
 
+    useEffect(()=>{
+        checkTrackNumber();
+        checkFollowState();
+        checkFollowNumber();
+    },[loginId]);
+
     useEffect(() => {
         if (!loginID) {
             return;
         }
 
-        axios.get(`/api/track/findById/${loginId}`).then((resp) => {
-            setTracks(resp.data);
-        });
+        checkTrackNumber();
         checkFollowState();
         checkFollowNumber();
     }, [loginID]);
+
+    const checkTrackNumber = () => {
+        axios.get(`/api/track/findById/${loginId}`).then((resp) => {
+            setTracks(resp.data);
+        });
+    }
 
     const checkFollowState = () => {
         const formData = new FormData();
@@ -150,7 +160,13 @@ const MusicWithTabs = () => {
                             <Tab label="Albums" component={Link} to="albums" {...a11yProps(2)} />
                             <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)} />
                             <div className={styles.like_edit}>
-                                {!isFollowed ? <Button variant="outlined" startIcon={<PersonIcon/>}
+                                {
+                                    loginID == loginId ?
+                                    ""
+                                    :
+                                    !isFollowed ?
+                                    //팔로우 안한 상태일때.
+                                    <Button variant="outlined" startIcon={<PersonIcon/>}
                                     sx={{
                                         width: '100px',
                                         height: '30px',
@@ -169,6 +185,7 @@ const MusicWithTabs = () => {
                                     Follow
                                 </Button>
                                 :
+                                //팔로우 한 상태일때.
                                 <Button variant="outlined" startIcon={<PersonIcon/>}
                                     sx={{
                                         width: '100px',
@@ -233,13 +250,13 @@ const MusicWithTabs = () => {
                     <div className={styles.infoItem}>
                         <Typography variant="h6" gutterBottom>
                             Followers<br></br>
-                            {followNumber.followers}
+                            {followNumber.followers ? followNumber.followers : "0"}
                         </Typography>
                     </div>
                     <div className={styles.infoItem}>
                         <Typography variant="h6" gutterBottom>
                             Following<br></br>
-                            {followNumber.followings}
+                            {followNumber.followings ? followNumber.followings : "0"}
                         </Typography>
                     </div>
                     <div className={styles.infoItemLast}>

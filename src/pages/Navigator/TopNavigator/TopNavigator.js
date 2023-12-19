@@ -309,7 +309,7 @@ const TopNavigator = () => {
             });
         }
     };
-
+    
     const handleLoginClick = async () => {
         const { value: formValues } = await Swal.fire({
             title: 'Welcome Back',
@@ -359,7 +359,6 @@ const TopNavigator = () => {
             formData.append("password", formValues.password);
             axios.post("/api/member/login", formData).then(resp => {
                 setLoginID(formValues.id);
-                localStorage.setItem("loginID", formValues.id);
             }).catch(err => {
                 if (err.response.status == 401) {
                     Swal.fire({
@@ -382,7 +381,6 @@ const TopNavigator = () => {
     const handleLogoutClick = () => {
         axios.post("/api/member/logout").then(() => {
             setLoginID("");
-            localStorage.removeItem("loginID");
         }).catch(err => {
             console.log(err);
         })

@@ -1,12 +1,14 @@
 import { Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 import style from './announce.module.css'
 import Reactquill from './ReactQuill';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import { LoginContext } from '../../App';
 const AnnounceWriteMain = () =>{
 
-    const [announce, setAnnounce] = useState({announceTitle:"",announceWriter:"kwon", announceCategory:"none",announcePublic:1, announceContents:"",announceAnswerState:0,announceWriteDate:new Date().toISOString(),files:[]});
+    const {loginID} = useContext(LoginContext);
+    const [announce, setAnnounce] = useState({announceTitle:"",announceWriter:loginID, announceCategory:"none",announcePublic:1, announceContents:"",announceAnswerState:0,announceWriteDate:new Date().toISOString(),files:[]});
 
     const navi = useNavigate();
     const handleChange = (e) => {
