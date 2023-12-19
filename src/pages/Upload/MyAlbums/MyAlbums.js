@@ -1,46 +1,64 @@
-// import { Button } from "reactstrap";
-// import styles from "./MyAlbums.module.css"
-// import axios from "axios";
-// import { useState } from "react";
+import { Button } from "reactstrap";
+import styles from "./MyAlbums.module.css"
+import axios from "axios";
+import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom"
+import RightSide from "../../Main/RightSide/RightSide";
+import { LoginContext } from "../../../App";
+import { Box, CircularProgress } from "@mui/material";
+import AlbumsCarousel from "./AlbumsCarousel/AlbumsCarousel"
 
-// const MyAlbums = () => {
+const MyAlbums = () => {
 
-//     const [albums, setAlbums] = useState([]);
+   
+    const [selectTitle, setSelectTitle] = useState([]);
+   
+    const { loginID, setLoginID } = useContext(LoginContext);
+    const storageId = localStorage.getItem("loginID");
+    const [isFavorite, setFavorite] = useState(0);
+    const [loading, setLoading] = useState(true);
+   
+    const [myAlbumsInfo,setMyAlbumsInfo]=useState([]);
+    
+    useEffect(() => {
+        axios.get(`/api/album/findByLogin`).then(resp=>{
+            console.log(resp.data)
+            setMyAlbumsInfo(resp.data);
+            setLoading(false); 
+        })
+       
+    }, [loginID]);
 
-//     // 앨범 불러오는 기능
-//     const handleAlbum = () => {
-//         axios.get("/api/album/findByLogin").then(resp => {
-//             console.log(resp.data);
-//             setAlbums(resp.data);
-//         })
-//     }
 
-//     return (
-//         <div className={styles.container}>
-//             <div className={styles.contentContainer}>
-//                 <div className={styles.leftSide}>
+    // const CircularIndeterminate = () => {
+    //     return (
+    //         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    //             <CircularProgress />
+    //         </Box>
+    //     );
+    // };
+
+    // if (loading) {
+    //     return <CircularIndeterminate />;
+    // }
+
+    return (
+        <div className={styles.container}>
+            <div className={styles.contentContainer}>
+                <div className={styles.leftSide}>
                     
-//                     <div className={styles.carouselTitle}>최근 유행하는 노래</div>
-//                     <div className={styles.carousel}>
-//                         <OwlCarousel />
-//                     </div>
-//                     {Array.isArray(selectTitle) && selectTitle.filter(tag => [5, 6, 8, 9, 10, 12, 13, 14].includes(tag.tagId)).map((filterTag, index) => (
-//                         <div key={index}>
-//                             <div className={styles.carouselTitle}>{filterTag.tagName}</div>
-//                             <div className={styles.carousel}>
-//                                 <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike} setFavorite={setFavorite} isFavorite={isFavorite} trackInfoAll={trackInfoAll}/>
-//                             </div>
-//                         </div>
-//                     ))}
+                    <div className={styles.carouselTitle}>내 앨범목록</div>
+                    <div className={styles.carousel}>
+                        <AlbumsCarousel myAlbumsInfo={myAlbumsInfo}/>
+                    </div>
+                    
 
-//                     <div className={styles.leftBottom}></div>
-//                 </div>
-//                 <div className={styles.rightSide}>
-//                     <RightSide trackLike={trackLike} trackInfoByTag={trackInfoByTag}/>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
+                    <div className={styles.leftBottom}></div>
+                </div>
+               
+            </div>
+        </div>
+    );
+}
 
-// export default MyAlbums;
+export default MyAlbums;
