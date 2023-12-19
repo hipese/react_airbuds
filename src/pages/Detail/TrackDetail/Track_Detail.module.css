@@ -155,3 +155,7 @@
     justify-content: center;
     margin-bottom: 100px !important;
 }
+
+.thumbUp :hover{
+    cursor: pointer;
+}
