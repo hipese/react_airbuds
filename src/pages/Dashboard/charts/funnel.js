@@ -5,34 +5,7 @@ import { ResponsiveFunnel } from '@nivo/funnel'
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
-const data = [
-{
-    "id": "50대 이상",
-    "value": 5 ,
-    "label": "Sent"
-},
-{
-    "id": "40대",
-    "value": 1,
-    "label": "Viewed"
-},
-{
-    "id": "30대",
-    "value": 1,
-    "label": "Clicked"
-},
-{
-    "id": "20대",
-    "value": 5,
-    "label": "Add To Card"
-},
-{
-    "id": "10대",
-    "value": 0,
-    "label": "Purchased"
-}
-];
-const MyResponsiveFunnel = () => (
+const MyResponsiveFunnel = ({data}) => (
     <ResponsiveFunnel
         data={data}
         margin={{ top: 20, right: 20, bottom: 20, left: 20 }}

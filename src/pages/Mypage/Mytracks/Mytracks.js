@@ -19,7 +19,7 @@ import WaveSurferPlayer from "../../Components/WaveSurferPlayer";
 import heart from "../assets/heart.svg";
 
 const Mytracks = () => {
-    const { loginId } = useParams();
+    const { targetID } = useParams();
     const [track, setTrack] = useState([]);
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
     const { isPlaying, setIsPlaying } = useContext(PlayingContext);
@@ -29,7 +29,6 @@ const Mytracks = () => {
     const { loginID, setLoginID } = useContext(LoginContext);
     const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
     const [trackPlayingStatus, setTrackPlayingStatus] = useState({});
-    const storageId = localStorage.getItem("loginID");
     const [isFavorite, setFavorite] = useState(0);
     const [trackLike,setLike] = useState([]);
     const [trackCount,setTrackCount] = useState([]);
@@ -39,14 +38,14 @@ const Mytracks = () => {
             return;
         }
 
-        axios.get(`/api/track/findById/${loginId}`).then((resp) => {
+        axios.get(`/api/track/findById/${targetID}`).then((resp) => {
             const tracksWithImages = resp.data.map((track) => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
                 return { ...track, imagePath };
             });
             console.log(tracksWithImages);
             setTrack(tracksWithImages);
-        });        
+        });
     }, [loginID]);
 
     const addTrackToPlaylist = (track) => {
@@ -88,10 +87,10 @@ const Mytracks = () => {
             if(!isLiked){
                 const formData = new FormData();
                 formData.append("likeSeq",0);
-                formData.append("userId",storageId);
+                formData.append("userId",loginID);
                 formData.append("trackId",trackId);                
                 axios.post(`/api/like`,formData).then(res=>{
-                    setLike([...trackLike, { trackId : trackId, userId: storageId, likeSeq: res.data}]);
+                    setLike([...trackLike, { trackId : trackId, userId: loginID, likeSeq: res.data}]);
                     setFavorite(isFavorite+1);
                     e.target.classList.add(styles.onClickHeart);
                     e.target.classList.remove(styles.NonClickHeart);
@@ -101,7 +100,7 @@ const Mytracks = () => {
             }else{
                 const deleteData = new FormData();
                 deleteData.append("trackId",trackId);
-                deleteData.append("userId",storageId);
+                deleteData.append("userId",loginID);
                 axios.post(`/api/like/delete`,deleteData).then(res=>{
                     const newLikeList = trackLike.filter(e => e.trackId !== trackId);
                     console.log("carousel delete",newLikeList);
@@ -125,14 +124,14 @@ const Mytracks = () => {
     };
     
     const loadingLikes = async () => {
-        axios.get(`/api/like/${storageId}`).then(res=>{
+        axios.get(`/api/like/${loginID}`).then(res=>{
             console.log(res.data);
             setLike(res.data);            
         }).catch((e)=>{
             console.log(e);
         });
 
-        axios.get(`/api/track/like_count/${loginId}`).then(res=>{
+        axios.get(`/api/track/like_count/${targetID}`).then(res=>{
             setTrackCount(res.data);
         }).catch((e)=>{
             console.log(e);

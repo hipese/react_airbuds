@@ -142,6 +142,9 @@
 
 .count{
     font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .editContainer{
@@ -154,4 +157,8 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 100px !important;
+}
+
+.thumbUp :hover{
+    cursor: pointer;
 }
