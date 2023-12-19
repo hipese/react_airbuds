@@ -14,6 +14,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Pagination, PaginationItem } from "@mui/material";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 const theme = createTheme({
     components: {
@@ -46,6 +47,7 @@ const Track_Detail = () => {
     const [editedReply, setEditedReply] = useState({ trackId: trackId, writer: "", contents: "", writeDate: "" });
     const COUNT_PER_PAGE = 10;
     const [currentPage, setCurrentPage] = useState(1);
+    const [liked, setLiked] = useState(false);
 
     useEffect(() => {
         axios.get(`/api/track/bytrack_id/${trackId}`).then(resp => {
@@ -184,6 +186,10 @@ const Track_Detail = () => {
             });
     };
 
+    const handleThumbUpClick = () => {
+        setLiked((prevLiked) => !prevLiked);
+    };
+
     return (
         <Grid container className={styles.container}>
             <Grid item xs={12} md={8} className={styles.container2}>
@@ -236,7 +242,7 @@ const Track_Detail = () => {
                             <Grid item xs={12} md={12} className={styles.user_info}>
                                 <Avatar alt="Profile" src="/static/images/avatar/1.jpg" sx={{ width: '80px', height: '80px' }} />
                                 <Typography variant="body1">
-                                    {loginID ? loginID : '로그인해주세요'}
+                                    {track.writeId}
                                 </Typography>
                                 <div className={styles.like}>
                                     <FavoriteBorderIcon />
@@ -334,7 +340,6 @@ const Track_Detail = () => {
                                         </Button>
                                     </Grid>
                                 ) : (
-                                    // Display text in view mode
                                     <div className={styles.reply_info}>
                                         <Typography variant="h6">{comment.writer}</Typography>
                                         <Typography variant="body1">{comment.contents}</Typography>
@@ -343,8 +348,10 @@ const Track_Detail = () => {
                                 )}
                                 <div className={styles.udContainer}>
                                     <div className={styles.thumbUp}>
-                                        <ThumbUpOffAltIcon />
-                                        <div className={styles.count}>3.2k</div>
+                                        <div className={styles.thumbUp} onClick={handleThumbUpClick}>
+                                            {liked ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
+                                            <div className={styles.count}>3.2k</div>
+                                        </div>
                                     </div>
                                     <Button
                                         sx={{
