@@ -85,3 +85,17 @@
 .report{
     background:linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
 }
+.reporttext{
+    background:linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: lighter;
+}
+
+
+.streamtext{
+    background:linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: lighter;
+}
