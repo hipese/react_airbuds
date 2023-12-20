@@ -235,6 +235,32 @@ const Track_Detail = () => {
         }
     }
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const now = new Date();
+
+        const diffInMinutes = Math.floor((now - date) / (1000 * 60));
+        const diffInHours = Math.floor(diffInMinutes / 60);
+
+        if (diffInMinutes < 1) {
+            return '방금 전';
+        } else if (diffInHours < 1) {
+            return `${diffInMinutes}분 전`;
+        } else if (diffInHours < 24) {
+            return `${diffInHours}시간 전`;
+        } else {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('ko-KR', options);
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // 엔터키 기본 동작 막기 (개행 추가 방지)
+            handlePostReply(); // 댓글 작성 함수 호출
+        }
+    };
+
     return (
         <Grid container className={styles.container}>
             <Grid item xs={12} md={8} className={styles.container2}>
@@ -312,7 +338,9 @@ const Track_Detail = () => {
                                         multiline
                                         rows={1}
                                         value={reply.contents}
-                                        onChange={handleReplyChange} />
+                                        onChange={handleReplyChange}
+                                        onKeyDown={handleKeyDown}
+                                    />
                                     <Button variant="contained" onClick={handlePostReply} sx={{
                                         height: '56px',
                                         width: '100px',
@@ -388,7 +416,7 @@ const Track_Detail = () => {
                                     <div className={styles.reply_info}>
                                         <Typography variant="h6">{comment.writer}</Typography>
                                         <Typography variant="body1">{comment.contents}</Typography>
-                                        <Typography variant="caption">{comment.writeDate}</Typography>
+                                        <Typography variant="caption">{formatDate(comment.writeDate)}</Typography>
                                     </div>
                                 )}
                                 <div className={styles.udContainer}>
