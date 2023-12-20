@@ -23,11 +23,9 @@ const Sanction = () => {
 
   const [loading, setLoading] = useState(true);
 
-  const { loginID } = useContext(LoginContext);
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [tracks, setTracks] = useState([]);
-  const [sanctions, setSanctions] = useState([]);
   const [reason, setReason] = useState('');
   const [selectedTrackId, setSelectedTrackId] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -40,7 +38,7 @@ const Sanction = () => {
     }).catch((e) => {
       console.log(e);
     });
-  }, [tracks]);
+  }, []);
 
   const totalItems = tracks.length;
   const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);
@@ -95,7 +93,7 @@ const Sanction = () => {
         console.error('Error:', error);
       });
     } else {
-      alert("입력해라")
+      alert("입력해주세요")
     }
   };
 
@@ -215,7 +213,7 @@ const Sanction = () => {
                   {e.trackId}
                 </Typography>
               </Grid>
-              <Grid item xs={4} className={`${style.center}`}>
+              <Grid item xs={3} className={`${style.center}`}>
                 <Typography fontSize={{ xs: "13px", lg: "14px" }}>
                   <Link
                     to={getDetailLink(
@@ -254,7 +252,7 @@ const Sanction = () => {
                   {e.count}
                 </Typography>
               </Grid>
-              <Grid item xs={1} className={`${style.center}`}>
+              <Grid item xs={2} className={`${style.spaceEvenly}`}>
                 <Button onClick={() => handleOpenModal(e.trackId)} className={`${style.sanction}`}>노래</Button>
                 <Button onClick={() => handleImage(e.trackId)} className={`${style.sanction}`}>사진</Button>
               </Grid>
