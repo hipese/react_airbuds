@@ -74,10 +74,10 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
         console.log("Title Image: ", titleImage);
         if(titleImage){
             formData.append("titleImage", titleImage);
-              // 예전 이미지 값
-            formData.append(`prevImage`, prevImage);
         }
-
+        
+        // 예전 이미지 값
+        formData.append(`prevImage`, prevImage);
         formData.append('albumTitle', albumUpdate.title);
         // 앨범의 테그 보내기 
         albumUpdate.albumTag.forEach(tag => {
