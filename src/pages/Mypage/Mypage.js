@@ -44,7 +44,19 @@ const MusicWithTabs = () => {
 
     const InputFileUpload = () => {
         return (
-            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} onChange={changeBackgroundHandler}>
+            <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+                onChange={changeBackgroundHandler}
+                sx={{
+                    backgroundColor: '#4CAF50', // Default background color
+                    color: 'white', // Default text color
+                    '&:hover': {
+                        backgroundColor: '#45a049', // Change background color on hover
+                    },
+                }}
+            >
                 Upload file
                 <VisuallyHiddenInput type="file" />
             </Button>
@@ -63,6 +75,7 @@ const MusicWithTabs = () => {
     const [isFollowed, setFollow] = useState(false);
     const [followNumber, setFollowNumber] = useState({});
     const navi = useNavigate();
+    const [slicedReplies, setSlicedReplies] = useState([]);
 
     useEffect(() => {
         axios.get(`/api/track/findById/${targetID}`).then((resp) => {
@@ -84,10 +97,20 @@ const MusicWithTabs = () => {
         setValue(0);
     }, [targetID, loginID]);
 
+    useEffect(() => {
+        axios.get(`/api/reply/writer/${targetID}`).then((resp) => {
+            console.log(resp.data);
+            const sliced = resp.data.slice(0, 5);
+            setSlicedReplies(sliced);
+        });
+    }, [targetID, loginID]);
+
     const checkTrackNumber = () => {
         axios.get(`/api/track/findById/${targetID}`).then((resp) => {
             setTracks(resp.data);
-        });
+        }).catch(err => {
+            console.log(err);
+        })
     }
 
     const checkFollowState = () => {
@@ -197,7 +220,19 @@ const MusicWithTabs = () => {
                     {
                         isBackgroundChanged ?
                             <><br></br>
-                                <Button component="label" variant="contained" startIcon={<CheckIcon />} onClick={uploadBackgroundHandler}>
+                                <Button
+                                    component="label"
+                                    variant="contained"
+                                    startIcon={<CheckIcon />}
+                                    onClick={uploadBackgroundHandler}
+                                    sx={{
+                                        backgroundColor: '#4CAF50', // Default background color
+                                        color: 'white', // Default text color
+                                        '&:hover': {
+                                            backgroundColor: '#45a049', // Change background color on hover
+                                        },
+                                    }}
+                                >
                                     SAVE
                                 </Button>
                             </>
@@ -373,7 +408,17 @@ const MusicWithTabs = () => {
                     </div>
                 </div>
                 <div className={styles.myreply}>
-                    나의 최근 댓글
+                    <h3>최근 댓글</h3>
+                    <div className={styles.commentList}>
+                        {slicedReplies.map((reply) => (
+                            <Link to={`/Detail/${reply.trackId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                <div key={reply.seq} className={styles.comment}>
+                                    <p className={styles.commentContent}>{reply.contents}</p>
+                                    <p className={styles.commentDate}>{new Date(reply.writeDate).toLocaleString()}</p>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
                 </div>
             </Grid>
         </Grid>

@@ -53,6 +53,10 @@ const History = () => {
             // 기존 track 배열 업데이트
             setTrack(allTracks);
             setLoading(false);
+
+            if (allTracks.length < 6) {
+                setHasMore(false);
+            }
         });
     }, [loginID]);
 
