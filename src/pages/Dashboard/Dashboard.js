@@ -121,7 +121,8 @@ const DashBoardDisplay = () => {
     const [formdReport,setFormdReport] = React.useState([]);
     const [formdMusic,setFormdMusic] = React.useState([]);
     const [formdmember,setFormdMember] = React.useState([]);
-    const [member,setMember] = React.useState([]);
+    const [dailyReport,setDailyReport] = React.useState(0);
+    const [dailyVisitor,setDailyVisitor] = React.useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -206,6 +207,20 @@ const DashBoardDisplay = () => {
             console.log(e);
         });
 
+        axios.get("/api/dashboard/reportCount").then(res=>{
+            console.log(res.data);
+            setDailyReport(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+        
+        axios.get("/api/dashboard/visitorCount").then(res=>{
+            console.log(res.data);
+            setDailyVisitor(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+
     },[]);
     
     return(
@@ -230,8 +245,8 @@ const DashBoardDisplay = () => {
                                 <Typography fontSize={13}>
                                     Daliy Visitor
                                 </Typography>                        
-                                <Typography fontSize={40} paddingLeft={4} className={`${style.visitortext}`}>
-                                    {visitor}%
+                                <Typography fontSize={38} paddingLeft={4} className={`${style.visitortext}`}>
+                                    {dailyVisitor} 명
                                 </Typography>
                                 <div className={`${style.progressBar} ${style.pad5}`}>
                                     <BorderLinearProgress variant="determinate" value={visitor > 100 ? 100 : visitor} />
@@ -259,17 +274,19 @@ const DashBoardDisplay = () => {
                     </Tooltip>
                 </Grid>
                 <Grid item xs={12} md={4} className={`${style.center}`}>
-                    <Tooltip title="Anything">
+                    <Tooltip title="Today Report">
                         <div className={`${style.dashBox}`}>
-                            <div className={`${style.pad10}`}>
-                                <Typography fontSize={13}>
-                                    Today Report
-                                </Typography>                        
-                                <Typography fontSize={40} paddingLeft={2}>
-                                    {report}%
-                                </Typography>
-                                <div className={`${style.progressBar} ${style.pad5}`}>
-                                    <BlueLinearProgress variant='determinate' value={report > 100 ? 100 : report}/>
+                            <div>
+                                <div className={`${style.pad10} ${style.report}`}>
+                                    <Typography fontSize={13} color={'white'} fontWeight={'bold'}>
+                                        Today Report
+                                    </Typography>                        
+                                    <Typography fontSize={38} paddingLeft={2} color={'white'}>
+                                        {dailyReport} 건
+                                    </Typography>
+                                </div>
+                                <div className={`${style.progressBar}`}>
+                                    {/* <BlueLinearProgress variant='determinate' value={report > 100 ? 100 : report}/> */}
                                 </div>
                             </div>                                                
                             
