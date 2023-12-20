@@ -11,8 +11,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/system';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import CheckIcon from '@mui/icons-material/Check';
-import { Link, Route, Routes, useParams } from "react-router-dom";
 import Mytracks from "./Mytracks/Mytracks";
 import All from "./All/All";
 import Myalbums from "./Myalbums/Myalbums";
@@ -62,6 +62,7 @@ const MusicWithTabs = () => {
     const [isBackgroundChanged, setIsBackgroundChanged] = useState(false);
     const [isFollowed,setFollow] = useState(false);
     const [followNumber,setFollowNumber] = useState({});
+    const navi = useNavigate();
 
     useEffect(() => {
         axios.get(`/api/track/findById/${targetID}`).then((resp) => {
@@ -79,6 +80,8 @@ const MusicWithTabs = () => {
         checkTrackNumber();
         checkFollowState();
         checkFollowNumber();
+        navi(`/profile/${targetID}`);
+        setValue(0);
     }, [targetID, loginID]);
 
     const checkTrackNumber = () => {
@@ -198,7 +201,7 @@ const MusicWithTabs = () => {
                                 SAVE
                             </Button>
                             </>
-                             :
+                            :
                             <></>
                     }
                     
