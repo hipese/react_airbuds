@@ -14,6 +14,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Pagination, PaginationItem } from "@mui/material";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 const theme = createTheme({
     components: {
@@ -46,8 +47,11 @@ const Track_Detail = () => {
     const [editedReply, setEditedReply] = useState({ trackId: trackId, writer: "", contents: "", writeDate: "" });
     const COUNT_PER_PAGE = 10;
     const [currentPage, setCurrentPage] = useState(1);
+    const [isFavorite, setFavorite] = useState(0);
+    const [replyLike, setReplyLike] = useState([]);
+    const [likeCount, setLikeCount] = useState([]);
 
-    useEffect(() => {
+    const loadingReplies = async () => {
         axios.get(`/api/track/bytrack_id/${trackId}`).then(resp => {
             const track = resp.data;
             const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
@@ -56,11 +60,12 @@ const Track_Detail = () => {
         });
 
         axios.get(`/api/reply/${trackId}`).then(resp => {
+            console.log(resp.data);
             setReplyList(resp.data);
         }).catch((e) => {
             console.log(e);
         });
-    }, [loginID]);
+    }
 
     const totalItems = replyList.length;
     const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);
@@ -184,6 +189,52 @@ const Track_Detail = () => {
             });
     };
 
+    const loadingLikes = async () => {
+        axios.get(`/api/tllike/${loginID}`).then(res => {
+            console.log(res.data);
+            setReplyLike(res.data);
+        }).catch((e) => {
+            console.log(e);
+        });
+    }
+
+    useEffect(() => {
+        loadingLikes();
+        loadingReplies();
+    }, [isFavorite, loginID]);
+
+    const handleFavorite = (replySeq, isLiked, e) => {
+        if (loginID !== "") {
+            if (!isLiked) {
+                const formData = new FormData();
+                formData.append("seq", 0);
+                formData.append("id", loginID);
+                formData.append("replySeq", replySeq);
+                axios.post(`/api/tllike`, formData).then(res => {
+                    setReplyLike([...replyLike, { replySeq: replySeq, id: loginID, seq: res.data }]);
+                    setFavorite(isFavorite + 1);
+                }).catch((e) => {
+                    console.log(e);
+                });
+            } else {
+                const deleteData = new FormData();
+                deleteData.append("replySeq", replySeq);
+                deleteData.append("id", loginID);
+                axios.post(`/api/tllike/delete`, deleteData).then(res => {
+                    const newLikeList = replyLike.filter(e => e.replySeq !== replySeq);
+                    console.log("carousel delete", newLikeList);
+                    setReplyLike(newLikeList);
+                    setFavorite(isFavorite + 1);
+                }).catch((e) => {
+                    console.log(e);
+                });
+            }
+        } else {
+            alert("좋아요는 로그인을 해야 합니다.")
+            return;
+        }
+    }
+
     return (
         <Grid container className={styles.container}>
             <Grid item xs={12} md={8} className={styles.container2}>
@@ -236,7 +287,7 @@ const Track_Detail = () => {
                             <Grid item xs={12} md={12} className={styles.user_info}>
                                 <Avatar alt="Profile" src="/static/images/avatar/1.jpg" sx={{ width: '80px', height: '80px' }} />
                                 <Typography variant="body1">
-                                    {loginID ? loginID : '로그인해주세요'}
+                                    {track.writeId}
                                 </Typography>
                                 <div className={styles.like}>
                                     <FavoriteBorderIcon />
@@ -334,7 +385,6 @@ const Track_Detail = () => {
                                         </Button>
                                     </Grid>
                                 ) : (
-                                    // Display text in view mode
                                     <div className={styles.reply_info}>
                                         <Typography variant="h6">{comment.writer}</Typography>
                                         <Typography variant="body1">{comment.contents}</Typography>
@@ -343,8 +393,11 @@ const Track_Detail = () => {
                                 )}
                                 <div className={styles.udContainer}>
                                     <div className={styles.thumbUp}>
-                                        <ThumbUpOffAltIcon />
-                                        <div className={styles.count}>3.2k</div>
+                                        <div className={styles.thumbUp}
+                                            onClick={(e) => { handleFavorite(comment.seq, replyLike.some(replyLike => replyLike.replySeq === comment.seq), e) }}>
+                                            {replyLike.some(replyLike => replyLike.replySeq === comment.seq) ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
+                                            <div className={styles.count}>{comment.likeCount}</div>
+                                        </div>
                                     </div>
                                     <Button
                                         sx={{

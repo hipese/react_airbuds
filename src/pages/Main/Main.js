@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom"
 import OwlCarousel from "./Carousel"
 import RightSide from "./RightSide/RightSide";
-import { LoginContext } from "../../App";
+import { AutoPlayContext, CurrentTrackContext, LoginContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from "../../App";
 import { Box, CircularProgress } from "@mui/material";
 
 const Main = () => {
@@ -12,32 +12,43 @@ const Main = () => {
     const [selectTitle, setSelectTitle] = useState([]);
     const [selectImage, setSelectImage] = useState("");
     const [trackInfoByTag, setTrackInfoByTag] = useState({});
-    const [trackLike,setLike] = useState([]);
+    const [trackLike, setLike] = useState([]);
     const { loginID, setLoginID } = useContext(LoginContext);
     const [isFavorite, setFavorite] = useState(0);
     const [trackInfoAll, setTrackInfoAll] = useState([]);
     const [loading, setLoading] = useState(true);
     const [flag, setFlag] = useState(true);
-    
+    const { audioFiles, setAudioFiles } = useContext(MusicContext);
+    const { isPlaying, setIsPlaying } = useContext(PlayingContext);
+    const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
+    const { track_info, setTrack_info } = useContext(TrackInfoContext);
+    const { tracks, setTracks } = useContext(TrackContext);
+    const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
+
 
 
     useEffect(() => {
         axios.get("/api/track/recent")
             .then((res) => {
-                setRecentMusic(res.data);
+                const tracksWithImages = res.data.map((track) => {
+                    const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+                    return { ...track, imagePath };
+                });
+                console.log(tracksWithImages);
+                setRecentMusic(tracksWithImages);
                 if (res.data.length > 0 && res.data[0].trackImages && res.data[0].trackImages.length > 0) {
                     setSelectImage(res.data[0].trackImages[0].imagePath);
-                }                
+                }
             })
             .catch((err) => {
                 console.log(err);
             });
-        
+
         axios.get("/api/MusicTag")
             .then((res) => {
-                if(Array.isArray(res.data)) {
+                if (Array.isArray(res.data)) {
                     setSelectTitle(res.data);
-                    setLoading(false);                                     
+                    setLoading(false);
                 } else {
                     setSelectTitle([]);
                     console.log("Data is not an array:", res.data);
@@ -46,15 +57,14 @@ const Main = () => {
             .catch((err) => {
                 console.log(err);
                 setSelectTitle([]);
-            });         
-            loadingLikes();            
-            
+            });
+        loadingLikes();
     }, [loginID]);
 
     const loadingLikes = async () => {
-        axios.get(`/api/like/${loginID}`).then(res=>{
+        axios.get(`/api/like/${loginID}`).then(res => {
             setLike(res.data);
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log(e);
         });
     }
@@ -67,10 +77,9 @@ const Main = () => {
 
         }).catch((e)=>{
             console.log(e);
-        })
-    }
+    });
 
-    useEffect(()=>{
+    useEffect(() => {
         loadingLikes();
     }, [isFavorite]);
 
@@ -87,7 +96,7 @@ const Main = () => {
         if (Array.isArray(selectTitle)) {
             selectTitle.forEach(tag => {
                 if ([5, 6, 8, 9, 10, 12, 13, 14].includes(tag.tagId)) {
-                    axios.get("/api/trackTag", { params: { tag: tag.tagId }})
+                    axios.get("/api/trackTag", { params: { tag: tag.tagId } })
                         .then((res) => {
                             setTrackInfoByTag(prevState => ({
                                 ...prevState,
@@ -100,7 +109,7 @@ const Main = () => {
                 }
             });
         }
-    }, [selectTitle]); 
+    }, [selectTitle]);
 
     useEffect(()=>{
         addVisitCount();
@@ -122,20 +131,49 @@ const Main = () => {
         );
     };
 
+    const addTrackToPlaylist = (track) => {
+
+        axios.post(`/api/cplist`, {
+            trackId: track.trackId,
+            id: loginID
+        }).then(resp => {
+
+        })
+
+        setAutoPlayAfterSrcChange(true);
+
+        // 트랙에서 관련 정보 추출
+        const { filePath, imagePath, title, writer } = track;
+        // TrackInfoContext를 선택한 트랙 정보로 업데이트
+        setTrack_info({
+            filePath,
+            imagePath,
+            title,
+            writer,
+        });
+
+        setTracks((prevTracks) => [track, ...prevTracks]);
+
+        // 현재 트랙을 중지하고 새 트랙을 재생 목록에 추가하고 재생 시작
+        setAudioFiles((prevAudioFiles) => [`/tracks/${filePath}`, ...prevAudioFiles]);
+        setCurrentTrack(0);
+        setIsPlaying(true);
+    };
+
     if (loading) {
         return <CircularIndeterminate />;
     }
 
-    
+
     return (
         <div className={styles.container}>
             <div className={styles.contentContainer}>
                 <div className={styles.leftSide}>
                     <div className={styles.RecentTitle}>최신 업로드</div>
                     <div className={styles.RecentMusicBox}>
-                        <img className={styles.RecentImg} src={`/tracks/image/${selectImage}`} alt={`/tracks/image/${selectImage}`}/>
+                        <img className={styles.RecentImg} src={`/tracks/image/${selectImage}`} alt={`/tracks/image/${selectImage}`} />
                         <div className={styles.RecentMusic}>
-                            {recentMusic.map((music, index) => { 
+                            {recentMusic.map((music, index) => {
                                 return (
                                     <div className={styles.RecentMusicOne} key={index} onClick={() => handleSelectMusic(music)}>
                                         <div className={styles.RecentTitleAndSinger}>
@@ -144,7 +182,7 @@ const Main = () => {
                                             <div className={styles.RecentSong}>{music.title}</div>
                                         </div>
                                         <div className={styles.Listen}>
-                                            <div className={styles.play}></div>
+                                            <div className={styles.play} onClick={() => addTrackToPlaylist(music)}></div>
                                             <div className={styles.listenPerson}>{music.viewCount}명</div>
                                         </div>
                                     </div>
@@ -160,7 +198,7 @@ const Main = () => {
                         <div key={index}>
                             <div className={styles.carouselTitle}>{filterTag.tagName}</div>
                             <div className={styles.carousel}>
-                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike} setFavorite={setFavorite} isFavorite={isFavorite} trackInfoAll={trackInfoAll}/>
+                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike} setFavorite={setFavorite} isFavorite={isFavorite} trackInfoAll={trackInfoAll} />
                             </div>
                         </div>
                     ))}
@@ -168,11 +206,10 @@ const Main = () => {
                     <div className={styles.leftBottom}></div>
                 </div>
                 <div className={styles.rightSide}>
-                    <RightSide trackLike={trackLike} trackInfoByTag={trackInfoByTag}/>
+                    <RightSide trackLike={trackLike} trackInfoByTag={trackInfoByTag} />
                 </div>
             </div>
         </div>
     );
 }
-
 export default Main;

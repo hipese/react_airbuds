@@ -19,7 +19,7 @@ import WaveSurferPlayer from "../../Components/WaveSurferPlayer";
 import heart from "../assets/heart.svg";
 
 const Mytracks = () => {
-    const { targetId } = useParams();
+    const { targetID } = useParams();
     const [track, setTrack] = useState([]);
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
     const { isPlaying, setIsPlaying } = useContext(PlayingContext);
@@ -38,7 +38,7 @@ const Mytracks = () => {
             return;
         }
 
-        axios.get(`/api/track/findById/${targetId}`).then((resp) => {
+        axios.get(`/api/track/findById/${targetID}`).then((resp) => {
             const tracksWithImages = resp.data.map((track) => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
                 return { ...track, imagePath };
@@ -131,7 +131,7 @@ const Mytracks = () => {
             console.log(e);
         });
 
-        axios.get(`/api/track/like_count/${targetId}`).then(res=>{
+        axios.get(`/api/track/like_count/${targetID}`).then(res=>{
             setTrackCount(res.data);
         }).catch((e)=>{
             console.log(e);

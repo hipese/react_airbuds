@@ -18,6 +18,8 @@ import QnaList from "../Qna/qnaList";
 import Upload_Main from "../Upload/Upload_Main";
 import DashBoardMain from "../Dashboard/Dashboard";
 import Track_Detail from "../Detail/TrackDetail/Track_Detail";
+import Editpage from "../Mypage/Editpage";
+import MyAlbumDetail from "../Upload/MyAlbums/MyAlbumDetail/MyAlbumDetail";
 
 const Groovy = () => {
     return (
@@ -33,7 +35,8 @@ const Groovy = () => {
                         <Route path="Feed/*" element={<Feed />} />
                         <Route path="Library/*" element={<Library />} />
                         <Route path="Playlist/*" element={<Playlist />} />
-                        <Route path="Mypage/:targetId/*" element={<Mypage />} />
+                        <Route path="Profile/:targetID/*" element={<Mypage />} />
+                        <Route path="Mypage/*" element={<Editpage />} />
                         <Route path="Register/*" element={<Register />} />
                         <Route path="Login/*" element={<Login />} />
                         <Route path="Upload/*" element={<Upload_Main />} />
@@ -41,6 +44,7 @@ const Groovy = () => {
                         <Route path="Admin/*" element={<Admin />} />
                         <Route path="Announce/*" element={<AnnounceList />} />
                         <Route path="Detail/:trackId/*" element={<Track_Detail />} />
+                        <Route path="/Album/Detail/*" element={<MyAlbumDetail />} />
                         <Route path="QnA/*" element={<QnaList />} />
                         <Route path="Dashboard/*" element={<DashBoardMain/>} />
                     </Routes>
