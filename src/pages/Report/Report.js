@@ -4,8 +4,6 @@ import ReportList from "./ReportList";
 import ReportDetail from "./ReportDetail";
 import Sanction from "./Sanction/Sanction";
 import SanctionList from "./Sanction/SanctionList";
-import Request from "./Request/Request";
-import RequestList from "./Request/RequestList";
 import style from './Report.module.css'
 import { Box, Button, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tab, Tooltip, Typography } from "@mui/material";
 const Report = () => {
@@ -54,13 +52,13 @@ const Report = () => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={(event) => { handleDrawerClick(event, "/report/sanctionList") }}>
-            <ListItemText primary="제재 목록" />
+          <ListItemButton onClick={(event) => { handleDrawerClick(event, "/report/sanction") }}>
+            <ListItemText primary="제재 관리" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={(event) => { handleDrawerClick(event, "/report/requestList") }}>
-            <ListItemText primary="해제 요청 목록" />
+          <ListItemButton onClick={(event) => { handleDrawerClick(event, "/report/sanctionList") }}>
+            <ListItemText primary="제재 목록" />
           </ListItemButton>
         </ListItem>
       </List>
@@ -87,8 +85,6 @@ const Report = () => {
         <Route path="/detail/:seq" element={<ReportDetail />} />
         <Route path="/sanction" element={<Sanction />} />
         <Route path="/sanctionList" element={<SanctionList />} />
-        <Route path="/request" element={<Request />} />
-        <Route path="/requestList" element={<RequestList />} />
       </Routes>
     </div>
   );

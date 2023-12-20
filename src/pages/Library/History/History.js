@@ -38,6 +38,11 @@ const History = () => {
     const [trackLike,setLike] = useState([]);
     
     useEffect(() => {
+        if (!loginID) {
+            setLoading(false);
+            return;
+        }
+
         axios.get(`/api/cplist`).then(resp => {
 
             const allTracks = [];

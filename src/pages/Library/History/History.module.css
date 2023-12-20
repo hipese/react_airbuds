@@ -79,3 +79,7 @@
     filter: brightness(50%);
     cursor: pointer;
 }
+.noneLogin {
+    margin-top: 180px;
+    margin-right: 200px;
+}
