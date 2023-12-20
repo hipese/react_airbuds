@@ -51,6 +51,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
         hiddenAudioInput.current.click();
     };
 
+    console.log(imageView);
 
     const handleUpdate = () => {
         const formData = new FormData();
@@ -75,7 +76,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
         if(titleImage){
             formData.append("titleImage", titleImage);
         }
-        
+
         // 예전 이미지 값
         formData.append(`prevImage`, prevImage);
         formData.append('albumTitle', albumUpdate.title);
