@@ -80,7 +80,7 @@ const MusicWithTabs = () => {
         checkTrackNumber();
         checkFollowState();
         checkFollowNumber();
-        navi(`/Mypage/${targetID}`);
+        navi(`/profile/${targetID}`);
         setValue(0);
     }, [targetID, loginID]);
 
