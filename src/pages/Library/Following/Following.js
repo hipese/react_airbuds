@@ -33,6 +33,7 @@ const Following = () => {
   useEffect(() => {
 
     if (!loginID) {
+      setLoading(false);
       return;
     }
 
@@ -148,7 +149,7 @@ const Following = () => {
       ) : (
         loginID ? (
           <>
-            <div className={styles.carouselTitle1}>최근에 재생한 노래들</div>
+            <div className={styles.carouselTitle1}>팔로우한 사용자</div>
             <div className={styles.carousel}>
               <div className={styles.Carousel}>
                 <OwlCarousel
