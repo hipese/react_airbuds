@@ -193,9 +193,21 @@ const QnaContents = () => {
                         </Grid>                        
                         <Grid item xs={12} sm={4} className={`${style.rightAlign}`}>
                             
-                            { selectedQna.qnaWriter == loginID ? <div className={`${style.btnEven}`}><button onClick={handleDelete}>삭제하기</button>
-                                                                <button onClick={handleMoveToList}>목록으로</button></div>
-                                                                :<button onClick={handleMoveToList}>목록으로</button>    }
+                            { selectedQna.qnaWriter == loginID ? <div className={`${style.btnEven}`}>
+                                                                    <Button variant="outlined" size="small" onClick={handleDelete} className={`${style.margintR30}`}>
+                                                                        삭제
+                                                                    </Button>
+                                                                    <Button variant="contained" size="small" onClick={handleMoveToList}>
+                                                                        목록으로
+                                                                    </Button>
+                                                                </div>
+                                                                :
+                                                                <div className={`${style.btnEven}`}>
+                                                                    <Button variant="contained" size="small" onClick={handleMoveToList}>
+                                                                        목록으로
+                                                                    </Button>
+                                                                </div>    }
+                                                                
                         </Grid>
                     </Grid>
                     <hr/>

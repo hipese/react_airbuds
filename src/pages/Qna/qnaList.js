@@ -1,4 +1,4 @@
-import { Box, Grid, Icon, List, ListItem, Pagination, Typography } from "@mui/material";
+import { Box, Button, Grid, Icon, List, ListItem, Pagination, PaginationItem, Typography } from "@mui/material";
 import style from './qna.module.css';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
@@ -17,6 +17,22 @@ const QnaList =() => {
         console.log(i);
         navi(`contents/${e}`);
     }
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const COUNT_PER_PAGE = 8;
+
+    const totalItems = qnaList.length;
+    const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);
+
+    const startIndex = (currentPage - 1) * COUNT_PER_PAGE;
+        const endIndex = Math.min(startIndex + COUNT_PER_PAGE, totalItems);
+        const visibleQnaList = qnaList.slice(startIndex, endIndex);
+
+    const onPageChange = (e, page) => {
+            setCurrentPage(page);
+        };
+
+    
 
     useEffect(()=>{
         axios.get("/api/qna").then(res=>{
@@ -61,7 +77,7 @@ const QnaList =() => {
                     </Typography>
                 </Box>
             </Grid>
-            {qnaList.map((e,i)=>{
+            {visibleQnaList.map((e,i)=>{
                 return(
                     <Grid key={i} container className={`${style.announceLine} ${style.pad10}`} onClick={()=>{handleMove(e.qnaSeq,e.qnaPublic)}}>
                         <Grid item xs={1} className={`${style.center}`}>
@@ -105,10 +121,25 @@ const QnaList =() => {
                 )
             })}
             <div className={`${style.rightAlign}`}>
-                <Link to="write"><button>문의하기</button></Link>
+                <Link to="write">
+                    <Button variant="contained">문의하기</Button>
+                </Link>
             </div>           
             <div className={`${style.center}`}>
-                <Pagination count={10} />
+                <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={onPageChange}
+                    size="medium"
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        padding: "15px 0",
+                    }}
+                    renderItem={(item) => (
+                        <PaginationItem {...item} sx={{ fontSize: 12 }} />
+                    )}
+                />
             </div>            
         </div>
     )

@@ -38,6 +38,9 @@
 .marginB100{
     margin-bottom: 100px;
 }
+.margintR30{
+    margin-right: 30px;
+}
 
 .ma{
     margin: auto;
@@ -149,6 +152,10 @@
 
 .snackpos{
     bottom: -650px;
+}
+
+.w100{
+    width: 100%;
 }
 
 /* QnA Write CSS */
