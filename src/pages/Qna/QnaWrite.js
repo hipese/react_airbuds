@@ -19,7 +19,26 @@ const QnaWriteMain = () =>{
         setBoard(prev=>({...prev,[name]:value}));
     }
     const handleSubmit = () => {
-        console.log(board);
+        if(board.qnaTitle == ""){
+            alert("제목을 작성해주세요.");
+            return;
+        }
+
+        if(board.qnaCategory == "none"){
+            alert("카테고리를 선택해주세요.");
+            return;
+        }
+
+        if(board.qnaContents == ""){
+            alert("문의할 내용을 작성해주세요.");
+            return;
+        }
+
+        if(board.qnaCategory == "none"){
+            alert("카테고리를 선택해주세요.");
+            return;
+        }
+
         const formData = new FormData();
         formData.append("qnaTitle",board.qnaTitle);
         formData.append("qnaWriter",loginID);
