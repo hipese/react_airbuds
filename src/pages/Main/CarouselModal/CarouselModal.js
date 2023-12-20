@@ -173,7 +173,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
         ];
         const playlistData = {
             ...targetPlaylist,
-            playlistTracks: updatedTracks
+            playlistTrack: updatedTracks
         };
         axios.put(`/api/playlist/track/${playlistSeq}`, playlistData).then((res) => {
             onClose();
@@ -283,20 +283,20 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
                         </ul>
                         <ul className={styles.playlistAdded}>
                             {playlist.map((list, index) => {
-                                const hasTracks = list.playlistTracks && list.playlistTracks.length > 0;
+                                const hasTracks = list.playlistTrack && list.playlistTrack.length > 0;
 
                                 return (
                                     <li key={index} className={styles.playlistAddedLi}>
                                         <div className={styles.playlistAddedImg}>
-                                            {hasTracks && list.playlistTracks[0].playlistImagePath ? (
-                                                <img src={`/tracks/image/${list.playlistTracks[0].playlistImagePath}`} alt={list.playlistPlTitle} />
+                                            {hasTracks && list.playlistTrack[0].playlistImagePath ? (
+                                                <img src={`/tracks/image/${list.playlistTrack[0].playlistImagePath}`} alt={list.playlistPlTitle} />
                                             ) : null}
                                         </div>
                                         <div className={styles.playlistAddedWriterAndTitle}>
                                             <div className={styles.playlistAddedTitle}>{list.playlistPlTitle}</div>
                                             <div className={styles.playlistAddedCount}>
                                                 <img src={Music} alt="" className={styles.musicIcon} />
-                                                <div className={styles.playlistAddedMusic}>{hasTracks ? list.playlistTracks.length : 0}</div>
+                                                <div className={styles.playlistAddedMusic}>{hasTracks ? list.playlistTrack.length : 0}</div>
                                             </div>
                                         </div>
                                         <div className={styles.AddedBtnBox}>

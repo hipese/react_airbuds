@@ -125,7 +125,7 @@
 }
 
 .replyoutput{
-    margin-bottom: 100px !important;
+    margin-bottom: 10px !important;
     width: 100%;
 }
 
@@ -142,9 +142,23 @@
 
 .count{
     font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .editContainer{
     display: flex;
     align-items: center;
+}
+
+.pageNation{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 100px !important;
+}
+
+.thumbUp :hover{
+    cursor: pointer;
 }

@@ -11,13 +11,15 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/system';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Link, Route, Routes, useParams } from "react-router-dom";
+import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
+import CheckIcon from '@mui/icons-material/Check';
 import Mytracks from "./Mytracks/Mytracks";
 import All from "./All/All";
 import Myalbums from "./Myalbums/Myalbums";
 import Myplaylists from "./Myplaylists/Myplaylists";
 import { LoginContext } from "../../App";
 import axios from "axios";
+import PersonIcon from '@mui/icons-material/Person';
 
 function a11yProps(index) {
     return {
@@ -39,41 +41,170 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const MusicWithTabs = () => {
-    const { loginId } = useParams();
+
+    const InputFileUpload = () => {
+        return (
+            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} onChange={changeBackgroundHandler}>
+                Upload file
+                <VisuallyHiddenInput type="file" />
+            </Button>
+        );
+    }
+
+    const { targetID } = useParams();
     const [value, setValue] = React.useState(0);
-    const { loginID, setLoginID } = useContext(LoginContext);
+    const { loginID } = useContext(LoginContext);
     const [tracks, setTracks] = useState([]);
+    const [profileImage, setProfileImage] = useState("");
+    const [backgroundImage, setBackgroundImage] = useState("");
+    const [newBackgroundImage, setNewBackgroundImage] = useState();
+    const [backgroundState, setBackgroundState] = useState({backgroundColor : "whitesmoke"});
+    const [isBackgroundChanged, setIsBackgroundChanged] = useState(false);
+    const [isFollowed,setFollow] = useState(false);
+    const [followNumber,setFollowNumber] = useState({});
+    const navi = useNavigate();
 
     useEffect(() => {
-        if (!loginID) {
-            return;
-        }
-
-        axios.get(`/api/track/findById/${loginId}`).then((resp) => {
+        axios.get(`/api/track/findById/${targetID}`).then((resp) => {
             setTracks(resp.data);
         });
-    }, [loginID]);
+
+        // 프로필 이미지 + 배경 이미지 받아오기
+        axios.get(`/api/member/getProfiles/${targetID}`).then((resp) => {
+            setProfileImage(resp.data.profile_image);
+            setBackgroundImage(resp.data.background_image);
+        }).catch(err => {
+            console.log(err); // 나중에 오류 알림으로 바꾸기
+        })
+
+        checkTrackNumber();
+        checkFollowState();
+        checkFollowNumber();
+        navi(`/Mypage/${targetID}`);
+        setValue(0);
+    }, [targetID, loginID]);
+
+    const checkTrackNumber = () => {
+        axios.get(`/api/track/findById/${targetID}`).then((resp) => {
+            setTracks(resp.data);
+        });
+    }
+
+    const checkFollowState = () => {
+        const formData = new FormData();
+        formData.append("memberId",loginID);
+        formData.append("singerId",targetID);
+
+        axios.post(`/api/like/isfollow`,formData).then(res=>{
+            setFollow(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
+    const checkFollowNumber = () => {
+        axios.get(`/api/like/nums/${targetID}`).then(res=>{
+            setFollowNumber(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    useEffect(() => {
+        if(backgroundImage !== null && backgroundImage !== "")
+            setBackgroundState({backgroundImage : `url(${backgroundImage})`, backgroundSize : "cover"});
+        else 
+            setBackgroundState({backgroundColor : "whitesmoke"});
+    }, [backgroundImage]);
+
+    const changeBackgroundHandler = (e) => {
+        const newImagePath = URL.createObjectURL(e.target.files[0]);
+        setNewBackgroundImage(e.target.files[0]);
+        setBackgroundImage(newImagePath);
+        setIsBackgroundChanged(true);
+    };
+
+    const uploadBackgroundHandler = () => {
+        const formData = new FormData();
+        formData.append( "newBgImage" ,newBackgroundImage);
+        axios.post("/api/member/uploadBackground", formData, {headers : {"Content-Type" : "multipart/form-data"}})
+        .then(resp => {
+            console.log(resp);
+            setIsBackgroundChanged(false);
+        }).catch(err => {
+            console.log(err);
+        });
+
+    };
+    const handleFollowBtn = (state) => {
+        if(loginID != ""){
+            console.log(state);
+            if(!state){
+                const formData = new FormData();
+                formData.append("memberId",loginID);
+                formData.append("singerId",targetID)
+                axios.post(`/api/like/follow`,formData).then(res=>{
+                    checkFollowState();
+                    checkFollowNumber();
+                }).catch((e)=>{
+                    console.log(e);
+                });
+            }else{
+                const formData = new FormData();
+                formData.append("memberId",loginID);
+                formData.append("singerId",targetID)
+                axios.post(`/api/like/followDelete`,formData).then(res=>{
+                    checkFollowState();
+                    checkFollowNumber();
+                }).catch((e)=>{
+                    console.log(e);
+                });
+            }
+            
+        }else{
+            alert("로그인 필요");
+            return;
+        }
+    }
+
     return (
         <Grid container>
-            <Grid item className={styles.user_info}>
+            <Grid item className={styles.user_info} style={backgroundState}>
                 <Grid item md={2}>
                     <Avatar alt="Remy Sharp" sx={{ width: 180, height: 180, marginLeft: 2 }} />
                 </Grid>
                 <Grid item md={7}>
-                    <Typography variant="h2" gutterBottom>
-                        {loginId}
-                    </Typography>
-                    <Typography variant="h5" gutterBottom>
-                        &nbsp;'s Groovy Space
-                    </Typography>
+                    <Box className={styles.target_id_container}>
+                        <Typography variant="h2" gutterBottom>
+                            {targetID}
+                        </Typography>
+                        <Typography variant="h5" gutterBottom>
+                            &nbsp;'s Groovy Space
+                        </Typography>
+                    </Box>
                 </Grid>
-                <Grid item md={3}>
-                    <InputFileUpload />
+                <Grid item md={3} style={{display : "flex", justifyContent:"center", alignItems : "center", flexDirection : "column"}}>
+                    {
+                        loginID !== null && targetID === loginID ?
+                        <InputFileUpload />
+                        :
+                        <></>
+                    }
+                    {
+                        isBackgroundChanged ?
+                        <><br></br>
+                            <Button component="label" variant="contained" startIcon={<CheckIcon />} onClick={uploadBackgroundHandler}>
+                                SAVE
+                            </Button>
+                            </>
+                            :
+                            <></>
+                    }
+                    
                 </Grid>
             </Grid>
             <Grid item xs={12} md={9} className={styles.Panel}>
@@ -94,8 +225,13 @@ const MusicWithTabs = () => {
                             <Tab label="Albums" component={Link} to="albums" {...a11yProps(2)} />
                             <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)} />
                             <div className={styles.like_edit}>
-                                <FavoriteBorderIcon />
-                                <Button variant="outlined" startIcon={<ModeEditIcon />}
+                                {
+                                    loginID == targetID ?
+                                    ""
+                                    :
+                                    !isFollowed ?
+                                    //팔로우 안한 상태일때.
+                                    <Button variant="outlined" startIcon={<PersonIcon/>}
                                     sx={{
                                         width: '100px',
                                         height: '30px',
@@ -103,13 +239,60 @@ const MusicWithTabs = () => {
                                         borderColor: '#4CAF50',
                                         marginTop: '10px',
                                         marginBottom: '10px',
+                                        marginRight: '10px',
                                         '&:hover': {
                                             borderColor: '#4CAF50',
                                             backgroundColor: '#4CAF50',
+                                            color : "white"
                                         },
-                                    }}>
-                                    Edit
+                                    }}
+                                    onClick={()=>{handleFollowBtn(isFollowed)}}>
+                                    Follow
                                 </Button>
+                                :
+                                //팔로우 한 상태일때.
+                                <Button variant="outlined" startIcon={<PersonIcon/>}
+                                    sx={{
+                                        width: '120px',
+                                        height: '30px',
+                                        color: 'white',
+                                        borderColor: '#4CAF50',
+                                        backgroundColor : '#4CAF50',
+                                        marginTop: '10px',
+                                        marginBottom: '10px',
+                                        marginRight: '10px',
+                                        '&:hover': {
+                                            backgroundColor: 'white',
+                                            borderColor: '#4CAF50',
+                                            color: '#212529',
+                                        },
+                                    }}
+                                    onClick={()=>{handleFollowBtn(isFollowed)}}>
+                                    Followed
+                                </Button>
+                                }
+                                {
+                                    targetID === loginID ?
+                                        <Link to={`/Mypage`}>
+                                            <Button variant="outlined" startIcon={<ModeEditIcon />}
+                                                sx={{
+                                                    width: '100px',
+                                                    height: '30px',
+                                                    color: '#212529',
+                                                    borderColor: '#4CAF50',
+                                                    marginTop: '10px',
+                                                    marginBottom: '10px',
+                                                    '&:hover': {
+                                                        borderColor: '#4CAF50',
+                                                        backgroundColor: '#4CAF50',
+                                                    },
+                                                }}>
+                                                Edit
+                                            </Button>
+                                        </Link>
+                                        :
+                                        <></>
+                                }
                             </div>
                         </Tabs>
                     </Box>
@@ -138,13 +321,13 @@ const MusicWithTabs = () => {
                     <div className={styles.infoItem}>
                         <Typography variant="h6" gutterBottom>
                             Followers<br></br>
-                            100
+                            {followNumber.followers ? followNumber.followers : "0"}
                         </Typography>
                     </div>
                     <div className={styles.infoItem}>
                         <Typography variant="h6" gutterBottom>
                             Following<br></br>
-                            50
+                            {followNumber.followings ? followNumber.followings : "0"}
                         </Typography>
                     </div>
                     <div className={styles.infoItemLast}>
@@ -159,15 +342,6 @@ const MusicWithTabs = () => {
                 </div>
             </Grid>
         </Grid>
-    );
-}
-
-const InputFileUpload = () => {
-    return (
-        <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-            Upload file
-            <VisuallyHiddenInput type="file" />
-        </Button>
     );
 }
 

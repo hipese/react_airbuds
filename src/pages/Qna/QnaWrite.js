@@ -1,4 +1,4 @@
-import { Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 import style from './qna.module.css'
 import Reactquill from './ReactQuill';
 import { useContext, useState } from 'react';
@@ -141,8 +141,8 @@ const QnaWriteMain = () =>{
                         </Grid>
                         <Grid item xs={12}>
                             <div className={`${style.center} ${style.btnEven}`}>
-                                <button onClick={handleCancel}>취소</button>   
-                                <button onClick={handleSubmit}>작성</button>
+                                <Button variant="outlined" onClick={handleCancel}>취소</Button>
+                                <Button variant="contained" onClick={handleSubmit}>작성 완료</Button>
                             </div>
                         </Grid>
                     </Grid>                    

@@ -120,6 +120,9 @@ const DashBoardDisplay = () => {
     const [report,setReport] = React.useState(58);
     const [formdReport,setFormdReport] = React.useState([]);
     const [formdMusic,setFormdMusic] = React.useState([]);
+    const [formdmember,setFormdMember] = React.useState([]);
+    const [dailyReport,setDailyReport] = React.useState(0);
+    const [dailyVisitor,setDailyVisitor] = React.useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -170,7 +173,7 @@ const DashBoardDisplay = () => {
         });
     
     return reactData;
-    };
+    };   
 
     React.useEffect(()=>{
         axios.get(`/api/dashboard/report`).then(res=>{
@@ -178,14 +181,44 @@ const DashBoardDisplay = () => {
             const groupedData = groupByYear(res.data);
             const reactData = transformToLineData(groupedData);
             setFormdReport(reactData);
-            console.log('report',reactData);
+        }).catch((e)=>{
         });
 
         axios.get(`/api/dashboard/music`).then(res=>{
             const groupedData = groupByYear(res.data);
             const reactData = transformToLineData(groupedData);
-            console.log("music",reactData);
             setFormdMusic(reactData);
+        }).catch((e)=>{
+            console.log(e);
+        });
+
+        axios.get(`/api/dashboard/member`).then(res=>{
+            const transformedData = res.data.map(item => ({
+                id: item.ageGroup,
+                value: item.count,
+                label: item.ageGroup
+            }));
+
+            const sortedData = transformedData.sort((a, b) => {
+                return b.id.localeCompare(a.id);
+            });
+            setFormdMember(sortedData);
+        }).catch((e)=>{
+            console.log(e);
+        });
+
+        axios.get("/api/dashboard/reportCount").then(res=>{
+            console.log(res.data);
+            setDailyReport(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+        
+        axios.get("/api/dashboard/visitorCount").then(res=>{
+            console.log(res.data);
+            setDailyVisitor(res.data);
+        }).catch((e)=>{
+            console.log(e);
         });
 
     },[]);
@@ -212,8 +245,8 @@ const DashBoardDisplay = () => {
                                 <Typography fontSize={13}>
                                     Daliy Visitor
                                 </Typography>                        
-                                <Typography fontSize={40} paddingLeft={2}>
-                                    {visitor}%
+                                <Typography fontSize={38} paddingLeft={4} className={`${style.visitortext}`}>
+                                    {dailyVisitor} 명
                                 </Typography>
                                 <div className={`${style.progressBar} ${style.pad5}`}>
                                     <BorderLinearProgress variant="determinate" value={visitor > 100 ? 100 : visitor} />
@@ -241,17 +274,19 @@ const DashBoardDisplay = () => {
                     </Tooltip>
                 </Grid>
                 <Grid item xs={12} md={4} className={`${style.center}`}>
-                    <Tooltip title="Anything">
+                    <Tooltip title="Today Report">
                         <div className={`${style.dashBox}`}>
-                            <div className={`${style.pad10}`}>
-                                <Typography fontSize={13}>
-                                    Today Report
-                                </Typography>                        
-                                <Typography fontSize={40} paddingLeft={2}>
-                                    {report}%
-                                </Typography>
-                                <div className={`${style.progressBar} ${style.pad5}`}>
-                                    <BlueLinearProgress variant='determinate' value={report > 100 ? 100 : report}/>
+                            <div>
+                                <div className={`${style.pad10} ${style.report}`}>
+                                    <Typography fontSize={13} color={'white'} fontWeight={'bold'}>
+                                        Today Report
+                                    </Typography>                        
+                                    <Typography fontSize={38} paddingLeft={2} color={'white'}>
+                                        {dailyReport} 건
+                                    </Typography>
+                                </div>
+                                <div className={`${style.progressBar}`}>
+                                    {/* <BlueLinearProgress variant='determinate' value={report > 100 ? 100 : report}/> */}
                                 </div>
                             </div>                                                
                             
@@ -308,7 +343,7 @@ const DashBoardDisplay = () => {
                                 className={`${style.center} ${style.w100}`}
                             >                    
                                 <div className={`${style.dashLBox}`}>
-                                    <FunnelChart/>
+                                    <FunnelChart data={formdmember}/>
                                 </div>   
                             </Box>
                         </Grid>

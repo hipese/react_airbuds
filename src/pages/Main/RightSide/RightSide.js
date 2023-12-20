@@ -4,13 +4,19 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import Like from "../assets/like.png"
 import { LoginContext } from "../../../App";
+import { useNavigate } from "react-router";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const RightSide = ({trackLike,trackInfoByTag}) => {
 
     const [onlyLike, setOnlyLike] = useState([]);
+    const [artist,setArtist] = useState([]);
     const { loginID } = useContext(LoginContext);
+    const navi = useNavigate();
     
     const test =() => {
+        navi("/dashboard");
     }
 
     const findCommonTrack = (trackInfo, trackLike) => {
@@ -24,7 +30,6 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
         tagObjectsArray.forEach( item => newArr.push(...item));
 
         const commonTracks = findCommonTrack(newArr, trackLike);
-        console.log("rightside commonetrack",commonTracks);
 
         const uniqueTitlesArray = commonTracks.reduce((result, item) => {
             const existingItem = result.find(existing => existing.track.title === item.track.title);
@@ -43,40 +48,65 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
         });
     }
 
-    const handletest =() => {
-        console.log(trackLike);
-    }
+    useEffect(()=>{
+        axios.get(`/api/like/follwingData/${loginID}`).then(res=>{
+            console.log(res.data);
+            const sortedData = res.data.sort((a, b) => b.followerNumber - a.followerNumber);
+            const threeData = sortedData.filter((e,i)=>i < 3);
+            setArtist(threeData);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    },[loginID!==""]);
 
     useEffect(()=>{        
-        console.log("right side tracklike",trackLike);
         sideLoading();        
     },[trackLike]);
+
+    const handleMoveToProfile = (id) => {
+        navi(`/Mypage/${id}`);
+    }
+    
     return (
         <div className={styles.positionFixed}>
-            <div className={styles.followArtist}><GroupAddIcon className={styles.followIcon} />팔로우한 아티스트<div className={styles.viewAll} onClick={handletest}>더보기</div></div>
-            <ul className={styles.followul}>
-                <li className={styles.followli}>
-                    <div className={styles.followImg}></div>
-                    <div>
-                        <div className={styles.followSinger}>아이유</div>
-                        <PeopleAltIcon className={styles.followPersonIcon} /> <div className={styles.followPerson}>4.3만</div>
-                    </div>
-                </li>
-                <li className={styles.followli}>
-                    <div className={styles.followImg}></div>
-                    <div>
-                        <div className={styles.followSinger}>오마이걸</div>
-                        <PeopleAltIcon className={styles.followPersonIcon} /> <div className={styles.followPerson}>2.1만</div>
-                    </div>
-                </li>
-                <li className={styles.followli}>
-                    <div className={styles.followImg}></div>
-                    <div>
-                        <div className={styles.followSinger}>티아라</div>
-                        <PeopleAltIcon className={styles.followPersonIcon} /> <div className={styles.followPerson}>3.7만</div>
-                    </div>
-                </li>
-            </ul>
+            <div className={styles.followArtist}><GroupAddIcon className={styles.followIcon} />팔로우한 아티스트<div className={styles.viewAll}>더보기</div></div>
+                {loginID != "" ? 
+                        <ul className={styles.loveul}>
+                            {artist.map((e,i) => {
+                            const trackImage = e.profile_image && e.profile_image > 0
+                            ? `/tracks/image/${e.profile_image}`
+                            : "http://placehold.it/150x150";
+                            return (
+                                <div key={i} onClick={() => {handleMoveToProfile(e.singer)}}>
+                                    <li className={styles.loveli}>
+                                        <div className={styles.loveImg}>
+                                            <img src={trackImage} width={50} height={50}></img>
+                                        </div>
+                                        <div>
+                                            <div className={styles.loveSinger}>{e.singer}</div>
+                                            <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson}>{e.followerNumber ? e.followerNumber : "0"}</div>
+                                        </div>
+                                    </li>
+                                </div>
+                            )
+                        })}
+                        </ul>
+                    :
+                        <ul className={styles.loveul}>
+                            <li className={styles.followli}>
+                                <div>
+                                </div>
+                            </li>
+                            <li className={styles.followli}>
+                                <div>
+                                </div>
+                            </li>
+                            <li className={styles.followli}>
+                                <div>
+                                </div>
+                            </li>
+                        </ul>
+                    }
             <div className={styles.loveYou}><img src={Like} alt="..." className={styles.like} />좋아요<div className={styles.viewAll}>더보기</div></div>
             
                 {loginID != "" ? 
@@ -92,7 +122,7 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
                                 </div>
                                 <div>
                                     <div className={styles.loveSinger}>{e.track.title}</div>
-                                    <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson} onClick={test}>{e.track.writer ? e.track.writer : "unknown"}</div>
+                                    <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson}>{e.track.writer ? e.track.writer : "unknown"}</div>
                                 </div>
                             </li>
                         )
@@ -100,27 +130,6 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
                     </ul>
                 :
                     <ul className={styles.loveul}>
-                        <li className={styles.followli}>
-                            <div className={styles.loveImg}></div>
-                            <div>
-                                <div className={styles.loveSinger}>오마이걸</div>
-                                <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson}>2.1만</div>
-                            </div>
-                        </li>
-                        <li className={styles.followli}>
-                            <div className={styles.loveImg}></div>
-                            <div>
-                                <div className={styles.loveSinger}>티아라</div>
-                                <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson}>3.7만</div>
-                            </div>
-                        </li>
-                        <li className={styles.followli}>
-                            <div className={styles.loveImg}></div>
-                            <div>
-                                <div className={styles.loveSinger}>오마이걸</div>
-                                <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson}>2.1만</div>
-                            </div>
-                        </li>
                     </ul>
                 }
         </div>

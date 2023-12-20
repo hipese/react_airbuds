@@ -309,7 +309,7 @@ const TopNavigator = () => {
             });
         }
     };
-
+    
     const handleLoginClick = async () => {
         const { value: formValues } = await Swal.fire({
             title: 'Welcome Back',
@@ -359,7 +359,6 @@ const TopNavigator = () => {
             formData.append("password", formValues.password);
             axios.post("/api/member/login", formData).then(resp => {
                 setLoginID(formValues.id);
-                localStorage.setItem("loginID", formValues.id);
             }).catch(err => {
                 if (err.response.status == 401) {
                     Swal.fire({
@@ -382,7 +381,6 @@ const TopNavigator = () => {
     const handleLogoutClick = () => {
         axios.post("/api/member/logout").then(() => {
             setLoginID("");
-            localStorage.removeItem("loginID");
         }).catch(err => {
             console.log(err);
         })
@@ -427,7 +425,7 @@ const TopNavigator = () => {
                                         <Link className={styles.linkurl} to="/Upload"><div className={activeLink === 'Upload' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Upload')}>업로드</div></Link>
                                     </Col>
                                     <Col>
-                                        <Link className={styles.linkurl} to={`/Mypage/${loginID}`}><div>Profile</div></Link>
+                                        <Link className={styles.linkurl} to={`/Profile/${loginID}`}><div>프로필</div></Link>
                                     </Col>
                                     <Col>
                                         <div className={styles.linkurl} onClick={handleLogoutClick}><div className={activeLink === 'logout' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('logoutt')}>로그아웃</div></div>

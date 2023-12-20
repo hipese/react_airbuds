@@ -17,8 +17,7 @@
     width: 80%;
     height: 130px;
     border: 1px solid lightgray;
-    border-radius: 5px;
-    
+    border-radius: 5px;    
 }
 
 .dashLBox{
@@ -26,7 +25,6 @@
     height: 560px;
     border: 1px solid lightgray;
     border-radius: 5px;
-    background-color: white;
 }
 
 .dashBox:hover{
@@ -72,4 +70,18 @@
 
 .marginT20{
     margin-top: 20px;
+}
+
+.visitor{
+    background:linear-gradient(to left, #25aae1, #40e495, #30dd8a, #2bb673);
+}
+.visitortext{
+    background:linear-gradient(to left, #25aae1, #40e495, #30dd8a, #2bb673);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: lighter;
+}
+
+.report{
+    background:linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
 }
