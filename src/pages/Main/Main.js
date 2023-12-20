@@ -67,7 +67,8 @@ const Main = () => {
         }).catch((e) => {
             console.log(e);
         });
-    }
+    };
+
     const addVisitCount = () => {
         const formdData = new FormData();
         const date = new Date().toISOString();
@@ -77,7 +78,8 @@ const Main = () => {
 
         }).catch((e)=>{
             console.log(e);
-    });
+        });
+    };
 
     useEffect(() => {
         loadingLikes();
