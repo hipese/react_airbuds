@@ -1,11 +1,21 @@
-import { Alert, Avatar, Button, Grid, Snackbar, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Grid, Snackbar, Typography } from '@mui/material';
 import style from './Report.module.css'
 import { useNavigate, useParams } from 'react-router';
 import { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { LoginContext } from '../../App';
+import CircularProgress from "@mui/material/CircularProgress";
 
+const CircularIndeterminate = () => {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <CircularProgress />
+    </Box>
+  );
+};
 const ReportDetail = () => {
+
+  const [loading, setLoading] = useState(true);
 
   const { seq } = useParams();
   const [isChanged, setChanged] = useState(0);
@@ -56,6 +66,7 @@ const ReportDetail = () => {
       setSelectedReport(resp.data);
       axios.get(`/api/report/answerlist/${seq}`).then(resp => {
         setReplyList(resp.data);
+        setLoading(false);
       }).catch((e) => {
         console.log(e);
       });
@@ -96,6 +107,10 @@ const ReportDetail = () => {
     })
   }
 
+  if (loading) {
+    return <CircularIndeterminate />;
+  }
+  
   return (
     <div className={`${style.wrap}`}>
       <div className={`${style.reportContents} ${style.ma}`}>
