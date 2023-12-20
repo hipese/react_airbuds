@@ -46,9 +46,9 @@ const Main = () => {
             .catch((err) => {
                 console.log(err);
                 setSelectTitle([]);
-            });
-            loadingLikes();
-            loadingFollwings();
+            });         
+            loadingLikes();            
+            
     }, [loginID]);
 
     const loadingLikes = async () => {
@@ -58,13 +58,16 @@ const Main = () => {
             console.log(e);
         });
     }
+    const addVisitCount = () => {
+        const formdData = new FormData();
+        const date = new Date().toISOString();
+        console.log(date);
+        formdData.append("visitDate",date);
+        axios.put(`/api/dashboard/visit`,formdData).then(res=>{
 
-    const loadingFollwings = async () => {
-        axios.get(`/api/like/follwingData/${loginID}`).then(res=>{
-            console.log(res.data);
         }).catch((e)=>{
             console.log(e);
-        });
+        })
     }
 
     useEffect(()=>{
@@ -98,6 +101,10 @@ const Main = () => {
             });
         }
     }, [selectTitle]); 
+
+    useEffect(()=>{
+        addVisitCount();
+    },[]);
 
 
     const handleSelectMusic = (music) => {

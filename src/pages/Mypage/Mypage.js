@@ -11,7 +11,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/system';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Link, Route, Routes, useParams } from "react-router-dom";
+import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import Mytracks from "./Mytracks/Mytracks";
 import All from "./All/All";
 import Myalbums from "./Myalbums/Myalbums";
@@ -40,18 +40,13 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const MusicWithTabs = () => {
-    const { loginId } = useParams();
+    const { targetId } = useParams();
     const [value, setValue] = React.useState(0);
     const { loginID, setLoginID } = useContext(LoginContext);
     const [tracks, setTracks] = useState([]);
     const [isFollowed,setFollow] = useState(false);
     const [followNumber,setFollowNumber] = useState({});
-
-    useEffect(()=>{
-        checkTrackNumber();
-        checkFollowState();
-        checkFollowNumber();
-    },[loginId]);
+    const navi = useNavigate();
 
     useEffect(() => {
         if (!loginID) {
@@ -61,10 +56,12 @@ const MusicWithTabs = () => {
         checkTrackNumber();
         checkFollowState();
         checkFollowNumber();
-    }, [loginID]);
+        navi(`/Mypage/${targetId}`);
+        setValue(0);
+    }, [targetId]);
 
     const checkTrackNumber = () => {
-        axios.get(`/api/track/findById/${loginId}`).then((resp) => {
+        axios.get(`/api/track/findById/${targetId}`).then((resp) => {
             setTracks(resp.data);
         });
     }
@@ -72,7 +69,7 @@ const MusicWithTabs = () => {
     const checkFollowState = () => {
         const formData = new FormData();
         formData.append("memberId",loginID);
-        formData.append("singerId",loginId);
+        formData.append("singerId",targetId);
 
         axios.post(`/api/like/isfollow`,formData).then(res=>{
             setFollow(res.data);
@@ -82,7 +79,7 @@ const MusicWithTabs = () => {
     }
 
     const checkFollowNumber = () => {
-        axios.get(`/api/like/nums/${loginId}`).then(res=>{
+        axios.get(`/api/like/nums/${targetId}`).then(res=>{
             setFollowNumber(res.data);
         }).catch((e)=>{
             console.log(e);
@@ -99,7 +96,7 @@ const MusicWithTabs = () => {
             if(!state){
                 const formData = new FormData();
                 formData.append("memberId",loginID);
-                formData.append("singerId",loginId)
+                formData.append("singerId",targetId)
                 axios.post(`/api/like/follow`,formData).then(res=>{
                     checkFollowState();
                     checkFollowNumber();
@@ -109,7 +106,7 @@ const MusicWithTabs = () => {
             }else{
                 const formData = new FormData();
                 formData.append("memberId",loginID);
-                formData.append("singerId",loginId)
+                formData.append("singerId",targetId)
                 axios.post(`/api/like/followDelete`,formData).then(res=>{
                     checkFollowState();
                     checkFollowNumber();
@@ -132,7 +129,7 @@ const MusicWithTabs = () => {
                 </Grid>
                 <Grid item md={7}>
                     <Typography variant="h2" gutterBottom>
-                        {loginId}
+                        {targetId}
                     </Typography>
                     <Typography variant="h5" gutterBottom>
                         &nbsp;'s Groovy Space
@@ -161,7 +158,7 @@ const MusicWithTabs = () => {
                             <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)} />
                             <div className={styles.like_edit}>
                                 {
-                                    loginID == loginId ?
+                                    loginID == targetId ?
                                     ""
                                     :
                                     !isFollowed ?

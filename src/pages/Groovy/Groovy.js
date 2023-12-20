@@ -33,7 +33,7 @@ const Groovy = () => {
                         <Route path="Feed/*" element={<Feed />} />
                         <Route path="Library/*" element={<Library />} />
                         <Route path="Playlist/*" element={<Playlist />} />
-                        <Route path="Mypage/:loginId/*" element={<Mypage />} />
+                        <Route path="Mypage/:targetId/*" element={<Mypage />} />
                         <Route path="Register/*" element={<Register />} />
                         <Route path="Login/*" element={<Login />} />
                         <Route path="Upload/*" element={<Upload_Main />} />

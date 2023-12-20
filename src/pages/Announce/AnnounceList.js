@@ -1,4 +1,4 @@
-import { Box, Grid, List, ListItem, Pagination, Typography } from "@mui/material";
+import { Box, Grid, List, ListItem, Pagination, PaginationItem, Typography } from "@mui/material";
 import style from './announce.module.css';
 import { Route, Routes, useNavigate } from "react-router-dom";
 import AnnounceWriteMain from "../Announce/AnnounceWrite";
@@ -10,8 +10,22 @@ import { useCookies } from "react-cookie";
 
 const AnnounceList = () =>{    
     const [cookies, setCookie, removeCookie] = useCookies(["isViewed"]);
-    
+    const [announceList,setAnnounceList] = useState([]);
     const navi = useNavigate();
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const COUNT_PER_PAGE = 8;
+
+    const totalItems = announceList.length;
+    const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);
+
+    const startIndex = (currentPage - 1) * COUNT_PER_PAGE;
+    const endIndex = Math.min(startIndex + COUNT_PER_PAGE, totalItems);
+    const visibleQnaList = announceList.slice(startIndex, endIndex);
+
+    const onPageChange = (e, page) => {
+            setCurrentPage(page);
+        };
     
     const handleMove = (seq) => {
         if(cookies.isViewed == undefined || cookies.isViewed == false)
@@ -35,7 +49,7 @@ const AnnounceList = () =>{
         }
         navi(`contents/${seq}`)
     };
-    const [announceList,setAnnounceList] = useState([]);
+    
     useEffect(()=>{
         axios.get(`/api/announce`).then(res=>{
             console.log(res.data);
@@ -118,7 +132,20 @@ const AnnounceList = () =>{
             })}
             
             <div className={`${style.center}`}>
-                <Pagination count={10} />
+            <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={onPageChange}
+                    size="medium"
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        padding: "15px 0",
+                    }}
+                    renderItem={(item) => (
+                        <PaginationItem {...item} sx={{ fontSize: 12 }} />
+                    )}
+                />
             </div>
         </div>
         
