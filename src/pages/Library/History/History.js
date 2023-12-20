@@ -33,6 +33,11 @@ const History = () => {
     const containerRef = useRef(null);  // 컨테이너 div를 위한 Ref
 
     useEffect(() => {
+        if (!loginID) {
+            setLoading(false);
+            return;
+        }
+
         axios.get(`/api/cplist`).then(resp => {
 
             const allTracks = [];

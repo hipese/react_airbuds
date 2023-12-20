@@ -33,6 +33,7 @@ const Likes = () => {
     useEffect(() => {
 
         if (!loginID) {
+            setLoading(false);
             return;
         }
 

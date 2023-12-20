@@ -63,3 +63,8 @@
     align-items: center;
     justify-content: center;
 }
+
+.noneLogin {
+    margin-top: 180px;
+    margin-right: 200px;
+  }

@@ -64,7 +64,7 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
     },[trackLike]);
 
     const handleMoveToProfile = (id) => {
-        navi(`/Mypage/${id}`);
+        navi(`/profile/${id}`);
     }
     
     return (
