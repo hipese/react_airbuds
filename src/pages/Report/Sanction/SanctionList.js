@@ -1,13 +1,24 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { Pagination, PaginationItem } from '@mui/material';
 import { Button, Input } from "reactstrap";
 import axios from 'axios';
 import style from './Sanction.module.css';
 import { LoginContext } from '../../../App';
+import CircularProgress from "@mui/material/CircularProgress";
+
+const CircularIndeterminate = () => {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <CircularProgress />
+    </Box>
+  );
+};
 
 const SanctionList = () => {
+
+  const [loading, setLoading] = useState(true);
 
   const { loginID } = useContext(LoginContext);
   const [search, setSearch] = useState('');
@@ -18,10 +29,11 @@ const SanctionList = () => {
   useEffect(() => {
     axios.get('/api/report/sanctionList').then((resp) => {
       setSanctions(resp.data);
+      setLoading(false);
     }).catch((e) => {
       console.log(e);
     });
-  }, []);
+  }, [sanctions]);
 
   const totalItems = sanctions.length;
   const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);
@@ -54,6 +66,9 @@ const SanctionList = () => {
     })
   }
 
+  if (loading) {
+    return <CircularIndeterminate />;
+  }
   return (
     <div className={`${style.container}`}>
       <div className={style.search}>

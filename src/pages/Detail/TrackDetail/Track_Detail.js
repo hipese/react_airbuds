@@ -16,6 +16,10 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Pagination, PaginationItem } from "@mui/material";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
+import style from "./report.module.css";
+import Swal from "sweetalert2";
+import "@sweetalert2/themes/bootstrap-4";
+
 const theme = createTheme({
     components: {
         MuiMenu: {
@@ -60,7 +64,6 @@ const Track_Detail = () => {
         });
 
         axios.get(`/api/reply/${trackId}`).then(resp => {
-            console.log(resp.data);
             setReplyList(resp.data);
         }).catch((e) => {
             console.log(e);
@@ -92,7 +95,6 @@ const Track_Detail = () => {
 
         // 트랙에서 관련 정보 추출
         const { filePath, imagePath, title, writer } = track;
-        console.log(imagePath);
         // TrackInfoContext를 선택한 트랙 정보로 업데이트
         setTrack_info({
             filePath,
@@ -116,7 +118,6 @@ const Track_Detail = () => {
 
     const handlePostReply = () => {
         axios.post(`/api/reply`, reply).then(resp => {
-            console.log(resp.data);
             // setReplyList(prev => ([...prev, reply]))
             setReply((prev) => ({ ...prev, contents: "" }));
             axios.get(`/api/reply/${trackId}`).then(resp => {
@@ -138,7 +139,6 @@ const Track_Detail = () => {
     };
 
     const handleDeleteClick = (comment) => {
-        console.log(comment.seq);
         // 삭제 버튼 클릭 시 확인 메시지 표시
         const shouldDelete = window.confirm('정말로 삭제하시겠습니까?');
         // 삭제 버튼 클릭 시 해당 댓글 삭제
@@ -191,7 +191,6 @@ const Track_Detail = () => {
 
     const loadingLikes = async () => {
         axios.get(`/api/tllike/${loginID}`).then(res => {
-            console.log(res.data);
             setReplyLike(res.data);
         }).catch((e) => {
             console.log(e);
@@ -222,7 +221,6 @@ const Track_Detail = () => {
                 deleteData.append("id", loginID);
                 axios.post(`/api/tllike/delete`, deleteData).then(res => {
                     const newLikeList = replyLike.filter(e => e.replySeq !== replySeq);
-                    console.log("carousel delete", newLikeList);
                     setReplyLike(newLikeList);
                     setFavorite(isFavorite + 1);
                 }).catch((e) => {
@@ -261,6 +259,99 @@ const Track_Detail = () => {
         }
     };
 
+
+    const [boxChecked, setBoxChecked] = useState();
+
+    const handleReport = async () => {
+
+        const { value: formValues } = await Swal.fire({
+            title: "신고",
+            html: `
+          <hr>
+          <p>신고하실 내용이 무엇입니까?</p>
+          <p id="track" style="text-decoration: underline;">
+            트랙을 신고
+            <input type="checkbox" id="trackCheckbox" checked style="cursor: pointer;" >
+          </p>
+          <p id="coverImage" style="cursor: pointer; text-decoration: underline;" >
+          커버 이미지를 신고
+          <input type="checkbox" id="coverImageCheckbox" style="cursor: pointer;" >
+          </p>
+          <input  type="text" id="reason" placeholder="신고 사유" class="swal2-input" />
+          <p id="contents">
+            ex) 저작권침해, 사칭, 남용, 상표권침해, 그 외 사유
+          </p>
+          <hr>
+          <p>
+            보고된 신고는 관리자에 의해 검토되며, 관리자는 신고 내용이 당사의
+            지침 또는 약관을 위반할 경우 조치를 취합니다.
+          </p>
+          <p>반복적인 위반이나 심각한 위반은 계정을 영구적으로 삭제 할 수 있습니다.</p>
+          `,
+            confirmButtonText: "신고완료",
+            focusConfirm: false,
+            customClass: {
+                container: style.htmlContainer,
+                popup: style.swal2PopUpHeWid,
+                title: style.title,
+                htmlContainer: style.text,
+                confirmButton: style.confirm,
+                cancelButton: style.cancel,
+            },
+            didOpen: () => {
+                const trackCheckbox = document.getElementById("trackCheckbox");
+                const coverImageCheckbox = document.getElementById("coverImageCheckbox");
+
+                trackCheckbox.addEventListener("change", () => {
+                    setBoxChecked("Track");
+                });
+
+                coverImageCheckbox.addEventListener("change", () => {
+                    setBoxChecked("CoverImage");
+                });
+            },
+            preConfirm: async () => {
+                const trackCheckbox = document.getElementById("trackCheckbox");
+                const coverImageCheckbox = document.getElementById("coverImageCheckbox");
+                const reasonInput = document.getElementById("reason");
+
+                if (reasonInput.value === "") {
+                    Swal.showValidationMessage("신고 사유를 입력해주세요");
+                } else {
+
+                    if (!trackCheckbox.checked && !coverImageCheckbox.checked) {
+                        // 사용자가 체크박스를 선택하지 않은 경우 예외 처리
+                        Swal.showValidationMessage("적어도 하나의 항목을 선택하세요.");
+                    } else {
+                        if (trackCheckbox.checked && coverImageCheckbox.checked) {
+                            // 사용자가 체크박스를 둘 다 선택한 경우 예외 처리
+                            Swal.showValidationMessage("둘 중 하나의 항목 만을 선택하세요.");
+                        } else {
+                            // FormData 생성
+                            const formData = new FormData();
+                            formData.append("reason", reasonInput.value);
+                            formData.append("trackId", trackId);
+                            formData.append("ReportWriter", loginID);
+                            formData.append("ReportCategory", trackCheckbox.checked ? "Track" : "CoverImage");
+                            formData.append("ReportSubject", track.writeId);
+
+                            try {
+                                // 서버로 데이터 전송
+                                const response = await axios.post("/api/report", formData, {
+                                    headers: {
+                                        "Content-Type": "multipart/form-data",
+                                    },
+                                });
+                            } catch (error) {
+                                console.error("Error sending data to server:", error);
+                            }
+                        }
+                    }
+                }
+            },
+        });
+    };
+
     return (
         <Grid container className={styles.container}>
             <Grid item xs={12} md={8} className={styles.container2}>
@@ -269,7 +360,9 @@ const Track_Detail = () => {
                         <Typography variant="h4">음원 정보</Typography>
                     </Grid>
                     <Grid item xs={12} md={1}>
-                        <Typography variant="subtitle2">2 months ago</Typography>
+                        <div onClick={handleReport} className={style.report}>
+                            <ErrorOutlineIcon />&nbsp;&nbsp;신고
+                        </div>
                     </Grid>
                 </Grid>
                 <Grid container className={styles.track_info}>
@@ -461,9 +554,6 @@ const Track_Detail = () => {
                                                     </MenuItem>,
                                                 ]
                                             )}
-                                            <MenuItem onClick={() => handleClose(comment)}>
-                                                <ErrorOutlineIcon />&nbsp;&nbsp;신고
-                                            </MenuItem>
                                         </Menu>
                                     </ThemeProvider>
                                 </div>
