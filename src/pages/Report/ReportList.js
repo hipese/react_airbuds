@@ -9,8 +9,18 @@ import { format } from "date-fns";
 import axios from 'axios';
 import style from './Report.module.css';
 import { LoginContext } from '../../App';
+import CircularProgress from "@mui/material/CircularProgress";
 
+const CircularIndeterminate = () => {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <CircularProgress />
+    </Box>
+  );
+};
 const ReportList = () => {
+
+  const [loading, setLoading] = useState(true);
 
   const { loginID } = useContext(LoginContext);
   const [search, setSearch] = useState('');
@@ -21,10 +31,11 @@ const ReportList = () => {
   useEffect(() => {
     axios.get('/api/report').then((resp) => {
       setReports(resp.data);
+      setLoading(false);
     }).catch((e) => {
       console.log(e);
     });
-  }, []);
+  }, [reports]);
 
   const totalItems = reports.length;
   const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);
@@ -44,6 +55,10 @@ const ReportList = () => {
   const inputChangeHandler = (e) => {
     setSearch(e.target.value);
   };
+
+  if (loading) {
+    return <CircularIndeterminate />;
+  }
 
   return (
     <div className={`${style.container}`}>

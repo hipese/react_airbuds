@@ -52,7 +52,7 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
         axios.get(`/api/like/follwingData/${loginID}`).then(res=>{
             console.log(res.data);
             const sortedData = res.data.sort((a, b) => b.followerNumber - a.followerNumber);
-            const threeData = sortedData.filter((e,i)=>i < 3);
+            const threeData = sortedData.filter((e,i)=>i <= 3);
             setArtist(threeData);
         }).catch((e)=>{
             console.log(e);
@@ -63,13 +63,34 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
         sideLoading();        
     },[trackLike]);
 
+    const addStreamCount = (trackId, singerId, e) => {
+        const formdata = new FormData();
+        const date = new Date().toISOString();
+        formdata.append("trackId",trackId);
+        formdata.append("streamDate",date);
+        formdata.append("streamSinger",singerId);
+        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
     const handleMoveToProfile = (id) => {
-        navi(`/Mypage/${id}`);
+        navi(`/profile/${id}`);
+    }
+
+    const handleMoveToMusicDetail = (trackId) => {
+        navi(`/Detail/${trackId}`);
+    }
+
+    const handleMoveToPlus = (location) => {
+        navi(`/Library/${location}`);
     }
     
     return (
         <div className={styles.positionFixed}>
-            <div className={styles.followArtist}><GroupAddIcon className={styles.followIcon} />팔로우한 아티스트<div className={styles.viewAll}>더보기</div></div>
+            <div className={styles.followArtist}><GroupAddIcon className={styles.followIcon} />팔로우한 아티스트<div className={styles.viewAll} onClick={()=>(handleMoveToPlus("following"))}>더보기</div></div>
                 {loginID != "" ? 
                         <ul className={styles.loveul}>
                             {artist.map((e,i) => {
@@ -107,7 +128,7 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
                             </li>
                         </ul>
                     }
-            <div className={styles.loveYou}><img src={Like} alt="..." className={styles.like} />좋아요<div className={styles.viewAll}>더보기</div></div>
+            <div className={styles.loveYou}><img src={Like} alt="..." className={styles.like} />좋아요<div className={styles.viewAll} onClick={()=>(handleMoveToPlus("likes"))}>더보기</div></div>
             
                 {loginID != "" ? 
                     <ul className={styles.loveul}>
@@ -116,15 +137,21 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
                         ? `/tracks/image/${e.track.trackImages[0].imagePath}`
                         : "http://placehold.it/150x150";
                         return (
-                            <li key={i} className={styles.loveli}>
-                                <div className={styles.loveImg}>
-                                    <img src={trackImage} width={50} height={50}></img>
-                                </div>
-                                <div>
-                                    <div className={styles.loveSinger}>{e.track.title}</div>
-                                    <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson}>{e.track.writer ? e.track.writer : "unknown"}</div>
-                                </div>
-                            </li>
+                            <div onClick={()=>{
+                                    handleMoveToMusicDetail(e.track.trackId);
+                                    // addStreamCount(e.track.trackId,e.track.writer,null);   //노래 스트리밍 카운트를 증가하는 메서드.
+                                }
+                            }>
+                                <li key={i} className={styles.loveli}>
+                                    <div className={styles.loveImg}>
+                                        <img src={trackImage} width={50} height={50}></img>
+                                    </div>
+                                    <div>
+                                        <div className={styles.loveSinger}>{e.track.title}</div>
+                                        <PeopleAltIcon className={styles.lovePersonIcon} /> <div className={styles.lovePerson}>{e.track.writer ? e.track.writer : "unknown"}</div>
+                                    </div>
+                                </li>
+                            </div>
                         )
                     })}
                     </ul>

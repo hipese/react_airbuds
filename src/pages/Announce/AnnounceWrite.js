@@ -17,6 +17,25 @@ const AnnounceWriteMain = () =>{
         setAnnounce(prev=>({...prev,[name]:value}));
     }
     const handleSubmit = () => {        
+        if(announce.announceTitle == ""){
+            alert("제목을 작성해주세요.");
+            return;
+        }
+
+        if(announce.announceCategory == "none"){
+            alert("카테고리를 선택해주세요.");
+            return;
+        }
+
+        if(announce.announceContents == ""){
+            alert("공지할 내용을 작성해주세요.");
+            return;
+        }
+
+        if(announce.announceCategory == "none"){
+            alert("카테고리를 선택해주세요.");
+            return;
+        }
         axios.post("/api/announce",announce).then(res=>{
             navi("/announce");
         }).catch((e)=>{

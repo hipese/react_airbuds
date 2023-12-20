@@ -69,3 +69,17 @@
     font-weight: 500;
     margin-top: 30px;
 }
+
+.onClickHeart {
+    filter: invert(27%) sepia(94%) saturate(7461%) hue-rotate(356deg) brightness(100%) contrast(119%);
+    cursor: pointer;
+}
+
+.NonClickHeart {
+    filter: brightness(50%);
+    cursor: pointer;
+}
+.noneLogin {
+    margin-top: 180px;
+    margin-right: 200px;
+}

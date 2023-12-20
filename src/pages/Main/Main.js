@@ -61,6 +61,7 @@ const Main = () => {
 
     const loadingLikes = async () => {
         axios.get(`/api/like/${loginID}`).then(res => {
+            console.log(res.data);
             setLike(res.data);
         }).catch((e) => {
             console.log(e);

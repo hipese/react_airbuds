@@ -103,7 +103,13 @@ const AnnounceList = () =>{
                         </Grid>
                         <Grid item xs={2} className={`${style.center}`}>
                             <Typography fontSize={{xs:"12px",sm:"14px"}}>
-                                {e.announceCategory}
+                                {
+                                    e.announceCategory == "open" ? "서비스 오픈" :
+                                    e.announceCategory == "info" ? "안내" :
+                                    e.announceCategory == "news" ? "서비스 소식" :
+                                    e.announceCategory == "inspection" ? "서비스 점검" :
+                                    e.announceCategory == "close" ? "서비스 오픈종료" : ""
+                                }
                             </Typography>
                         </Grid>
                         <Grid item xs={5} className={`${style.center}`}>
