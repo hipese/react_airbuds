@@ -74,7 +74,7 @@ const YourTrackList = () => {
             });
             setTrack(tracksWithImages);
         });
-    }, [loginID]);
+    }, [track,loginID]);
 
     const addTrackToPlaylist = (track) => {
 
@@ -109,6 +109,17 @@ const YourTrackList = () => {
         setCurrentTrack(0);
         setIsPlaying(true);
     };
+
+
+    // 선택한 id값의 음원 정보를 삭제하는 기능
+    const handleDelete = (trackId) => {
+        console.log("뭐임" + trackId);
+        axios.delete(`/api/track/${trackId}`).then(resp => {
+            console.log("삭제 성공..")
+        }).catch(resp => {
+            console.log("삭제 실패...")
+        })
+    }
 
 
     return (
@@ -175,7 +186,7 @@ const YourTrackList = () => {
                                 )}
                             </div>
                             <div>
-                                <DeleteIcon className={styles.largeIcon} />
+                                <DeleteIcon className={styles.largeIcon}onClick={() => handleDelete(trackone.trackId)} />
                             </div>
                         </div>
                     </div>
