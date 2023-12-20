@@ -9,6 +9,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import { useInView } from 'react-intersection-observer';
+import heart from '../assets/heart.svg'
 
 const LoadingSpinner = () => (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
@@ -29,6 +30,9 @@ const Likes = () => {
     const [page, setPage] = useState(0);  // 무한 스크롤을 위한 현재 페이지 추적
     const [hasMore, setHasMore] = useState(true);  // 더 불러올 아이템이 있는지 추적
     const containerRef = useRef(null);  // 컨테이너 div를 위한 Ref
+    const [myLikes,setMyLikes] = useState([]);
+    const [isFavorite, setFavorite] = useState(0);
+    const [trackLike,setLike] = useState([]);
 
     useEffect(() => {
 
@@ -50,6 +54,7 @@ const Likes = () => {
             });
 
             // 기존 track 배열 업데이트
+            console.log(allTracks);
             setTrack(allTracks);
             setLoading(false);
 
@@ -61,11 +66,47 @@ const Likes = () => {
             console.error('데이터를 불러오는 중 오류 발생:', error);
             setLoading(false);
         });
+
+        loadingLikes();
     }, [loginID]);
 
     const [ref, inView] = useInView({
         // triggerOnce: true, // 스크롤이 닿은 후 한 번만 실행되도록 설정
     });
+
+    const loadingLikes = () =>{
+        axios.get(`/api/like/myLikes/${loginID}`).then(res=>{
+            console.log(res.data);
+            setMyLikes(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
+    useEffect(()=>{
+        axios.get(`/api/like/order`).then(resp => {
+
+            const allTracks = [];
+
+            resp.data.forEach((trackItem, outerIndex) => {
+                trackItem.tracks.forEach((innerTrack, innerIndex) => {
+                    const imagePath = innerTrack.trackImages.length > 0 ? innerTrack.trackImages[0].imagePath : null;
+
+                    allTracks.push({ ...innerTrack, imagePath });
+                });
+            });
+
+            // 기존 track 배열 업데이트
+            console.log(allTracks);
+            setTrack(allTracks);
+            setLoading(false);
+        }).catch(error => {
+            console.error('데이터를 불러오는 중 오류 발생:', error);
+            setLoading(false);
+        });
+
+        loadingLikes();
+    },[isFavorite]);
 
     // 바닥에 스크롤이 닿았을 때 실행될 함수
     const handleScrollToBottom = () => {
@@ -166,6 +207,46 @@ const Likes = () => {
         setCurrentTrack(0);
         setIsPlaying(true);
     };
+    const countForTrack = (trackId) => {
+        const countInfo = myLikes.find(item => item.trackId === trackId);
+        return countInfo ? countInfo.count : 0;
+    }
+
+    const handleFavorite = (trackId, isLiked,e) => {
+        if(loginID !== ""){
+            if(!isLiked){
+                const formData = new FormData();
+                formData.append("likeSeq",0);
+                formData.append("userId",loginID);
+                formData.append("trackId",trackId);                
+                axios.post(`/api/like`,formData).then(res=>{
+                    setLike([...trackLike, { trackId : trackId, userId: loginID, likeSeq: res.data}]);
+                    setFavorite(isFavorite+1);
+                    e.target.classList.add(styles.onClickHeart);
+                    e.target.classList.remove(styles.NonClickHeart);
+                }).catch((e)=>{
+                    console.log(e);
+                });
+            }else{
+                const deleteData = new FormData();
+                deleteData.append("trackId",trackId);
+                deleteData.append("userId",loginID);
+                axios.post(`/api/like/delete`,deleteData).then(res=>{
+                    const newLikeList = trackLike.filter(e => e.trackId !== trackId);
+                    console.log("carousel delete",newLikeList);
+                    setLike(newLikeList);
+                    setFavorite(isFavorite+1);
+                    e.target.classList.remove(styles.onClickHeart);
+                    e.target.classList.add(styles.NonClickHeart);
+                }).catch((e)=>{
+                    console.log(e);
+                });            
+            }
+        }else{
+            alert("좋아요는 로그인을 해야 합니다.")
+            return;
+        }
+    }
 
     return (
         <>
@@ -208,8 +289,14 @@ const Likes = () => {
                                     </div>
                                     <div className={styles.like_share}>
                                         <div className={styles.like}>
-                                            <FavoriteBorderIcon />
-                                            16.9K
+                                            <img 
+                                            src={heart} 
+                                            alt="" 
+                                            className={
+                                                myLikes.some(trackLike => trackLike.trackId === track.trackId) 
+                                                ? styles.onClickHeart : styles.NonClickHeart} 
+                                            onClick={(e)=>{handleFavorite(track.trackId,myLikes.some(trackLike => trackLike.trackId === track.trackId),e)}}/>
+                                            {countForTrack(track.trackId)}
                                         </div>
                                         <div className={styles.share}>
                                             <RepeatIcon />

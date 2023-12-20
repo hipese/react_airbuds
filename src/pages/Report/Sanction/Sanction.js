@@ -9,7 +9,19 @@ import axios from 'axios';
 import style from './Sanction.module.css';
 import { LoginContext } from '../../../App';
 
+import CircularProgress from "@mui/material/CircularProgress";
+
+const CircularIndeterminate = () => {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <CircularProgress />
+    </Box>
+  );
+};
+
 const Sanction = () => {
+
+  const [loading, setLoading] = useState(true);
 
   const { loginID } = useContext(LoginContext);
   const [search, setSearch] = useState('');
@@ -24,10 +36,11 @@ const Sanction = () => {
   useEffect(() => {
     axios.get('/api/report/trackList').then((resp) => {
       setTracks(resp.data);
+      setLoading(false);
     }).catch((e) => {
       console.log(e);
     });
-  }, []);
+  }, [tracks]);
 
   const totalItems = tracks.length;
   const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);
@@ -86,11 +99,15 @@ const Sanction = () => {
     }
   };
 
-  const handleImage = (trackId)=>{
+  const handleImage = (trackId) => {
     axios.put(`/api/report/sanction/image/${trackId}`).then(resp => {
     }).catch(error => {
       console.error('Error:', error);
     });
+  }
+
+  if (loading) {
+    return <CircularIndeterminate />;
   }
 
   return (

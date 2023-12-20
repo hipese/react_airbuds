@@ -17,9 +17,6 @@ const MyAlbumDetail = () => {
 
     const [albumUpdate, setAlbumUpdate] = useState(albumData); 
 
-    const handleUpdateAlbum = (updatedAlbumData) => {
-        setAlbumUpdate(updatedAlbumData); 
-    };
 
     // 모달창을 띄우기 위한 변수
     const [open, setOpen] = useState(false);
@@ -64,7 +61,7 @@ const MyAlbumDetail = () => {
                     >
                         <UpdateAlbumModal 
                         albumUpdate={albumUpdate} 
-                        onUpdateAlbum={handleUpdateAlbum}
+                        setAlbumUpdate={setAlbumUpdate}
                         onClose={handleClose} 
                         />
                     </Modal>

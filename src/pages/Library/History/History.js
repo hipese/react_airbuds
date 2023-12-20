@@ -11,6 +11,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import { useInView } from 'react-intersection-observer';
+import heart from '../assets/heart.svg'
 
 const LoadingSpinner = () => (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
@@ -32,6 +33,10 @@ const History = () => {
     const [hasMore, setHasMore] = useState(true);  // 더 불러올 아이템이 있는지 추적
     const containerRef = useRef(null);  // 컨테이너 div를 위한 Ref
 
+    const [myLikes,setMyLikes] = useState([]);
+    const [isFavorite, setFavorite] = useState(0);
+    const [trackLike,setLike] = useState([]);
+    
     useEffect(() => {
         if (!loginID) {
             setLoading(false);
@@ -58,6 +63,7 @@ const History = () => {
                 setHasMore(false);
             }
         });
+        loadingLikes();
     }, [loginID]);
 
     const [ref, inView] = useInView({
@@ -98,6 +104,20 @@ const History = () => {
             });
         }
     };
+
+    const loadingLikes = () =>{
+        axios.get(`/api/like/myLikes/${loginID}`).then(res=>{
+            console.log(res.data);
+            setMyLikes(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
+    const countForTrack = (trackId) => {
+        const countInfo = myLikes.find(item => item.trackId === trackId);
+        return countInfo ? countInfo.count : 0;
+    }
 
 
     useEffect(() => {
@@ -163,6 +183,42 @@ const History = () => {
         setIsPlaying(true);
     };
 
+    const handleFavorite = (trackId, isLiked,e) => {
+        if(loginID !== ""){
+            if(!isLiked){
+                const formData = new FormData();
+                formData.append("likeSeq",0);
+                formData.append("userId",loginID);
+                formData.append("trackId",trackId);                
+                axios.post(`/api/like`,formData).then(res=>{
+                    setLike([...trackLike, { trackId : trackId, userId: loginID, likeSeq: res.data}]);
+                    setFavorite(isFavorite+1);
+                    e.target.classList.add(styles.onClickHeart);
+                    e.target.classList.remove(styles.NonClickHeart);
+                }).catch((e)=>{
+                    console.log(e);
+                });
+            }else{
+                const deleteData = new FormData();
+                deleteData.append("trackId",trackId);
+                deleteData.append("userId",loginID);
+                axios.post(`/api/like/delete`,deleteData).then(res=>{
+                    const newLikeList = trackLike.filter(e => e.trackId !== trackId);
+                    console.log("carousel delete",newLikeList);
+                    setLike(newLikeList);
+                    setFavorite(isFavorite+1);
+                    e.target.classList.remove(styles.onClickHeart);
+                    e.target.classList.add(styles.NonClickHeart);
+                }).catch((e)=>{
+                    console.log(e);
+                });            
+            }
+        }else{
+            alert("좋아요는 로그인을 해야 합니다.")
+            return;
+        }
+    };
+
     return (
         <>
             {loading ? (
@@ -204,8 +260,14 @@ const History = () => {
                                     </div>
                                     <div className={styles.like_share}>
                                         <div className={styles.like}>
-                                            <FavoriteBorderIcon />
-                                            16.9K
+                                            <img 
+                                            src={heart} 
+                                            alt="" 
+                                            className={
+                                                myLikes.some(trackLike => trackLike.trackId === track.trackId) 
+                                                ? styles.onClickHeart : styles.NonClickHeart} 
+                                            onClick={(e)=>{handleFavorite(track.trackId,myLikes.some(trackLike => trackLike.trackId === track.trackId),e)}}/>
+                                            {countForTrack(track.trackId)}
                                         </div>
                                         <div className={styles.share}>
                                             <RepeatIcon />
