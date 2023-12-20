@@ -123,6 +123,7 @@ const DashBoardDisplay = () => {
     const [formdmember,setFormdMember] = React.useState([]);
     const [dailyReport,setDailyReport] = React.useState(0);
     const [dailyVisitor,setDailyVisitor] = React.useState(0);
+    const [dailyStream,setDailyStream] = React.useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -221,6 +222,13 @@ const DashBoardDisplay = () => {
             console.log(e);
         });
 
+        axios.get("/api/dashboard/streamCount").then(res=>{
+            console.log(res.data);
+            setDailyStream(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+
     },[]);
     
     return(
@@ -249,7 +257,7 @@ const DashBoardDisplay = () => {
                                     {dailyVisitor} 명
                                 </Typography>
                                 <div className={`${style.progressBar} ${style.pad5}`}>
-                                    <BorderLinearProgress variant="determinate" value={visitor > 100 ? 100 : visitor} />
+                                    <BorderLinearProgress variant="determinate" value={dailyVisitor > 100 ? 100 : dailyVisitor} />
                                 </div>
                             </div>                                                
                         </div>
@@ -262,11 +270,11 @@ const DashBoardDisplay = () => {
                                 <Typography fontSize={13}>
                                     Today Streaming
                                 </Typography>                        
-                                <Typography fontSize={40} paddingLeft={2}>
-                                    {streaming}%
+                                <Typography fontSize={40} paddingLeft={2} className={`${style.streamtext}`}>
+                                    {dailyStream} 번
                                 </Typography>
                                 <div className={`${style.progressBar} ${style.pad5}`}>
-                                    <RedLinearProgress variant='determinate' value={streaming > 100 ? 100 : streaming}/>
+                                    <RedLinearProgress variant='determinate' value={dailyStream > 100 ? 100 : dailyStream}/>
                                 </div>
                             </div>                                                
                             
@@ -274,22 +282,19 @@ const DashBoardDisplay = () => {
                     </Tooltip>
                 </Grid>
                 <Grid item xs={12} md={4} className={`${style.center}`}>
-                    <Tooltip title="Today Report">
+                    <Tooltip title="Today Report">                        
                         <div className={`${style.dashBox}`}>
-                            <div>
-                                <div className={`${style.pad10} ${style.report}`}>
-                                    <Typography fontSize={13} color={'white'} fontWeight={'bold'}>
+                            <div className={`${style.pad10}`}>
+                                <Typography fontSize={13} fontWeight={'bold'}>
                                         Today Report
-                                    </Typography>                        
-                                    <Typography fontSize={38} paddingLeft={2} color={'white'}>
-                                        {dailyReport} 건
-                                    </Typography>
-                                </div>
-                                <div className={`${style.progressBar}`}>
-                                    {/* <BlueLinearProgress variant='determinate' value={report > 100 ? 100 : report}/> */}
-                                </div>
-                            </div>                                                
-                            
+                                </Typography>                        
+                                <Typography fontSize={38} paddingLeft={2} className={`${style.reporttext}`}>
+                                    {dailyReport} 건
+                                </Typography>
+                                <div className={`${style.progressBar} ${style.pad5}`}>
+                                    <BlueLinearProgress variant='determinate' value={dailyReport > 100 ? 100 : dailyReport}/>
+                                </div>                                
+                            </div>
                         </div>
                     </Tooltip>
                 </Grid>
