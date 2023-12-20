@@ -137,7 +137,7 @@ return (
             <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button> 
             <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button> 
         </div>  
-          {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} trackLike={trackLike}  trackInfoAll={trackInfoAll}/>}
+          {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} trackLike={trackLike}  trackInfoAll={trackInfoAll} />}
     </div>
   );
 });

@@ -20,8 +20,6 @@ const Main = () => {
     const [loading, setLoading] = useState(true);
     const [flag, setFlag] = useState(true);
 
-
-    
     useEffect(() => {
         axios.get("/api/track/recent")
             .then((res) => {
@@ -145,7 +143,7 @@ const Main = () => {
                         <div key={index}>
                             <div className={styles.carouselTitle}>{filterTag.tagName}</div>
                             <div className={styles.carousel}>
-                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike} setFavorite={setFavorite} isFavorite={isFavorite} trackInfoAll={trackInfoAll}/>
+                                <OwlCarousel trackInfo={trackInfoByTag[filterTag.tagName]} trackLike={trackLike} setLike={setLike} setFavorite={setFavorite} isFavorite={isFavorite} trackInfoAll={trackInfoAll} />
                             </div>
                         </div>
                     ))}
