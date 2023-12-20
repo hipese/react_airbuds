@@ -86,17 +86,6 @@ const Library = () => {
                                 textDecoration: 'none', // 밑줄 제거
                             },
                         }} />
-                        <Tab label="Playlists" component={Link} to="playlist" {...a11yProps(2)}
-                         sx={{
-                            '&.Mui-selected': {
-                                color: '#4CAF50',
-                                textDecoration: 'none', // 밑줄 제거
-                            },
-                            '&:hover': {
-                                color: '#4CAF50',
-                                textDecoration: 'none', // 밑줄 제거
-                            },
-                        }} />
                         <Tab label="Albums" component={Link} to="albums" {...a11yProps(3)}
                          sx={{
                             '&.Mui-selected': {
@@ -135,8 +124,7 @@ const Library = () => {
                 <Routes>
                     <Route path="/" element={<Overview />} />
                     <Route path="/likes" element={<Likes />} />
-                    {/* <Route path="/playlist" element={<Playlist />} />
-                    <Route path="/albums" element={<Albums />} /> */}
+                    {/* <Route path="/albums" element={<Albums />} /> */}
                     <Route path="/following" element={<Following />} /> 
                     <Route path="/history" element={<History />} />
                 </Routes>
