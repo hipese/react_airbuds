@@ -58,10 +58,10 @@ const MusicWithTabs = () => {
     const [profileImage, setProfileImage] = useState("");
     const [backgroundImage, setBackgroundImage] = useState("");
     const [newBackgroundImage, setNewBackgroundImage] = useState();
-    const [backgroundState, setBackgroundState] = useState({backgroundColor : "whitesmoke"});
+    const [backgroundState, setBackgroundState] = useState({ backgroundColor: "whitesmoke" });
     const [isBackgroundChanged, setIsBackgroundChanged] = useState(false);
-    const [isFollowed,setFollow] = useState(false);
-    const [followNumber,setFollowNumber] = useState({});
+    const [isFollowed, setFollow] = useState(false);
+    const [followNumber, setFollowNumber] = useState({});
     const navi = useNavigate();
 
     useEffect(() => {
@@ -92,20 +92,20 @@ const MusicWithTabs = () => {
 
     const checkFollowState = () => {
         const formData = new FormData();
-        formData.append("memberId",loginID);
-        formData.append("singerId",targetID);
+        formData.append("memberId", loginID);
+        formData.append("singerId", targetID);
 
-        axios.post(`/api/like/isfollow`,formData).then(res=>{
+        axios.post(`/api/like/isfollow`, formData).then(res => {
             setFollow(res.data);
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log(e);
         });
     }
 
     const checkFollowNumber = () => {
-        axios.get(`/api/like/nums/${targetID}`).then(res=>{
+        axios.get(`/api/like/nums/${targetID}`).then(res => {
             setFollowNumber(res.data);
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log(e);
         });
     }
@@ -115,10 +115,10 @@ const MusicWithTabs = () => {
     };
 
     useEffect(() => {
-        if(backgroundImage !== null && backgroundImage !== "")
-            setBackgroundState({backgroundImage : `url(${backgroundImage})`, backgroundSize : "cover"});
-        else 
-            setBackgroundState({backgroundColor : "whitesmoke"});
+        if (backgroundImage !== null && backgroundImage !== "")
+            setBackgroundState({ backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover" });
+        else
+            setBackgroundState({ backgroundColor: "whitesmoke" });
     }, [backgroundImage]);
 
     const changeBackgroundHandler = (e) => {
@@ -130,42 +130,42 @@ const MusicWithTabs = () => {
 
     const uploadBackgroundHandler = () => {
         const formData = new FormData();
-        formData.append( "newBgImage" ,newBackgroundImage);
-        axios.post("/api/member/uploadBackground", formData, {headers : {"Content-Type" : "multipart/form-data"}})
-        .then(resp => {
-            console.log(resp);
-            setIsBackgroundChanged(false);
-        }).catch(err => {
-            console.log(err);
-        });
+        formData.append("newBgImage", newBackgroundImage);
+        axios.post("/api/member/uploadBackground", formData, { headers: { "Content-Type": "multipart/form-data" } })
+            .then(resp => {
+                console.log(resp);
+                setIsBackgroundChanged(false);
+            }).catch(err => {
+                console.log(err);
+            });
 
     };
     const handleFollowBtn = (state) => {
-        if(loginID != ""){
+        if (loginID != "") {
             console.log(state);
-            if(!state){
+            if (!state) {
                 const formData = new FormData();
-                formData.append("memberId",loginID);
-                formData.append("singerId",targetID)
-                axios.post(`/api/like/follow`,formData).then(res=>{
+                formData.append("memberId", loginID);
+                formData.append("singerId", targetID)
+                axios.post(`/api/like/follow`, formData).then(res => {
                     checkFollowState();
                     checkFollowNumber();
-                }).catch((e)=>{
+                }).catch((e) => {
                     console.log(e);
                 });
-            }else{
+            } else {
                 const formData = new FormData();
-                formData.append("memberId",loginID);
-                formData.append("singerId",targetID)
-                axios.post(`/api/like/followDelete`,formData).then(res=>{
+                formData.append("memberId", loginID);
+                formData.append("singerId", targetID)
+                axios.post(`/api/like/followDelete`, formData).then(res => {
                     checkFollowState();
                     checkFollowNumber();
-                }).catch((e)=>{
+                }).catch((e) => {
                     console.log(e);
                 });
             }
-            
-        }else{
+
+        } else {
             alert("로그인 필요");
             return;
         }
@@ -187,24 +187,24 @@ const MusicWithTabs = () => {
                         </Typography>
                     </Box>
                 </Grid>
-                <Grid item md={3} style={{display : "flex", justifyContent:"center", alignItems : "center", flexDirection : "column"}}>
+                <Grid item md={3} style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
                     {
                         loginID !== null && targetID === loginID ?
-                        <InputFileUpload />
-                        :
-                        <></>
+                            <InputFileUpload />
+                            :
+                            <></>
                     }
                     {
                         isBackgroundChanged ?
-                        <><br></br>
-                            <Button component="label" variant="contained" startIcon={<CheckIcon />} onClick={uploadBackgroundHandler}>
-                                SAVE
-                            </Button>
+                            <><br></br>
+                                <Button component="label" variant="contained" startIcon={<CheckIcon />} onClick={uploadBackgroundHandler}>
+                                    SAVE
+                                </Button>
                             </>
                             :
                             <></>
                     }
-                    
+
                 </Grid>
             </Grid>
             <Grid item xs={12} md={9} className={styles.Panel}>
@@ -218,58 +218,93 @@ const MusicWithTabs = () => {
                             <Tab label="ALL" component={Link} to="" {...a11yProps(0)}
                                 sx={{
                                     '&.Mui-selected': {
-                                        color: '#4CAF50',  // 선택된 상태일 때의 라벨 색상
+                                        color: '#4CAF50',
+                                        textDecoration: 'none', // 밑줄 제거
+                                    },
+                                    '&:hover': {
+                                        color: '#4CAF50',
+                                        textDecoration: 'none', // 밑줄 제거
                                     },
                                 }} />
-                            <Tab label="Tracks" component={Link} to="tracks" {...a11yProps(1)} />
-                            <Tab label="Albums" component={Link} to="albums" {...a11yProps(2)} />
-                            <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)} />
+                            <Tab label="Tracks" component={Link} to="tracks" {...a11yProps(1)}
+                                sx={{
+                                    '&.Mui-selected': {
+                                        color: '#4CAF50',
+                                        textDecoration: 'none', // 밑줄 제거
+                                    },
+                                    '&:hover': {
+                                        color: '#4CAF50',
+                                        textDecoration: 'none', // 밑줄 제거
+                                    },
+                                }} />
+                            <Tab label="Albums" component={Link} to="albums" {...a11yProps(2)}
+                                sx={{
+                                    '&.Mui-selected': {
+                                        color: '#4CAF50',
+                                        textDecoration: 'none', // 밑줄 제거
+                                    },
+                                    '&:hover': {
+                                        color: '#4CAF50',
+                                        textDecoration: 'none', // 밑줄 제거
+                                    },
+                                }} />
+                            <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)}
+                                sx={{
+                                    '&.Mui-selected': {
+                                        color: '#4CAF50',
+                                        textDecoration: 'none', // 밑줄 제거
+                                    },
+                                    '&:hover': {
+                                        color: '#4CAF50',
+                                        textDecoration: 'none', // 밑줄 제거
+                                    },
+                                }} />
                             <div className={styles.like_edit}>
                                 {
                                     loginID == targetID ?
-                                    ""
-                                    :
-                                    !isFollowed ?
-                                    //팔로우 안한 상태일때.
-                                    <Button variant="outlined" startIcon={<PersonIcon/>}
-                                    sx={{
-                                        width: '100px',
-                                        height: '30px',
-                                        color: '#212529',
-                                        borderColor: '#4CAF50',
-                                        marginTop: '10px',
-                                        marginBottom: '10px',
-                                        marginRight: '10px',
-                                        '&:hover': {
-                                            borderColor: '#4CAF50',
-                                            backgroundColor: '#4CAF50',
-                                            color : "white"
-                                        },
-                                    }}
-                                    onClick={()=>{handleFollowBtn(isFollowed)}}>
-                                    Follow
-                                </Button>
-                                :
-                                //팔로우 한 상태일때.
-                                <Button variant="outlined" startIcon={<PersonIcon/>}
-                                    sx={{
-                                        width: '120px',
-                                        height: '30px',
-                                        color: 'white',
-                                        borderColor: '#4CAF50',
-                                        backgroundColor : '#4CAF50',
-                                        marginTop: '10px',
-                                        marginBottom: '10px',
-                                        marginRight: '10px',
-                                        '&:hover': {
-                                            backgroundColor: 'white',
-                                            borderColor: '#4CAF50',
-                                            color: '#212529',
-                                        },
-                                    }}
-                                    onClick={()=>{handleFollowBtn(isFollowed)}}>
-                                    Followed
-                                </Button>
+                                        ""
+                                        :
+                                        !isFollowed ?
+                                            //팔로우 안한 상태일때.
+                                            <Button variant="outlined" startIcon={<PersonIcon />}
+                                                sx={{
+                                                    width: '100px',
+                                                    height: '30px',
+                                                    color: '#212529',
+                                                    borderColor: '#4CAF50',
+                                                    marginTop: '10px',
+                                                    marginBottom: '10px',
+                                                    marginRight: '10px',
+                                                    '&:hover': {
+                                                        borderColor: '#4CAF50',
+                                                        backgroundColor: '#4CAF50',
+                                                        color: "white"
+                                                    },
+                                                }}
+                                                onClick={() => { handleFollowBtn(isFollowed) }}>
+                                                Follow
+                                            </Button>
+                                            :
+                                            //팔로우 한 상태일때.
+                                            <Button variant="outlined" startIcon={<PersonIcon />}
+                                                sx={{
+                                                    width: '120px',
+                                                    height: '30px',
+                                                    color: 'white',
+                                                    borderColor: '#4CAF50',
+                                                    backgroundColor: '#4CAF50',
+                                                    marginTop: '10px',
+                                                    marginBottom: '10px',
+                                                    marginRight: '10px',
+                                                    '&:hover': {
+                                                        backgroundColor: 'white',
+                                                        borderColor: '#4CAF50',
+                                                        color: '#212529',
+                                                    },
+                                                }}
+                                                onClick={() => { handleFollowBtn(isFollowed) }}>
+                                                Followed
+                                            </Button>
                                 }
                                 {
                                     targetID === loginID ?

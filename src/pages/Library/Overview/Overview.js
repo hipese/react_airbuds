@@ -33,6 +33,7 @@ const Overview = () => {
   useEffect(() => {
 
     if (!loginID) {
+      setLoading(false);
       return;
     }
 
@@ -94,19 +95,19 @@ const Overview = () => {
       carouselRef1.current.prev();
     }
   };
-  
+
   const goToNext1 = () => {
     if (carouselRef1.current) {
       carouselRef1.current.next();
     }
   };
-  
+
   const goToPrev2 = () => {
     if (carouselRef2.current) {
       carouselRef2.current.prev();
     }
   };
-  
+
   const goToNext2 = () => {
     if (carouselRef2.current) {
       carouselRef2.current.next();
