@@ -1,5 +1,5 @@
 .container {
-    max-width: 90%;
+    max-width: 100%;
     padding-left: 250px;
     padding-right: 250px;
     height: 100vh;
@@ -7,38 +7,110 @@
     transition: ease-in-out 0.5s;
 }
 
-@Media (max-width: 1200px) {
+@Media (max-width: 1700px) {
     .container {
         max-width: 100%;
         padding-left: 0px;
+        padding-right: 0px;
         transition: ease-in-out 0.5s;
     }
 }
 
-.contentContainer {
+.contentContainer h1 {
+    margin-top: 30px;
+}
+
+.playlistContent {
+    width: 100%;
+    height: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: stretch;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    margin-top: 30px;
+    padding: 0px 0px 100px 0px;
+    flex-wrap: wrap;
+    margin: auto;
 }
 
-.leftSide {
-    max-width: 1100px;
-    width: 70%;
-    min-width: 900px;
+.playlist {
+    width: 230px;
+    height: 340px;
+    padding: 15px;
+    margin: 10px;
+    transition: ease-in-out 0.5s;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    position: relative;
+}
+
+.playlist:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: ease-in-out 0.5s;
+}
+
+.playlistImgContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 100px);
+    grid-template-rows: repeat(2, 100px);
+    gap: 5px;
+    width: 200px;
+    height: 200px;
+}
+
+.playlistImg {
+    width: 100%;
     height: 100%;
-    padding-right: 40px;
-    border-right: 1px solid #e0e0e0;
-    overflow-y: auto;
+    object-fit: cover;
 }
 
-
-.leftBottom {
-    margin-bottom: 200px;
+.playlistImgContainerSingle {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.rightSide {
-    min-width: 400px;
-    height: 100%;
-    padding-left: 40px;
-    padding-right: 40px;
+.playlistTitle {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 5px;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.playlistWriter {
+    font-size: 15px;
+    font-weight: 400;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+    overflow: hidden;
+    height: 3em;
+    line-height: 1.5em;
+    color: #aaaaaa;
+    margin-top: 5px;
+}
+
+.playlistWriter>span {
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playlistLength {
+    font-size: 15px;
+    font-weight: 400;
+    width: 100%;
+    color: #aaaaaa;
+    margin-top: 5px;
+    display: flex;
+    justify-content: flex-end;
 }

@@ -70,7 +70,7 @@ const Carousel = React.memo(({ trackInfo,trackLike,setLike,setFavorite,isFavorit
             alert("좋아요는 로그인을 해야 합니다.")
             return;
         }
-    }
+    };
 
 return (
     <div className={styles.Carousel}>
@@ -135,7 +135,7 @@ return (
             <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button> 
             <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button> 
         </div>  
-          {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} trackLike={trackLike}  trackInfoAll={trackInfoAll}/>}
+          {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} trackLike={trackLike}  trackInfoAll={trackInfoAll} />}
     </div>
   );
 });

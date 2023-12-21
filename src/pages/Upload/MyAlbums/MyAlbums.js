@@ -53,7 +53,9 @@ const MyAlbums = () => {
                     </div>
                     
 
-                    <div className={styles.leftBottom}></div>
+                    <div className={styles.leftBottom}>
+                        
+                    </div>
                 </div>
                
             </div>
