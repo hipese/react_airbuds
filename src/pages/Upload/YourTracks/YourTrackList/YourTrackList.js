@@ -97,7 +97,7 @@ const YourTrackList = () => {
             writer,
         });
 
-       
+
 
         setTrackPlayingStatus((prevStatus) => ({
             ...prevStatus,
@@ -167,10 +167,7 @@ const YourTrackList = () => {
                                 <EditIcon className={styles.largeIcon} onClick={() => handleEditClick(trackone)} />
                                 <Modal
                                     open={open}
-                                    onClose={() => {
-                                        handleClose();
-                                        setSelectedTrack(null); // 모달이 닫힐 때 선택된 트랙 초기화
-                                    }}
+                                    onClose={handleClose}
                                     aria-labelledby="modal-modal-title"
                                     aria-describedby="modal-modal-description"
                                 >
