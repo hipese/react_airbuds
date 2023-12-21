@@ -250,7 +250,7 @@ const MusicWithTabs = () => {
                                 style: { backgroundColor: '#4CAF50' }  // 선택된 탭의 라벨 밑에 있는 줄의 색상
                             }}
                         >
-                            <Tab label="ALL" component={Link} to="" {...a11yProps(0)}
+                            <Tab label="Tracks" component={Link} to="" {...a11yProps(0)}
                                 sx={{
                                     '&.Mui-selected': {
                                         color: '#4CAF50',
@@ -261,7 +261,7 @@ const MusicWithTabs = () => {
                                         textDecoration: 'none', // 밑줄 제거
                                     },
                                 }} />
-                            <Tab label="Tracks" component={Link} to="tracks" {...a11yProps(1)}
+                            <Tab label="Albums" component={Link} to="albums" {...a11yProps(1)}
                                 sx={{
                                     '&.Mui-selected': {
                                         color: '#4CAF50',
@@ -272,18 +272,7 @@ const MusicWithTabs = () => {
                                         textDecoration: 'none', // 밑줄 제거
                                     },
                                 }} />
-                            <Tab label="Albums" component={Link} to="albums" {...a11yProps(2)}
-                                sx={{
-                                    '&.Mui-selected': {
-                                        color: '#4CAF50',
-                                        textDecoration: 'none', // 밑줄 제거
-                                    },
-                                    '&:hover': {
-                                        color: '#4CAF50',
-                                        textDecoration: 'none', // 밑줄 제거
-                                    },
-                                }} />
-                            <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(3)}
+                            <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(2)}
                                 sx={{
                                     '&.Mui-selected': {
                                         color: '#4CAF50',
@@ -379,8 +368,7 @@ const MusicWithTabs = () => {
                         <None_track_info />
                     </CustomTabPanel> */}
                     <Routes>
-                        <Route path="/" element={<All />} />
-                        <Route path="/tracks" element={<Mytracks />} />
+                        <Route path="/" element={<Mytracks />} />
                         <Route path="/albums" element={<Myalbums />} />
                         <Route path="/playlists" element={<Myplaylists />} />
                     </Routes>
