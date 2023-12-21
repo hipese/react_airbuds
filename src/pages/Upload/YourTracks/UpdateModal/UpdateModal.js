@@ -53,7 +53,7 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
       setPrevImagePath(selectedTrack.imagePath);
       setImageview("/tracks/image/" + selectedTrack.imagePath)
     
-  }, [selectedTrack]);
+  }, []);
 
 
 
