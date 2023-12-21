@@ -130,10 +130,22 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
 
 
   const handleTitleChange = (e) => {
+
+    if (e.target.value && e.target.value.length > 30) {
+      alert("제목은 30자 이하로 입력해주세요.");
+      return;
+  }
+
     setSelectedTrack(prev => ({ ...prev, title: e.target.value }));
   };
 
   const handleWriterChange = (e) => {
+
+    if (e.target.value && e.target.value.length > 30) {
+      alert("제작자는 20자 이하로 입력해주세요.");
+      return;
+  }
+
     setSelectedTrack(prev => ({ ...prev, writer: e.target.value }));
   };
 
