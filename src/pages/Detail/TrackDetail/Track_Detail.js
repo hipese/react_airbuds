@@ -360,7 +360,7 @@ const Track_Detail = () => {
                     <Grid item xs={12} md={11} className={styles.innerContainer}>
                         <Typography variant="h4">음원 정보</Typography>
                     </Grid>
-                    <Grid item xs={12} md={1}>
+                    <Grid item xs={12} md={1} className={styles.reportButton}>
                         <div onClick={handleReport} className={style.report}>
                             <ErrorOutlineIcon />&nbsp;&nbsp;신고
                         </div>

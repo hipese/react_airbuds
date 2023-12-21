@@ -74,7 +74,6 @@ const MusicWithTabs = () => {
     const [isBackgroundChanged, setIsBackgroundChanged] = useState(false);
     const [isFollowed, setFollow] = useState(false);
     const [followNumber, setFollowNumber] = useState({});
-    const navi = useNavigate();
     const [slicedReplies, setSlicedReplies] = useState([]);
 
     useEffect(() => {
@@ -93,7 +92,6 @@ const MusicWithTabs = () => {
         checkTrackNumber();
         checkFollowState();
         checkFollowNumber();
-        navi(`/profile/${targetID}`);
         setValue(0);
     }, [targetID, loginID]);
 

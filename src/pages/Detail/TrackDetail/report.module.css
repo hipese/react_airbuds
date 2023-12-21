@@ -10,7 +10,7 @@
     text-align: start !important;
 }
 
-.htmlContainer>div>:nth-child(6){
+.htmlContainer>div>:nth-child(6) {
     width: 280px;
 }
 
@@ -54,7 +54,7 @@ p {
     background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed) !important;
 }
 
-.confirm:hover{
+.confirm:hover {
     background-position: 100% 0 !important;
     -o-transition: all .4s ease-in-out;
     -webkit-transition: all .4s ease-in-out;
@@ -81,7 +81,7 @@ p {
     background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376) !important;
 }
 
-.cancel:hover{
+.cancel:hover {
     background-position: 100% 0 !important;
     -o-transition: all .4s ease-in-out;
     -webkit-transition: all .4s ease-in-out;
@@ -97,6 +97,10 @@ p {
     margin: auto;
 }
 
-.report:hover{
+.report {
+    text-align: right;
+}
+
+.report:hover {
     cursor: pointer;
 }
