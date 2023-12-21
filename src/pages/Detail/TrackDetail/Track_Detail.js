@@ -118,8 +118,13 @@ const Track_Detail = () => {
     }
 
     const handlePostReply = () => {
+        if (!loginID) {
+            alert("로그인이 필요합니다. 댓글을 작성하려면 로그인하세요.");
+            setReply((prev) => ({ ...prev, contents: "" }));
+            return;
+        }
+
         axios.post(`/api/reply`, reply).then(resp => {
-            // setReplyList(prev => ([...prev, reply]))
             setReply((prev) => ({ ...prev, contents: "" }));
             axios.get(`/api/reply/${trackId}`).then(resp => {
                 setReplyList(resp.data);
@@ -129,7 +134,7 @@ const Track_Detail = () => {
         }).catch((e) => {
             console.log(e);
         });
-    }
+    };
 
     const handleClick = (event, seq) => {
         setAnchorEl(event.currentTarget);
