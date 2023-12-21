@@ -11,6 +11,8 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { Link } from 'react-router-dom';
 import None_login_info from '../../Components/None_login_info';
 import { Box, CircularProgress } from '@mui/material';
+import None_track_info from '../../Components/None_login_info';
+import None_overview_info from '../../Components/None_overview_info';
 
 const LoadingSpinner = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
@@ -65,9 +67,9 @@ const Overview = () => {
 
       resp2.data.forEach((trackItem2, outerIndex) => {
         trackItem2.tracks.forEach((innerTrack2, innerIndex) => {
-          const imagePath2 = innerTrack2.trackImages.length > 0 ? innerTrack2.trackImages[0].imagePath : null;
+          const imagePath = innerTrack2.trackImages.length > 0 ? innerTrack2.trackImages[0].imagePath : null;
 
-          allTracks2.push({ ...innerTrack2, imagePath2 });
+          allTracks2.push({ ...innerTrack2, imagePath });
         });
       });
 
@@ -115,13 +117,21 @@ const Overview = () => {
   };
 
   // 최대 12개까지의 빈 아이템을 생성
-  // const emptyItems = Array.from({ length: Math.max(0, 12 - tracks.length) }, (_, index) => (
-  //   <div key={`empty-${index}`} className={styles.item}>
-  //     <img src="http://placehold.it/150x150" alt={`Empty Image ${index + 1}`} />
-  //     <div className={styles.carouselTitle}>빈 곡</div>
-  //     <div className={styles.carouselSinger}>Unknown Artist</div>
-  //   </div>
-  // ));
+  const emptyItems = Array.from({ length: Math.max(0, 11 - track.length) }, (_, index) => (
+    <div key={`empty-${index}`} className={styles.item}>
+      <img src="http://placehold.it/150x150" alt={`Empty Image ${index + 1}`} />
+      <div className={styles.carouselTitle}>빈 곡</div>
+      <div className={styles.carouselSinger}>Unknown Artist</div>
+    </div>
+  ));
+
+  const emptyItems2 = Array.from({ length: Math.max(0, 11 - track2.length) }, (_, index) => (
+    <div key={`empty-${index}`} className={styles.item}>
+      <img src="http://placehold.it/150x150" alt={`Empty Image ${index + 1}`} />
+      <div className={styles.carouselTitle}>빈 곡</div>
+      <div className={styles.carouselSinger}>Unknown Artist</div>
+    </div>
+  ));
 
   // 특정 트랙을 재생 목록에 추가하는 함수
   const addTrackToPlaylist = (track) => {
@@ -153,6 +163,56 @@ const Overview = () => {
     setIsPlaying(true);
   };
 
+  const combinedItems = [
+    ...track.map((track, index) => (
+      <div className={styles.item} key={index}>
+        <div>
+          <Link to={`/Detail/${track.trackId}`}>
+            <img src={`/tracks/image/${track.imagePath}`} alt={`Image ${index + 1}`} />
+            <div className={styles.carouselTitle}>{track.title}</div>
+            <div className={styles.carouselSinger}>
+              {track.writer}
+            </div>
+          </Link>
+        </div>
+
+        <div
+          className={styles.play_button}
+          onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
+        >
+          <PlayCircleIcon sx={{ width: '40px', height: '40px' }} />
+        </div>
+        <div className={styles.audioPath}>{track.filePath}</div>
+      </div>
+    )),
+    ...emptyItems
+  ];
+
+  const combinedItems2 = [
+    ...track2.map((track, index) => (
+      <div className={styles.item} key={index}>
+        <div>
+          <Link to={`/Detail/${track.trackId}`}>
+            <img src={`/tracks/image/${track.imagePath}`} alt={`Image ${index + 1}`} />
+            <div className={styles.carouselTitle}>{track.title}</div>
+            <div className={styles.carouselSinger}>
+              {track.writer}
+            </div>
+          </Link>
+        </div>
+
+        <div
+          className={styles.play_button}
+          onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
+        >
+          <PlayCircleIcon sx={{ width: '40px', height: '40px' }} />
+        </div>
+        <div className={styles.audioPath}>{track.filePath}</div>
+      </div>
+    )),
+    ...emptyItems2
+  ];
+
   return (
     <>
       {loading ? (
@@ -162,120 +222,83 @@ const Overview = () => {
       ) : (
         loginID ? (
           <>
-            <div className={styles.carouselTitle1}>최근에 재생한 노래들</div>
-            <div className={styles.carousel}>
-              <div className={styles.Carousel}>
-                <OwlCarousel
-                  className={styles.OwlCarousel}
-                  loop
-                  margin={10}
-                  nav={false}
-                  dots={false}
-                  autoplay
-                  autoplayTimeout={10000}
-                  autoWidth={true}
-                  autoplayHoverPause
-                  responsive={{
-                    768: {
-                      items: 5
-                    },
-                  }}
-                  ref={carouselRef1}
-                >
-                  {track.map((track, index) => (
-                    <div
-                      className={styles.item}
-                      key={index}
+            {track.length > 0 && (
+              <>
+                <div className={styles.carouselTitle1}>최근에 재생한 노래들</div>
+                <div className={styles.carousel}>
+                  <div className={styles.Carousel}>
+                    <OwlCarousel
+                      className={styles.OwlCarousel}
+                      loop
+                      margin={10}
+                      nav={false}
+                      dots={false}
+                      autoplay
+                      autoplayTimeout={10000}
+                      autoWidth={true}
+                      autoplayHoverPause
+                      responsive={{
+                        768: {
+                          items: 5
+                        },
+                      }}
+                      ref={carouselRef1}
                     >
-                      <div>
-                        <Link to={`/Detail/${track.trackId}`}>
-                          <img src={`/tracks/image/${track.imagePath}`} alt={`Image ${index + 1}`} />
-                          <div className={styles.carouselTitle}>{track.title}</div>
-                          <div className={styles.carouselSinger}>
-                            {track.writer}
-                          </div>
-                        </Link>
-                      </div>
-
-                      <div
-                        className={styles.play_button}
-                        onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
-                      >
-                        <PlayCircleIcon sx={{ width: '40px', height: '40px' }} />
-                      </div>
-                      <div className={styles.audioPath}>{track.filePath}</div>
+                      {combinedItems}
+                    </OwlCarousel>
+                    <div className={styles.carouselButton}>
+                      <button className={styles.owlPrev} onClick={goToPrev1}>
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                      </button>
+                      <button className={styles.owlNext} onClick={goToNext1}>
+                        <FontAwesomeIcon icon={faChevronRight} />
+                      </button>
                     </div>
-                  ))}
-                  {/* 빈 아이템 추가
-                  {emptyItems} */}
-                </OwlCarousel>
-                <div className={styles.carouselButton}>
-                  <button className={styles.owlPrev} onClick={goToPrev1}>
-                    <FontAwesomeIcon icon={faChevronLeft} />
-                  </button>
-                  <button className={styles.owlNext} onClick={goToNext1}>
-                    <FontAwesomeIcon icon={faChevronRight} />
-                  </button>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className={styles.carouselTitle1}>좋아요한 노래들</div>
-            <div className={styles.carousel}>
-              <div className={styles.Carousel}>
-                <OwlCarousel
-                  className={styles.OwlCarousel}
-                  loop
-                  margin={10}
-                  nav={false}
-                  dots={false}
-                  autoplay
-                  autoplayTimeout={10000}
-                  autoWidth={true}
-                  autoplayHoverPause
-                  responsive={{
-                    768: {
-                      items: 5
-                    },
-                  }}
-                  ref={carouselRef2}
-                >
-                  {track2.map((track, index) => (
-                    <div
-                      className={styles.item}
-                      key={index}
+              </>
+            )}
+            {track2.length > 0 && (
+              <>
+                <div className={styles.carouselTitle1}>좋아요한 노래들</div>
+                <div className={styles.carousel}>
+                  <div className={styles.Carousel}>
+                    <OwlCarousel
+                      className={styles.OwlCarousel}
+                      loop
+                      margin={10}
+                      nav={false}
+                      dots={false}
+                      autoplay
+                      autoplayTimeout={10000}
+                      autoWidth={true}
+                      autoplayHoverPause
+                      responsive={{
+                        768: {
+                          items: 5
+                        },
+                      }}
+                      ref={carouselRef2}
                     >
-                      <div>
-                        <Link to={`/Detail/${track.trackId}`}>
-                          <img src={`/tracks/image/${track.imagePath2}`} alt={`Image ${index + 1}`} />
-                          <div className={styles.carouselTitle}>{track.title}</div>
-                          <div className={styles.carouselSinger}>
-                            {track.writer}
-                          </div>
-                        </Link>
-                      </div>
-
-                      <div
-                        className={styles.play_button}
-                        onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
-                      >
-                        <PlayCircleIcon sx={{ width: '40px', height: '40px' }} />
-                      </div>
-                      <div className={styles.audioPath}>{track.filePath}</div>
+                      {combinedItems2}
+                    </OwlCarousel>
+                    <div className={styles.carouselButton}>
+                      <button className={styles.owlPrev} onClick={goToPrev2}>
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                      </button>
+                      <button className={styles.owlNext} onClick={goToNext2}>
+                        <FontAwesomeIcon icon={faChevronRight} />
+                      </button>
                     </div>
-                  ))}
-                  {/* 빈 아이템 추가
-                  {emptyItems} */}
-                </OwlCarousel>
-                <div className={styles.carouselButton}>
-                  <button className={styles.owlPrev} onClick={goToPrev2}>
-                    <FontAwesomeIcon icon={faChevronLeft} />
-                  </button>
-                  <button className={styles.owlNext} onClick={goToNext2}>
-                    <FontAwesomeIcon icon={faChevronRight} />
-                  </button>
+                  </div>
                 </div>
+              </>
+            )}
+            {track.length === 0 && track2.length === 0 && (
+              <div className={styles.noSongsMessage}>
+                <None_overview_info />
               </div>
-            </div>
+            )}
           </>
         ) : (
           <div className={styles.noneLogin}>
