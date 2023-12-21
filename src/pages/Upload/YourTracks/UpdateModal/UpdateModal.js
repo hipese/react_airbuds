@@ -1,30 +1,33 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import {  useContext, useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
-import { LoginContext } from '../../../../App';
 import MusicTagList from '../../Track_Upload/MuiscTagList/MuiscTagList';
 import { Button, Col, Input, Row } from 'reactstrap';
 import axios from 'axios';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import singlestyle from "./UpdateModal.module.css"
+import { LoginContext } from '../../../../App';
+
+
 const Modalstyle = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 1000,
-  height: 400,
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
 
+const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose }) => {
 
-const UpdateModal = ({ selectedTrack, setSelectedTrack,setTrack, onTrackUpdated, onClose }) => {
-
+  
+  console.log(selectedTrack);
   const [previmagePath, setPrevImagePath] = useState({});
   const [imageview, setImageview] = useState({});
+  const { loginID, setLoginID } = useContext(LoginContext);
 
   // 선택된 태그를 가져오는 방법
   const [selectTag, setSelectTag] = useState([]);
@@ -37,8 +40,12 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack,setTrack, onTrackUpdated,
   // =====================================================
 
   useEffect(() => {
+
+    if (!loginID) {
+      return;
+  }
     // props로 전달된 트랙 정보를 로컬 상태에 설정
-      axios.get(`/api/trackTag//selectTagById/${selectedTrack.trackId}`).then(resp => {
+      axios.get(`/api/trackTag/selectTagById/${selectedTrack.trackId}`).then(resp => {
         const transformedData = resp.data.map(item => ({
           id: item.musicTags.tagId,
           name: item.musicTags.tagName
@@ -50,7 +57,7 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack,setTrack, onTrackUpdated,
       setPrevImagePath(selectedTrack.imagePath);
       setImageview("/tracks/image/" + selectedTrack.imagePath)
     
-  }, [selectedTrack]);
+  }, [loginID]);
 
 
 
@@ -90,7 +97,7 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack,setTrack, onTrackUpdated,
       }
     }).then(resp => {
       console.log(resp);
-      onTrackUpdated(resp.data);
+      onTrackUpdated();
       onClose(); 
     })
 

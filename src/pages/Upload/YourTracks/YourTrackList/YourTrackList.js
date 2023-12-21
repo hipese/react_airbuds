@@ -44,16 +44,15 @@ const YourTrackList = () => {
 
 
     // 업데이트를 반영하기 위한 함수
-    const handleTrackUpdated = (updatedTrack) => {
-        setTrack((prevTracks) => {
-          return prevTracks.map((t) => {
-            if (t.trackId === updatedTrack.trackId) {
-              return updatedTrack; // Return updated track data
-            }
-            return t; // Return unmodified track data
-          });
+    const handleTrackUpdated = () => {
+        axios.get(`/api/track/findById/${loginID}`).then((resp) => {
+            const tracksWithImages = resp.data.map((track) => {
+                const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+                return { ...track, imagePath };
+            });
+            setTrack(tracksWithImages);
         });
-      };
+    };
 
 
     const handleEditClick = (track) => {
@@ -74,7 +73,8 @@ const YourTrackList = () => {
             });
             setTrack(tracksWithImages);
         });
-    }, [track,loginID]);
+    }, [loginID]);
+
 
     const addTrackToPlaylist = (track) => {
 
@@ -97,7 +97,7 @@ const YourTrackList = () => {
             writer,
         });
 
-        setTracks((prevTracks) => [track, ...prevTracks]);
+       
 
         setTrackPlayingStatus((prevStatus) => ({
             ...prevStatus,
@@ -165,28 +165,26 @@ const YourTrackList = () => {
 
                             <div>
                                 <EditIcon className={styles.largeIcon} onClick={() => handleEditClick(trackone)} />
-                                {selectedTrack && (
-                                    <Modal
-                                        open={open}
-                                        onClose={() => {
-                                            handleClose();
-                                            setSelectedTrack(null); // 모달이 닫힐 때 선택된 트랙 초기화
-                                        }}
-                                        aria-labelledby="modal-modal-title"
-                                        aria-describedby="modal-modal-description"
-                                    >
-                                        <UpdateModal
-                                            selectedTrack={selectedTrack}
-                                            setSelectedTrack={setSelectedTrack}
-                                            setTrack={setTrack}
-                                            onTrackUpdated={handleTrackUpdated}
-                                            onClose={handleClose}
-                                        />
-                                    </Modal>
-                                )}
+                                <Modal
+                                    open={open}
+                                    onClose={() => {
+                                        handleClose();
+                                        setSelectedTrack(null); // 모달이 닫힐 때 선택된 트랙 초기화
+                                    }}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <UpdateModal
+                                        selectedTrack={selectedTrack}
+                                        setSelectedTrack={setSelectedTrack}
+                                        setTrack={setTrack}
+                                        onTrackUpdated={handleTrackUpdated}
+                                        onClose={handleClose}
+                                    />
+                                </Modal>
                             </div>
                             <div>
-                                <DeleteIcon className={styles.largeIcon}onClick={() => handleDelete(trackone.trackId)} />
+                                <DeleteIcon className={styles.largeIcon} onClick={() => handleDelete(trackone.trackId)} />
                             </div>
                         </div>
                     </div>
