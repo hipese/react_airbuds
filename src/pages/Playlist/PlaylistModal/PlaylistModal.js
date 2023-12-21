@@ -10,7 +10,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
     useEffect(() => {
         if (showModal) {
             document.body.style.overflow = 'hidden';
-            const formatted = playlist.playlistTrack.map(track => ({ 
+            const formatted = playlist.playlistTracks.map(track => ({ 
                 ...track,
                 playlistDuration: formatDuration(track.playlistDuration)
             }));
@@ -18,8 +18,8 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
 
             const images = uniqueImages(formatted.filter(track => track && track.playlistImagePath));
             setTracksWithImages(images);
-            setTrackCount(playlist.playlistTrack.length);
-            setTotalDuration(getTotalDurationInHoursAndMinutes(playlist.playlistTrack));
+            setTrackCount(playlist.playlistTracks.length);
+            setTotalDuration(getTotalDurationInHoursAndMinutes(playlist.playlistTracks));
         } else {
             document.body.style.overflow = 'unset';
         }
@@ -37,7 +37,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
 
         return `${hours}${minutes}:${seconds}`;
     };
-    // const totalDuration = getTotalDurationInHoursAndMinutes(playlist.playlistTrack);
+    // const totalDuration = getTotalDurationInHoursAndMinutes(playlist.playlistTracks);
         const uniqueImages = (tracks) => {
         const uniquePaths = new Set();
         return tracks.filter(track => {
