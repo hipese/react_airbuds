@@ -57,8 +57,6 @@ const Likes = () => {
             console.log(allTracks);
             setTrack(allTracks);
             setLoading(false);
-
-
             if (allTracks.length < 6) {
                 setHasMore(false);
             }
