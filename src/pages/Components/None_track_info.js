@@ -32,9 +32,20 @@ const None_track_info = () => {
                     노래, 앨범, 혹은 특별한 플레이리스트를 올려주시면,<br></br>
                     여러분의 음악을 팬들과 공유할 수 있습니다.<br></br><br></br><br></br>
                     <Link to="/Upload">
-                    <Button component="label" variant="contained" startIcon={<LibraryMusicIcon />}>
-                        Upload Music
-                    </Button>
+                        <Button
+                            component="label"
+                            variant="contained"
+                            startIcon={<LibraryMusicIcon />}
+                            sx={{
+                                backgroundColor: '#4CAF50', // Default background color
+                                color: 'white', // Default text color
+                                '&:hover': {
+                                    backgroundColor: '#45a049', // Change background color on hover
+                                },
+                            }}
+                        >
+                            Upload Music
+                        </Button>
                     </Link>
                 </Typography>
             </div>

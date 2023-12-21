@@ -26,13 +26,10 @@ const MyAlbumDetail = () => {
 
     const handleCancle = () => {
         setOpen(false);
-        if (albumUpdate !== backUpAlbum) {
-            console.log("변경 사항이 감지됨 값 변경");
-        } else {
-            // 변경 사항이 없으면, 원래대로 복원
-            setAlbumUpdate(backUpAlbum);
-        }
-
+        axios.get(`/api/album/findByAlbumId/${backUpAlbum.albumId}`).then(resp=>{
+            console.log(resp.data);
+            setAlbumUpdate(resp.data);
+        })
     };
 
     const handleModalClose = (event, reason) => {

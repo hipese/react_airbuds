@@ -262,6 +262,15 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     };
 
     const handleFileDelete = (fileIndex) => {
+
+        console.log("몇개 남아있냐?"+(files.length+albumUpdate.tracks.length));
+        console.log("몇개 재거함?"+(deleteTrack.length));
+        console.log("몇개 추가함?"+(files.length));
+        if((albumUpdate.tracks.length+files.length)<=1){
+            alert("앨범에 파일이 하나라도 존재해야 합니다.");
+            return;
+        }
+
         setAlbumUpdate(currentAlbum => {
             const newTracks = [...currentAlbum.tracks];
             const removedTrack = newTracks.splice(fileIndex, 1)[0];
@@ -276,6 +285,14 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     };
 
     const handleAddFileDelete = (fileIndex) => {
+        console.log("몇개 남아있냐?"+(files.length+albumUpdate.tracks.length))
+        console.log("몇개 재거함?"+(deleteTrack.length))
+
+        if((albumUpdate.tracks.length+files.length)<=1){
+            alert("앨범에 파일이 하나라도 존재해야 합니다.");
+            return;
+        }
+
         setFiles(currentFiles => currentFiles.filter((_, idx) => idx !== fileIndex));
     };
 
