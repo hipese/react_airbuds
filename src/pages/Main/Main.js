@@ -25,8 +25,6 @@ const Main = () => {
     const { tracks, setTracks } = useContext(TrackContext);
     const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
 
-
-
     useEffect(() => {
         axios.get("/api/track/recent")
             .then((res) => {
