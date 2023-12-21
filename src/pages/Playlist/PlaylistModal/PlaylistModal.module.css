@@ -1,0 +1,261 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000000;
+}
+
+.modalContent {
+    background: white;
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    max-width: 1200px;
+    width: 90%;
+    max-height: 800px;
+    height: 90%;
+    position: relative;
+}
+
+.closeButton {
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.modalHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.modalImgContainerGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 125px);
+    grid-template-rows: repeat(2, 125px);
+    gap: 5px;
+    width: 250px;
+    height: 250px;
+}
+
+.modalImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modalImgContainerSingle {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.noImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: #eee;
+}
+
+.modalDetailHeader {
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+    margin-bottom: 15px;
+    position: relative;
+    height: 250px;
+    margin-left: 20px;
+}
+
+.modalTitle {
+    margin: 0;
+    font-size: 2rem;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.modalDetailContents {
+    display: flex;
+    margin-top: 10px;
+    font-size: 17px;
+    color: #aaaaaa;
+}
+
+.modalVisibility {
+    color: #aaaaaa;
+    font-size: 17px;
+}
+
+.modalDivider {
+    margin: 0 5px;
+}
+
+@layer animation {
+    @property --hue {
+        syntax: "<integer>";
+        inherits: true;
+        initial-value: 0;
+    }
+
+    @keyframes hueJump {
+        to {
+            --hue: 360;
+        }
+    }
+}
+
+.modalButtons {
+    position: absolute;
+    bottom: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.modifiedBtn {
+    border-radius: 5px;
+    background: none;
+    cursor: pointer;
+    width: 100px;
+    height: 40px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    --border: hsl(var(--hue, 0) 100% 50%);
+    --shadow: hsl(var(--hue, 0) 100% 80%);
+    --text-color: hsl(var(--hue, 0) 100% 50%);
+    border-color: var(--border);
+    box-shadow: 0 1rem 2rem -1.5rem var(--shadow);
+    color: var(--text-color);
+}
+
+.modifiedBtn:hover {
+    --border: hsl(var(--hue, 0), 100%, 50%);
+    --shadow: hsl(var(--hue, 0), 100%, 50%);
+    --text-color: hsl(var(--hue, 0), 100%, 50%);
+    animation: hueJump 1.5s infinite linear;
+}
+
+.deleteBtn {
+    border-radius: 5px;
+    background: none;
+    cursor: pointer;
+    width: 100px;
+    height: 40px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    --border: skyblue;
+    --shadow: skyblue;
+    --text-color: skyblue;
+    border-color: var(--border);
+    box-shadow: 0 1rem 2rem -1.5rem var(--shadow);
+    color: var(--text-color);
+}
+
+.deleteBtn:hover {
+    --border: hsl(var(--hue, 197), 71%, 53%);
+    --shadow: hsl(var(--hue, 197), 71%, 73%);
+    --text-color: hsl(var(--hue, 197), 71%, 53%);
+    animation: hueJump 1.5s infinite linear;
+}
+
+.modalBody {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 450px;
+    overflow-y: auto;
+}
+
+.modalTrackList {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    list-style: none;
+    padding: 0px;
+}
+
+.modalTrack {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px 5px 10px;
+    border-bottom: 1px solid #f7f7f7;
+}
+
+.modalTrack:hover {
+    background-color: #f7f7f7;
+    cursor: pointer;
+}
+
+.modalTrackImg {
+    min-width: 40px !important;
+    width: 40px !important;
+    min-height: 40px !important;
+    height: 40px !important;
+    border-radius: 5px;
+    margin-right: 20px;
+    background-color: #eee;
+}
+
+.modalTrackImg img {
+    width: 100%;
+    height: 100%;
+}
+
+.modalTrackInfo {
+    display: flex;
+    width: 100%;
+}
+
+.modalTrackTitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 400px;
+}
+
+.modalTrackWriter {
+    font-size: 1rem;
+    color: #aaaaaa;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 200px;
+}
+
+.modalTrackDuration {
+    font-size: 1rem;
+    color: #aaaaaa;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modalTrackDelete {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+}

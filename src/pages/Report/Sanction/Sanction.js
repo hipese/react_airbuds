@@ -9,13 +9,23 @@ import axios from 'axios';
 import style from './Sanction.module.css';
 import { LoginContext } from '../../../App';
 
+import CircularProgress from "@mui/material/CircularProgress";
+
+const CircularIndeterminate = () => {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <CircularProgress />
+    </Box>
+  );
+};
+
 const Sanction = () => {
 
-  const { loginID } = useContext(LoginContext);
+  const [loading, setLoading] = useState(true);
+
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [tracks, setTracks] = useState([]);
-  const [sanctions, setSanctions] = useState([]);
   const [reason, setReason] = useState('');
   const [selectedTrackId, setSelectedTrackId] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -24,6 +34,7 @@ const Sanction = () => {
   useEffect(() => {
     axios.get('/api/report/trackList').then((resp) => {
       setTracks(resp.data);
+      setLoading(false);
     }).catch((e) => {
       console.log(e);
     });
@@ -82,15 +93,19 @@ const Sanction = () => {
         console.error('Error:', error);
       });
     } else {
-      alert("입력해라")
+      alert("입력해주세요")
     }
   };
 
-  const handleImage = (trackId)=>{
+  const handleImage = (trackId) => {
     axios.put(`/api/report/sanction/image/${trackId}`).then(resp => {
     }).catch(error => {
       console.error('Error:', error);
     });
+  }
+
+  if (loading) {
+    return <CircularIndeterminate />;
   }
 
   return (
@@ -198,7 +213,7 @@ const Sanction = () => {
                   {e.trackId}
                 </Typography>
               </Grid>
-              <Grid item xs={4} className={`${style.center}`}>
+              <Grid item xs={3} className={`${style.center}`}>
                 <Typography fontSize={{ xs: "13px", lg: "14px" }}>
                   <Link
                     to={getDetailLink(
@@ -237,7 +252,7 @@ const Sanction = () => {
                   {e.count}
                 </Typography>
               </Grid>
-              <Grid item xs={1} className={`${style.center}`}>
+              <Grid item xs={2} className={`${style.spaceEvenly}`}>
                 <Button onClick={() => handleOpenModal(e.trackId)} className={`${style.sanction}`}>노래</Button>
                 <Button onClick={() => handleImage(e.trackId)} className={`${style.sanction}`}>사진</Button>
               </Grid>

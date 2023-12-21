@@ -44,16 +44,15 @@ const YourTrackList = () => {
 
 
     // 업데이트를 반영하기 위한 함수
-    const handleTrackUpdated = (updatedTrack) => {
-        setTrack((prevTracks) => {
-          return prevTracks.map((t) => {
-            if (t.trackId === updatedTrack.trackId) {
-              return updatedTrack; // Return updated track data
-            }
-            return t; // Return unmodified track data
-          });
+    const handleTrackUpdated = () => {
+        axios.get(`/api/track/findById/${loginID}`).then((resp) => {
+            const tracksWithImages = resp.data.map((track) => {
+                const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+                return { ...track, imagePath };
+            });
+            setTrack(tracksWithImages);
         });
-      };
+    };
 
 
     const handleEditClick = (track) => {
@@ -76,6 +75,7 @@ const YourTrackList = () => {
         });
     }, [loginID]);
 
+
     const addTrackToPlaylist = (track) => {
 
         axios.post(`/api/cplist`, {
@@ -97,7 +97,7 @@ const YourTrackList = () => {
             writer,
         });
 
-        setTracks((prevTracks) => [track, ...prevTracks]);
+       
 
         setTrackPlayingStatus((prevStatus) => ({
             ...prevStatus,
@@ -109,6 +109,17 @@ const YourTrackList = () => {
         setCurrentTrack(0);
         setIsPlaying(true);
     };
+
+
+    // 선택한 id값의 음원 정보를 삭제하는 기능
+    const handleDelete = (trackId) => {
+        console.log("뭐임" + trackId);
+        axios.delete(`/api/track/${trackId}`).then(resp => {
+            console.log("삭제 성공..")
+        }).catch(resp => {
+            console.log("삭제 실패...")
+        })
+    }
 
 
     return (
@@ -154,28 +165,26 @@ const YourTrackList = () => {
 
                             <div>
                                 <EditIcon className={styles.largeIcon} onClick={() => handleEditClick(trackone)} />
-                                {selectedTrack && (
-                                    <Modal
-                                        open={open}
-                                        onClose={() => {
-                                            handleClose();
-                                            setSelectedTrack(null); // 모달이 닫힐 때 선택된 트랙 초기화
-                                        }}
-                                        aria-labelledby="modal-modal-title"
-                                        aria-describedby="modal-modal-description"
-                                    >
-                                        <UpdateModal
-                                            selectedTrack={selectedTrack}
-                                            setSelectedTrack={setSelectedTrack}
-                                            setTrack={setTrack}
-                                            onTrackUpdated={handleTrackUpdated}
-                                            onClose={handleClose}
-                                        />
-                                    </Modal>
-                                )}
+                                <Modal
+                                    open={open}
+                                    onClose={() => {
+                                        handleClose();
+                                        setSelectedTrack(null); // 모달이 닫힐 때 선택된 트랙 초기화
+                                    }}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <UpdateModal
+                                        selectedTrack={selectedTrack}
+                                        setSelectedTrack={setSelectedTrack}
+                                        setTrack={setTrack}
+                                        onTrackUpdated={handleTrackUpdated}
+                                        onClose={handleClose}
+                                    />
+                                </Modal>
                             </div>
                             <div>
-                                <DeleteIcon className={styles.largeIcon} />
+                                <DeleteIcon className={styles.largeIcon} onClick={() => handleDelete(trackone.trackId)} />
                             </div>
                         </div>
                     </div>

@@ -5,3 +5,7 @@
     object-fit: cover;
     position: relative;
   }
+  .container{
+    height: 800px;
+    overflow: auto;
+  }
