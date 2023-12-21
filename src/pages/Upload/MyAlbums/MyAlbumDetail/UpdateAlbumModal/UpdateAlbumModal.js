@@ -29,7 +29,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     // 선택된 태그를 가져오는 방법
     const [trackTags, setTrackTags] = useState([]);
     const [titleImage, setTitleImage] = useState();
-
+    
     const [imageView, setImageView] = useState("/tracks/image/" + albumUpdate.coverImagePath);
     const [prevImage, setPrevImage] = useState(albumUpdate.coverImagePath);
     const [files, setFiles] = useState([]);
@@ -353,7 +353,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     return (
         <Box sx={ModalStyle} ref={ref}>
-            <Row>
+            <Row className={styles.container}>
                 <Col sx='12' md='4'>
                     <img
                         src={albumUpdate.coverImagePath ? imageView : "/assets/groovy2.png"}
