@@ -117,20 +117,24 @@ const YourTrackList = () => {
 
     // 선택한 id값의 음원 정보를 삭제하는 기능
     const handleDelete = (trackId) => {
-        console.log("뭐임" + trackId);
-        axios.delete(`/api/track/${trackId}`).then(resp => {
+        const isDelete =window.confirm("다음 곡을 삭제하시겠습니까?")
 
-        }).catch(resp => {
-            console.log("삭제 실패...")
-        })
+        if(isDelete){
+            axios.delete(`/api/track/${trackId}`).then(resp => {
 
-        axios.get(`/api/track/findById/${loginID}`).then((resp) => {
-            const tracksWithImages = resp.data.map((track) => {
-                const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
-                return { ...track, imagePath };
+            }).catch(resp => {
+                console.log("삭제 실패...")
+            })
+    
+            axios.get(`/api/track/findById/${loginID}`).then((resp) => {
+                const tracksWithImages = resp.data.map((track) => {
+                    const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+                    return { ...track, imagePath };
+                });
+                setTrack(tracksWithImages);
             });
-            setTrack(tracksWithImages);
-        });
+        }
+       
     }
 
 

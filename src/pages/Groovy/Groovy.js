@@ -32,15 +32,15 @@ const Groovy = () => {
 
     useEffect(() => {
         if (location.pathname.includes("/report") && userRole !== "ROLE_MANAGER") {
-            showAlert("이 페이지에 대한 권한이 없음!");
+            alert("이 페이지에 대한 권한이 없음!");
             navigate("/");
         }
         if (location.pathname.includes("/dashboard") && userRole !== "ROLE_MANAGER") {
-            showAlert("이 페이지에 대한 권한이 없음!");
+            alert("이 페이지에 대한 권한이 없음!");
             navigate("/");
         }
         if (location.pathname.includes("/announce/write") && userRole !== "ROLE_MANAGER") {
-            showAlert("이 페이지에 대한 권한이 없음!");
+            alert("이 페이지에 대한 권한이 없음!");
             navigate("/");
         }
     }, [location, userRole, navigate]);

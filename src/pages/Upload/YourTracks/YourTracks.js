@@ -11,11 +11,10 @@ const YourTracks = () => {
                 <Col sm="12" className={styles.introduction}>
                     <Row>
                         <Col sm="12" className={styles.gateText}>Your tracks</Col>
-                        <Col sm="12">sdsdss</Col>
                     </Row>
                 </Col>
                 <Col sm="12"> <YourTrackList /></Col>
-                <Col sm="12" className={styles.endcol}><Button>다른 음원 업로드</Button></Col>
+                <Col sm="12" className={styles.endcol}><Button>다른 음원 업로드(아직 기능 없어요)</Button></Col>
             </Row>
 
         </div>
