@@ -8,6 +8,7 @@ import axios from 'axios';
 
 
 export const LoginContext = createContext();
+export const RoleContext = createContext();
 export const MusicContext = createContext();
 export const PlayingContext = createContext();
 export const CurrentTrackContext = createContext();
@@ -29,6 +30,22 @@ function App() {
   const [tracks, setTracks] = useState([]);
   const [autoPlayAfterSrcChange, setAutoPlayAfterSrcChange] = useState(false);
 
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const getUserRole = async () => {
+      try {
+        await axios.post(`/api/member/${loginID}`).then(resp => {
+          setUserRole(resp.data.role);
+        });
+      } catch (error) {
+      }
+    };
+    if (loginID !== "") {
+      getUserRole();
+    }
+  }, [loginID]);
+
   useEffect(() => {
     axios.get("/api/member/isLogined").then(resp => {
       setLoginID(resp.data);
@@ -38,23 +55,25 @@ function App() {
   return (
     <Router>
       <LoginContext.Provider value={{ loginID, setLoginID }}>
-        <MusicContext.Provider value={{ audioFiles, setAudioFiles }}>
-          <CurrentTrackContext.Provider value={{ currentTrack, setCurrentTrack }}>
-            <PlayingContext.Provider value={{ isPlaying, setIsPlaying }}>
-              <TrackInfoContext.Provider value={{ track_info, setTrack_info }}>
-                <TrackContext.Provider value={{ tracks, setTracks }}>
-                  <AutoPlayContext.Provider value={{ autoPlayAfterSrcChange, setAutoPlayAfterSrcChange }}>
-                    <CookiesProvider>
-                      <Routes>
-                        <Route path="/*" element={<Groovy />} />
-                      </Routes>
-                    </CookiesProvider>
-                  </AutoPlayContext.Provider>
-                </TrackContext.Provider>
-              </TrackInfoContext.Provider>
-            </PlayingContext.Provider>
-          </CurrentTrackContext.Provider>
-        </MusicContext.Provider>
+        <RoleContext.Provider value={{ userRole, setUserRole }}>
+          <MusicContext.Provider value={{ audioFiles, setAudioFiles }}>
+            <CurrentTrackContext.Provider value={{ currentTrack, setCurrentTrack }}>
+              <PlayingContext.Provider value={{ isPlaying, setIsPlaying }}>
+                <TrackInfoContext.Provider value={{ track_info, setTrack_info }}>
+                  <TrackContext.Provider value={{ tracks, setTracks }}>
+                    <AutoPlayContext.Provider value={{ autoPlayAfterSrcChange, setAutoPlayAfterSrcChange }}>
+                      <CookiesProvider>
+                        <Routes>
+                          <Route path="/*" element={<Groovy />} />
+                        </Routes>
+                      </CookiesProvider>
+                    </AutoPlayContext.Provider>
+                  </TrackContext.Provider>
+                </TrackInfoContext.Provider>
+              </PlayingContext.Provider>
+            </CurrentTrackContext.Provider>
+          </MusicContext.Provider>
+        </RoleContext.Provider>
       </LoginContext.Provider>
     </Router>
   );
