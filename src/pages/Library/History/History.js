@@ -58,6 +58,9 @@ const History = () => {
             // 기존 track 배열 업데이트
             setTrack(allTracks);
             setLoading(false);
+            if (allTracks.length < 6) {
+                setHasMore(false);
+            }
         });
         loadingLikes();
     }, [loginID]);
@@ -100,21 +103,6 @@ const History = () => {
             });
         }
     };
-
-    const loadingLikes = () =>{
-        axios.get(`/api/like/myLikes/${loginID}`).then(res=>{
-            console.log(res.data);
-            setMyLikes(res.data);
-        }).catch((e)=>{
-            console.log(e);
-        });
-    }
-
-    const countForTrack = (trackId) => {
-        const countInfo = myLikes.find(item => item.trackId === trackId);
-        return countInfo ? countInfo.count : 0;
-    }
-
 
     useEffect(() => {
         if (inView) {
@@ -214,6 +202,24 @@ const History = () => {
             return;
         }
     };
+
+    const loadingLikes = () =>{
+        axios.get(`/api/like/myLikes/${loginID}`).then(res=>{
+            console.log(res.data);
+            setMyLikes(res.data);
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
+    const countForTrack = (trackId) => {
+        const countInfo = myLikes.find(item => item.trackId === trackId);
+        return countInfo ? countInfo.count : 0;
+    }
+
+    useEffect(()=>{
+        loadingLikes();
+    },[isFavorite]);
 
     return (
         <>
