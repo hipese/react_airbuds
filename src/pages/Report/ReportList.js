@@ -35,7 +35,7 @@ const ReportList = () => {
     }).catch((e) => {
       console.log(e);
     });
-  }, [reports]);
+  }, []);
 
   const totalItems = reports.length;
   const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);

@@ -1,14 +1,14 @@
-.followingContainer{
+.followingContainer {
   width: 80%;
   height: 100%;
   margin-bottom: 100px !important;
 }
 
-.title{
+.title {
   margin-top: 10px !important;
 }
 
-.following{
+.following {
   display: flex;
   align-items: center;
   width: 100%;
@@ -23,7 +23,11 @@
   cursor: pointer;
 }
 
-
 .userInfo:hover {
   transform: scale(1.1);
+}
+
+.noneLogin {
+  margin-top: 180px;
+  margin-right: 200px;
 }

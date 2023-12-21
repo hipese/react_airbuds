@@ -38,7 +38,7 @@
 .track_title_writer {
     background-color: #1e1e1e;
     height: 300px;
-    
+
 }
 
 .track_title {
@@ -66,12 +66,17 @@
     width: 100%;
 }
 
-.user_info{
+.linkurl {
     display: flex;
     align-items: center;
 }
 
-.like{
+.user_info {
+    display: flex;
+    align-items: center;
+}
+
+.like {
     display: flex;
     margin-left: auto;
 }
@@ -108,57 +113,57 @@
     color: #FF4081;
 }
 
-.reply_container{
+.reply_container {
     width: 100%;
     margin-bottom: 15px !important;
 }
 
-.commentContainer{
+.commentContainer {
     display: flex;
     width: 100%;
     margin-bottom: 15px !important;
 }
 
-.reply_input{
+.reply_input {
     display: flex;
     align-items: center;
 }
 
-.replyoutput{
+.replyoutput {
     margin-bottom: 10px !important;
     width: 100%;
 }
 
-.button{
+.button {
     width: 50px;
 }
 
-.udContainer{
+.udContainer {
     display: flex;
     margin-left: auto;
     align-items: center;
     justify-content: center;
 }
 
-.count{
+.count {
     font-size: 13px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.editContainer{
+.editContainer {
     display: flex;
     align-items: center;
 }
 
-.pageNation{
+.pageNation {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 100px !important;
 }
 
-.thumbUp :hover{
+.thumbUp :hover {
     cursor: pointer;
 }

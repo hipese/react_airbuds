@@ -28,18 +28,22 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     // 선택된 태그를 가져오는 방법
     const [trackTags, setTrackTags] = useState([]);
-    const [backUpAlbum, setBackUpAlbum] = useState(albumUpdate);
     const [titleImage, setTitleImage] = useState();
-
+    
     const [imageView, setImageView] = useState("/tracks/image/" + albumUpdate.coverImagePath);
     const [prevImage, setPrevImage] = useState(albumUpdate.coverImagePath);
     const [files, setFiles] = useState([]);
 
-    const [albumTag, setAlbumTag] = useState([]);
 
     const [deleteTrack, setDeleteTrack] = useState([]);
 
+    
+    // 그냥 닫을때는 다시 원래 데이터로 설정
     const handleCancle = () => {
+        onClose();
+    }
+
+    const handleUpdateComplet = () => {
         onClose();
     }
 
@@ -51,16 +55,14 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
         hiddenAudioInput.current.click();
     };
 
-    console.log(imageView);
-
     const handleUpdate = () => {
         const formData = new FormData();
         // 보내야할 데이터들 
         console.log(albumUpdate)
         console.log(trackTags)
         console.log(titleImage);
-        
-        if(files && files.length > 0){
+
+        if (files && files.length > 0) {
             files.forEach((fileData, index) => {
                 formData.append(`file`, fileData.file);
                 formData.append(`name`, fileData.name);
@@ -70,10 +72,10 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                 // 각 파일에 대한 태그 ID 배열 추출 및 추가
             });
         }
-        
+
         // 이미지 보내기
         console.log("Title Image: ", titleImage);
-        if(titleImage){
+        if (titleImage) {
             formData.append("titleImage", titleImage);
         }
 
@@ -94,7 +96,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
         albumUpdate.tracks.forEach(track => {
             formData.append('Tracktitles', track.title);
         });
-      
+
 
         if (deleteTrack) {
             deleteTrack.forEach(track => {
@@ -105,16 +107,21 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
         trackTags.forEach(tag => {
             formData.append('trackTags', tag.id);
         });
-        formData.append("albumId",albumUpdate.albumId);
+        formData.append("albumId", albumUpdate.albumId);
 
         axios.post("/api/album/updateAlbum", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(resp => {
-            console.log("성공");
+            console.log("성공!");
             console.log(resp.data);
+            setAlbumUpdate(resp.data);
             setFiles([]);
+            setTitleImage();
+            setImageView();
+            setDeleteTrack();
+            handleUpdateComplet();
 
         }).catch(resp => {
             console.log("실패")
@@ -255,6 +262,15 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     };
 
     const handleFileDelete = (fileIndex) => {
+
+        console.log("몇개 남아있냐?"+(files.length+albumUpdate.tracks.length));
+        console.log("몇개 재거함?"+(deleteTrack.length));
+        console.log("몇개 추가함?"+(files.length));
+        if((albumUpdate.tracks.length+files.length)<=1){
+            alert("앨범에 파일이 하나라도 존재해야 합니다.");
+            return;
+        }
+
         setAlbumUpdate(currentAlbum => {
             const newTracks = [...currentAlbum.tracks];
             const removedTrack = newTracks.splice(fileIndex, 1)[0];
@@ -269,6 +285,14 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     };
 
     const handleAddFileDelete = (fileIndex) => {
+        console.log("몇개 남아있냐?"+(files.length+albumUpdate.tracks.length))
+        console.log("몇개 재거함?"+(deleteTrack.length))
+
+        if((albumUpdate.tracks.length+files.length)<=1){
+            alert("앨범에 파일이 하나라도 존재해야 합니다.");
+            return;
+        }
+
         setFiles(currentFiles => currentFiles.filter((_, idx) => idx !== fileIndex));
     };
 
@@ -346,7 +370,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     return (
         <Box sx={ModalStyle} ref={ref}>
-            <Row>
+            <Row className={styles.container}>
                 <Col sx='12' md='4'>
                     <img
                         src={albumUpdate.coverImagePath ? imageView : "/assets/groovy2.png"}
