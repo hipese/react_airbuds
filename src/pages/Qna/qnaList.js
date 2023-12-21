@@ -10,10 +10,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 
 
-const QnaList =() => {
-    const {qnaList,setQnaList} = useContext(QnaContext);
+const QnaList = () => {
+    const { qnaList, setQnaList } = useContext(QnaContext);
     const navi = useNavigate();
-    const handleMove = (e,i) => {
+    const handleMove = (e, i) => {
         console.log(i);
         navi(`contents/${e}`);
     }
@@ -25,44 +25,44 @@ const QnaList =() => {
     const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);
 
     const startIndex = (currentPage - 1) * COUNT_PER_PAGE;
-        const endIndex = Math.min(startIndex + COUNT_PER_PAGE, totalItems);
-        const visibleQnaList = qnaList.slice(startIndex, endIndex);
+    const endIndex = Math.min(startIndex + COUNT_PER_PAGE, totalItems);
+    const visibleQnaList = qnaList.slice(startIndex, endIndex);
 
     const onPageChange = (e, page) => {
-            setCurrentPage(page);
-        };
+        setCurrentPage(page);
+    };
 
-    
 
-    useEffect(()=>{
-        axios.get("/api/qna").then(res=>{
+
+    useEffect(() => {
+        axios.get("/api/qna").then(res => {
             console.log(res.data);
             setQnaList(res.data);
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log(e);
         });
-    },[]);
-    return(
+    }, []);
+    return (
         <div className={`${style.container}`}>
             <Grid container className={`${style.marginT70} ${style.borderTB} ${style.boardLine} ${style.pad10} `}>
                 <Grid item xs={1} className={`${style.center}`}>
-                    <Typography fontSize={{xs:"12px",sm:"14px"}}>
-                    No
+                    <Typography fontSize={{ xs: "12px", sm: "14px" }}>
+                        No
                     </Typography>
                 </Grid>
                 <Grid item xs={2} className={`${style.center}`}>
-                    <Typography fontSize={{xs:"12px",sm:"14px"}}>
-                    분류
+                    <Typography fontSize={{ xs: "12px", sm: "14px" }}>
+                        분류
                     </Typography>
                 </Grid>
                 <Grid item xs={5} className={`${style.center}`}>
-                    <Typography fontSize={{xs:"12px",sm:"14px"}}>
-                    제목
+                    <Typography fontSize={{ xs: "12px", sm: "14px" }}>
+                        제목
                     </Typography>
                 </Grid>
                 <Grid item xs={3} className={`${style.center}`}>
-                    <Typography fontSize={{xs:"12px",sm:"14px"}}>
-                    작성자
+                    <Typography fontSize={{ xs: "12px", sm: "14px" }}>
+                        작성자
                     </Typography>
                 </Grid>
                 <Box
@@ -71,38 +71,38 @@ const QnaList =() => {
                     xs={1}
                     display={{ xs: "none", sm: "flex" }}
                     className={`${style.center}`}
-                >                    
-                    <Typography fontSize={{xs:"12px",sm:"14px"}}>
-                    답변상태
+                >
+                    <Typography fontSize={{ xs: "12px", sm: "14px" }}>
+                        답변상태
                     </Typography>
                 </Box>
             </Grid>
-            {visibleQnaList.map((e,i)=>{
-                return(
-                    <Grid key={i} container className={`${style.announceLine} ${style.pad10}`} onClick={()=>{handleMove(e.qnaSeq,e.qnaPublic)}}>
+            {visibleQnaList.map((e, i) => {
+                return (
+                    <Grid key={i} container className={`${style.announceLine} ${style.pad10}`} onClick={() => { handleMove(e.qnaSeq, e.qnaPublic) }}>
                         <Grid item xs={1} className={`${style.center}`}>
-                            {e.qnaPublic == 0 ? <LockIcon fontSize="small"/> : <LockOpenIcon fontSize="small"/>}
-                            <Typography fontSize={{xs:"12px",sm:"14px"}}>                            
-                            {e.qnaSeq}
+                            {e.qnaPublic == 0 ? <LockIcon fontSize="small" /> : <LockOpenIcon fontSize="small" />}
+                            <Typography fontSize={{ xs: "12px", sm: "14px" }}>
+                                {e.qnaSeq}
                             </Typography>
                         </Grid>
                         <Grid item xs={2} className={`${style.center}`}>
-                            <Typography fontSize={{xs:"12px",sm:"14px"}}>
+                            <Typography fontSize={{ xs: "12px", sm: "14px" }}>
                                 {
-                                    e.qnaCategory == "usurpation" ? "권리 침해" : 
-                                    e.qnaCategory == "service" ? "서비스 문의" :
-                                    e.qnaCategory == "event" ? "이벤트" :
-                                    e.qnaCategory == "error" ? "기타 오류" : ""
+                                    e.qnaCategory == "usurpation" ? "권리 침해" :
+                                        e.qnaCategory == "service" ? "서비스 문의" :
+                                            e.qnaCategory == "event" ? "이벤트" :
+                                                e.qnaCategory == "error" ? "기타 오류" : ""
                                 }
                             </Typography>
                         </Grid>
                         <Grid item xs={5} className={`${style.center}`}>
-                            <Typography fontSize={{xs:"12px",sm:"14px"}}>
+                            <Typography fontSize={{ xs: "12px", sm: "14px" }}>
                                 {e.qnaTitle}
                             </Typography>
                         </Grid>
                         <Grid item xs={3} className={`${style.center}`}>
-                            <Typography fontSize={{xs:"12px",sm:"14px"}}>
+                            <Typography fontSize={{ xs: "12px", sm: "14px" }}>
                                 {e.qnaWriter}
                             </Typography>
                         </Grid>
@@ -112,8 +112,8 @@ const QnaList =() => {
                             xs={1}
                             display={{ xs: "none", sm: "flex" }}
                             className={`${style.center}`}
-                        >                    
-                            <Typography fontSize={{xs:"12px",sm:"14px"}}>
+                        >
+                            <Typography fontSize={{ xs: "12px", sm: "14px" }}>
                                 {e.qnaAnswerState == 0 ? "답변 대기" : "답변 완료"}
                             </Typography>
                         </Box>
@@ -122,9 +122,19 @@ const QnaList =() => {
             })}
             <div className={`${style.rightAlign}`}>
                 <Link to="write">
-                    <Button variant="contained">문의하기</Button>
+                    <Button variant="contained"
+                        sx={{
+                            backgroundColor: '#4CAF50', // Default background color
+                            color: 'white', // Default text color
+                            '&:hover': {
+                                backgroundColor: '#45a049', // Change background color on hover
+                            },
+                        }}
+                    >
+                        문의하기
+                    </Button>
                 </Link>
-            </div>           
+            </div>
             <div className={`${style.center}`}>
                 <Pagination
                     count={totalPages}
@@ -140,22 +150,22 @@ const QnaList =() => {
                         <PaginationItem {...item} sx={{ fontSize: 12 }} />
                     )}
                 />
-            </div>            
+            </div>
         </div>
     )
 }
 export const QnaContext = createContext();
 
-const QnaListMain = () =>{
-    const [qnaList,setQnaList] = useState([]);
-    return(
-        <QnaContext.Provider value={{qnaList,setQnaList}}>
+const QnaListMain = () => {
+    const [qnaList, setQnaList] = useState([]);
+    return (
+        <QnaContext.Provider value={{ qnaList, setQnaList }}>
             <Routes>
-                <Route path="/" element={<QnaList/>}></Route>
-                <Route path="contents/:seq" element={<QnaContents/>}></Route>
-                <Route path="write" element={<QnaWrite/>}></Route>
+                <Route path="/" element={<QnaList />}></Route>
+                <Route path="contents/:seq" element={<QnaContents />}></Route>
+                <Route path="write" element={<QnaWrite />}></Route>
             </Routes>
         </QnaContext.Provider>
-    )     
+    )
 }
 export default QnaListMain;
