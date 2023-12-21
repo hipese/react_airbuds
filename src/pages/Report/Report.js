@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import ReportList from "./ReportList";
 import ReportDetail from "./ReportDetail";
