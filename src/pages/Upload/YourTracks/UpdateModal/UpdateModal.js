@@ -37,13 +37,9 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
   const handleClickImage = () => {
     hiddenFileInput.current.click();
   };
-  // =====================================================
+ 
 
   useEffect(() => {
-
-    if (!loginID) {
-      return;
-  }
     // props로 전달된 트랙 정보를 로컬 상태에 설정
       axios.get(`/api/trackTag/selectTagById/${selectedTrack.trackId}`).then(resp => {
         const transformedData = resp.data.map(item => ({
@@ -57,7 +53,7 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
       setPrevImagePath(selectedTrack.imagePath);
       setImageview("/tracks/image/" + selectedTrack.imagePath)
     
-  }, [loginID]);
+  }, []);
 
 
 

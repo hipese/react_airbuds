@@ -36,7 +36,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
         {}, {}, {} // 빈 객체로 나머지 세 개의 트랙을 초기화
     ];
 
-    const [playlistTrack, setPlaylistTrack] = useState(initialPlaylistTrack);
+    const [playlistTracks, setPlaylistTracks] = useState(initialPlaylistTrack);
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -100,7 +100,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
         const playlistData = {
             playlistPlTitle: playlistTitle,
             playlistVisibility: playlistVisibility,
-            playlistTrack: playlistTrack.filter(track => track.playlistTrackId) // 비어 있지 않은 트랙만 필터링
+            playlistTracks: playlistTracks.filter(track => track.playlistTrackId) // 비어 있지 않은 트랙만 필터링
         };
 
         try {
@@ -113,21 +113,21 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
 
     const handleAddClick = (trackToAddId) => {
         const trackToAdd = trackInfoAll.find(infoItem => infoItem.trackId === trackToAddId);
-        const isTrackAlreadyAdded = playlistTrack.some(track => track.playlistTrackId === trackToAddId);
+        const isTrackAlreadyAdded = playlistTracks.some(track => track.playlistTrackId === trackToAddId);
 
         if (isTrackAlreadyAdded) {
             // 트랙을 제거하는 경우
-            const newPlaylistTrack = playlistTrack.filter(track => track.playlistTrackId !== trackToAddId);
+            const newPlaylistTracks = playlistTracks.filter(track => track.playlistTrackId !== trackToAddId);
             // 제거된 트랙 뒤의 모든 트랙을 앞으로 당김
-            newPlaylistTrack.push({}); // 마지막에 빈 객체 추가
-            if (newPlaylistTrack.length > 4) {
-                newPlaylistTrack.pop(); // 배열이 네 개를 초과하면 마지막 요소 제거
+            newPlaylistTracks.push({}); // 마지막에 빈 객체 추가
+            if (newPlaylistTracks.length > 4) {
+                newPlaylistTracks.pop(); // 배열이 네 개를 초과하면 마지막 요소 제거
             }
-            setPlaylistTrack(newPlaylistTrack);
+            setPlaylistTracks(newPlaylistTracks);
         } else {
             // 새 트랙을 추가하는 경우
             let added = false;
-            const newPlaylistTrack = playlistTrack.map(track => {
+            const newPlaylistTracks = playlistTracks.map(track => {
                 if (!track.playlistTrackId && !added) {
                     added = true; // 새 트랙을 추가했음을 표시
                     return {
@@ -144,7 +144,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
 
             if (!added) return;
 
-            setPlaylistTrack(newPlaylistTrack);
+            setPlaylistTracks(newPlaylistTracks);
         }
     };
     
@@ -162,7 +162,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
         const targetPlaylist = playlist.find(list => list.playlistSeq === playlistSeq);
         if (!targetPlaylist) return;
         const updatedTracks = [
-            ...playlistTrack.filter(track => track.playlistTrackId).map(track => ({
+            ...playlistTracks.filter(track => track.playlistTrackId).map(track => ({
                 playlistTrackId: track.playlistTrackId,
                 playlistTitle: track.playlistTitle,
                 playlistImagePath: track.playlistImagePath,
@@ -173,7 +173,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
         ];
         const playlistData = {
             ...targetPlaylist,
-            playlistTrack: updatedTracks
+            playlistTracks: updatedTracks
         };
         axios.put(`/api/playlist/track/${playlistSeq}`, playlistData).then((res) => {
             onClose();
@@ -209,7 +209,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
                             <button className={styles.submitBtn} onClick={handleSubmit}>저장</button>
                         </div>
                         <ul className={styles.addPlaylist}>
-                            {playlistTrack.map((track, index) => {
+                            {playlistTracks.map((track, index) => {
                                 if (track.playlistTrackId) {
                                     // 실제 트랙 정보가 있는 경우
                                     return (
@@ -239,7 +239,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
 
                         <ul className={styles.likeMusic}>
                             {onlyLike.map((like, index) => {
-                                const isAdded = playlistTrack.some(track => track.playlistTrackId === like.trackId);
+                                const isAdded = playlistTracks.some(track => track.playlistTrackId === like.trackId);
                                 const buttonClass = isAdded ? styles.likeAddBtns : styles.likeAddBtn;
 
                                 return (
@@ -264,7 +264,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
                 ) : (
                     <div className={styles.Added}>
                         <ul className={styles.addPlaylist}>
-                            {playlistTrack.map((track, index) => {
+                                {playlistTracks.map((track, index) => {
                                 if (track.playlistTrackId) {
                                     return (
                                         <li key={index} className={styles.playlist}>
@@ -282,21 +282,22 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
                             })}
                         </ul>
                         <ul className={styles.playlistAdded}>
-                            {playlist.map((list, index) => {
-                                const hasTracks = list.playlistTrack && list.playlistTrack.length > 0;
+                                {playlist.map((list, index) => {
+                                console.log(list);
+                                const hasTracks = list.playlistTracks && list.playlistTracks.length > 0;
 
                                 return (
                                     <li key={index} className={styles.playlistAddedLi}>
                                         <div className={styles.playlistAddedImg}>
-                                            {hasTracks && list.playlistTrack[0].playlistImagePath ? (
-                                                <img src={`/tracks/image/${list.playlistTrack[0].playlistImagePath}`} alt={list.playlistPlTitle} />
+                                            {hasTracks && list.playlistTracks[0].playlistImagePath ? (
+                                                <img src={`/tracks/image/${list.playlistTracks[0].playlistImagePath}`} alt={list.playlistPlTitle} />
                                             ) : null}
                                         </div>
                                         <div className={styles.playlistAddedWriterAndTitle}>
                                             <div className={styles.playlistAddedTitle}>{list.playlistPlTitle}</div>
                                             <div className={styles.playlistAddedCount}>
                                                 <img src={Music} alt="" className={styles.musicIcon} />
-                                                <div className={styles.playlistAddedMusic}>{hasTracks ? list.playlistTrack.length : 0}</div>
+                                                <div className={styles.playlistAddedMusic}>{hasTracks ? list.playlistTracks.length : 0}</div>
                                             </div>
                                         </div>
                                         <div className={styles.AddedBtnBox}>

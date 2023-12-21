@@ -38,8 +38,13 @@ const YourTrackList = () => {
 
     const [selectedTrack, setSelectedTrack] = useState(null);
 
+
+    // 모달을 관리하는 부분
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpen = (track) => {
+        setSelectedTrack(track);
+        setOpen(true);
+    };
     const handleClose = () => setOpen(false);
 
 
@@ -55,10 +60,9 @@ const YourTrackList = () => {
     };
 
 
-    const handleEditClick = (track) => {
-        setSelectedTrack(track);
-        console.log(track);
-        handleOpen(); // 모달 열기
+    const handleEditClick = (event, track) => {
+        event.stopPropagation(); // Prevents the event from bubbling up (if necessary)
+        handleOpen(track);
     };
 
     useEffect(() => {
@@ -97,7 +101,7 @@ const YourTrackList = () => {
             writer,
         });
 
-       
+
 
         setTrackPlayingStatus((prevStatus) => ({
             ...prevStatus,
@@ -115,10 +119,18 @@ const YourTrackList = () => {
     const handleDelete = (trackId) => {
         console.log("뭐임" + trackId);
         axios.delete(`/api/track/${trackId}`).then(resp => {
-            console.log("삭제 성공..")
+
         }).catch(resp => {
             console.log("삭제 실패...")
         })
+
+        axios.get(`/api/track/findById/${loginID}`).then((resp) => {
+            const tracksWithImages = resp.data.map((track) => {
+                const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+                return { ...track, imagePath };
+            });
+            setTrack(tracksWithImages);
+        });
     }
 
 
@@ -164,24 +176,7 @@ const YourTrackList = () => {
                             </div>
 
                             <div>
-                                <EditIcon className={styles.largeIcon} onClick={() => handleEditClick(trackone)} />
-                                <Modal
-                                    open={open}
-                                    onClose={() => {
-                                        handleClose();
-                                        setSelectedTrack(null); // 모달이 닫힐 때 선택된 트랙 초기화
-                                    }}
-                                    aria-labelledby="modal-modal-title"
-                                    aria-describedby="modal-modal-description"
-                                >
-                                    <UpdateModal
-                                        selectedTrack={selectedTrack}
-                                        setSelectedTrack={setSelectedTrack}
-                                        setTrack={setTrack}
-                                        onTrackUpdated={handleTrackUpdated}
-                                        onClose={handleClose}
-                                    />
-                                </Modal>
+                                <EditIcon className={styles.largeIcon} onClick={(event) => handleEditClick(event, trackone)} />
                             </div>
                             <div>
                                 <DeleteIcon className={styles.largeIcon} onClick={() => handleDelete(trackone.trackId)} />
@@ -201,6 +196,22 @@ const YourTrackList = () => {
                     </div>
                 </div>
             ))}
+            {selectedTrack && (
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <UpdateModal
+                        selectedTrack={selectedTrack}
+                        setSelectedTrack={setSelectedTrack}
+                        setTrack={setTrack}
+                        onTrackUpdated={handleTrackUpdated}
+                        onClose={handleClose}
+                    />
+                </Modal>
+            )}
         </div>
     );
 };
