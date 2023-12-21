@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import {  useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import styles from "./AlbumsCarousel.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import axios from 'axios';
 import { LoginContext } from '../../../../App';
+import { Button } from 'reactstrap';
 
 const Carousel = React.memo(({ myAlbumsInfo, albumInfoAll }) => {
     const carouselRef = useRef(null);
@@ -39,7 +41,7 @@ const Carousel = React.memo(({ myAlbumsInfo, albumInfoAll }) => {
     }
 
     const uniqueAlbums = myAlbumsInfo.filter((v, i, a) => a.findIndex(t => (t.albumId === v.albumId)) === i);
-    
+
     console.log(myAlbumsInfo);
 
     return (
@@ -62,7 +64,7 @@ const Carousel = React.memo(({ myAlbumsInfo, albumInfoAll }) => {
                 }}
                 ref={carouselRef}
             >
-                 {uniqueAlbums && uniqueAlbums.map((album, index) => {
+                {uniqueAlbums && uniqueAlbums.map((album, index) => {
                     const albumImage = album.coverImagePath
                         ? `/tracks/image/${album.coverImagePath}`
                         : "http://placehold.it/150x150";
@@ -70,12 +72,12 @@ const Carousel = React.memo(({ myAlbumsInfo, albumInfoAll }) => {
                     const hoverClass = loginID ? styles.imgHover : styles.nonImageHover;
 
                     return (
-                        <div className={styles.item} key={index} onClick={() =>handleAlbumClick(album.albumId)}>
+                        <div className={styles.item} key={index} onClick={() => handleAlbumClick(album.albumId)}>
                             <div className={hoverClass}>
                                 <img src={albumImage} alt={album.title} className={styles.albumImage} />
                             </div>
                             <div className={styles.carouselContents}>
-                               
+
                                 <div className={styles.carouselTitle}>{album.title}</div>
                                 <div className={styles.carouselSinger}>{albumWriters}</div>
                             </div>
@@ -88,7 +90,10 @@ const Carousel = React.memo(({ myAlbumsInfo, albumInfoAll }) => {
                 <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button>
                 <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button>
             </div>
-
+            <Button className={styles.button_custom}>
+                <PlaylistAddIcon className={styles.icon_custom} />
+                앨범 생성하기
+            </Button>
         </div>
     );
 });

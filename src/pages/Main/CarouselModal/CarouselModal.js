@@ -4,6 +4,7 @@ import X from '../assets/x.png';
 import axios from 'axios';
 import { LoginContext } from "../../../App";
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import Music from '../assets/Music.svg';
 
 const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
     const [isClosing, setIsClosing] = useState(false);
@@ -12,13 +13,12 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
     const [selectedTab, setSelectedTab] = useState('playlistCreate');
     const [onlyLike, setOnlyLike] = useState([]);
     const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
+    const { loginID } = useContext(LoginContext);
+    const [playlist, setPlaylist] = useState([]);
+
     const handleCreatePlaylist = () => {
         setIsCreatingPlaylist(true);
         setSelectedTab('playlistCreate');
-    };
-    const handleAddPlaylist = () => {
-        setIsCreatingPlaylist(false);
-        setSelectedTab('playlistAdd');
     };
     useEffect(() => {
         setIsCreatingPlaylist(true);
@@ -111,42 +111,79 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
         }
     };
 
-const handleAddClick = (trackToAddId) => {
-    const trackToAdd = trackInfoAll.find(infoItem => infoItem.trackId === trackToAddId);
-    const isTrackAlreadyAdded = playlistTrack.some(track => track.playlistTrackId === trackToAddId);
+    const handleAddClick = (trackToAddId) => {
+        const trackToAdd = trackInfoAll.find(infoItem => infoItem.trackId === trackToAddId);
+        const isTrackAlreadyAdded = playlistTrack.some(track => track.playlistTrackId === trackToAddId);
 
-    if (isTrackAlreadyAdded) {
-        // 트랙을 제거하는 경우
-        const newPlaylistTrack = playlistTrack.filter(track => track.playlistTrackId !== trackToAddId);
-        // 제거된 트랙 뒤의 모든 트랙을 앞으로 당김
-        newPlaylistTrack.push({}); // 마지막에 빈 객체 추가
-        if (newPlaylistTrack.length > 4) {
-            newPlaylistTrack.pop(); // 배열이 네 개를 초과하면 마지막 요소 제거
-        }
-        setPlaylistTrack(newPlaylistTrack);
-    } else {
-        // 새 트랙을 추가하는 경우
-        let added = false;
-        const newPlaylistTrack = playlistTrack.map(track => {
-            if (!track.playlistTrackId && !added) {
-                added = true; // 새 트랙을 추가했음을 표시
-                return {
-                    playlistTrackId: trackToAdd.trackId,
-                    playlistTitle: trackToAdd.title,
-                    playlistImagePath: trackToAdd.trackImages[0].imagePath,
-                    playlistDuration: trackToAdd.duration,
-                    playlistFilePath: trackToAdd.filePath,
-                    playlistWriter: trackToAdd.writer
-                };
+        if (isTrackAlreadyAdded) {
+            // 트랙을 제거하는 경우
+            const newPlaylistTrack = playlistTrack.filter(track => track.playlistTrackId !== trackToAddId);
+            // 제거된 트랙 뒤의 모든 트랙을 앞으로 당김
+            newPlaylistTrack.push({}); // 마지막에 빈 객체 추가
+            if (newPlaylistTrack.length > 4) {
+                newPlaylistTrack.pop(); // 배열이 네 개를 초과하면 마지막 요소 제거
             }
-            return track;
+            setPlaylistTrack(newPlaylistTrack);
+        } else {
+            // 새 트랙을 추가하는 경우
+            let added = false;
+            const newPlaylistTrack = playlistTrack.map(track => {
+                if (!track.playlistTrackId && !added) {
+                    added = true; // 새 트랙을 추가했음을 표시
+                    return {
+                        playlistTrackId: trackToAdd.trackId,
+                        playlistTitle: trackToAdd.title,
+                        playlistImagePath: trackToAdd.trackImages[0].imagePath,
+                        playlistDuration: trackToAdd.duration,
+                        playlistFilePath: trackToAdd.filePath,
+                        playlistWriter: trackToAdd.writer
+                    };
+                }
+                return track;
+            });
+
+            if (!added) return;
+
+            setPlaylistTrack(newPlaylistTrack);
+        }
+    };
+    
+    const handleAddPlaylist = () => {
+        setIsCreatingPlaylist(false);
+        setSelectedTab('playlistAdd');
+        axios.get(`/api/playlist/${loginID}`).then((res) => {
+            setPlaylist(res.data);
+        }).catch((err) => {
+            console.log(err);
         });
-
-        if (!added) return;
-
-        setPlaylistTrack(newPlaylistTrack);
+    };
+    
+    const handleAddedList = (playlistSeq) => {
+        const targetPlaylist = playlist.find(list => list.playlistSeq === playlistSeq);
+        if (!targetPlaylist) return;
+        const updatedTracks = [
+            ...playlistTrack.filter(track => track.playlistTrackId).map(track => ({
+                playlistTrackId: track.playlistTrackId,
+                playlistTitle: track.playlistTitle,
+                playlistImagePath: track.playlistImagePath,
+                playlistDuration: track.playlistDuration,
+                playlistFilePath: track.playlistFilePath,
+                playlistWriter: track.playlistWriter
+            }))
+        ];
+        const playlistData = {
+            ...targetPlaylist,
+            playlistTrack: updatedTracks
+        };
+        axios.put(`/api/playlist/track/${playlistSeq}`, playlistData).then((res) => {
+            onClose();
+        }).catch((err) => {
+            console.log(err);
+        });
     }
-};
+    
+    
+
     
 
 
@@ -188,18 +225,14 @@ const handleAddClick = (trackToAddId) => {
                                         </li>
                                     );
                                 } else {
-                                    // 빈 객체인 경우 (아직 트랙이 추가되지 않음)
                                     return (
                                         <li key={index} className={styles.playlist}>
-                                            {/* 빈 트랙에 대한 렌더링 로직 (예: "트랙 추가" 메시지 또는 아이콘) */}
                                         </li>
                                     );
                                 }
                             })}
                         </ul>
                     
-
-                        {/* 추천하는 노래 목록 */}
                         <div className={styles.playlistLike}>
                             <div className={styles.pllikeTitle}>추천하는 노래</div>
                         </div>
@@ -229,7 +262,51 @@ const handleAddClick = (trackToAddId) => {
                         </ul>
                     </>
                 ) : (
-                    <div></div>
+                    <div className={styles.Added}>
+                        <ul className={styles.addPlaylist}>
+                            {playlistTrack.map((track, index) => {
+                                if (track.playlistTrackId) {
+                                    return (
+                                        <li key={index} className={styles.playlist}>
+                                            <div className={styles.playlistiwt}>
+                                                <div className={styles.playlistImg}>
+                                                    <img src={`/tracks/image/${track.playlistImagePath}`} alt={track.playlistTitle} />
+                                                </div>
+                                                <div className={styles.playlistWriterModal}>{track.playlistWriter}</div>
+                                                <span>-</span>
+                                                <div className={styles.playlistTitleModal}>{track.playlistTitle}</div>
+                                            </div>
+                                        </li>
+                                    );
+                                }
+                            })}
+                        </ul>
+                        <ul className={styles.playlistAdded}>
+                            {playlist.map((list, index) => {
+                                const hasTracks = list.playlistTrack && list.playlistTrack.length > 0;
+
+                                return (
+                                    <li key={index} className={styles.playlistAddedLi}>
+                                        <div className={styles.playlistAddedImg}>
+                                            {hasTracks && list.playlistTrack[0].playlistImagePath ? (
+                                                <img src={`/tracks/image/${list.playlistTrack[0].playlistImagePath}`} alt={list.playlistPlTitle} />
+                                            ) : null}
+                                        </div>
+                                        <div className={styles.playlistAddedWriterAndTitle}>
+                                            <div className={styles.playlistAddedTitle}>{list.playlistPlTitle}</div>
+                                            <div className={styles.playlistAddedCount}>
+                                                <img src={Music} alt="" className={styles.musicIcon} />
+                                                <div className={styles.playlistAddedMusic}>{hasTracks ? list.playlistTrack.length : 0}</div>
+                                            </div>
+                                        </div>
+                                        <div className={styles.AddedBtnBox}>
+                                            <button className={styles.AddedBtn} onClick={() => handleAddedList(list.playlistSeq)}>추가</button>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>    
+                    </div>
                 )}
         </div>
     </div>
