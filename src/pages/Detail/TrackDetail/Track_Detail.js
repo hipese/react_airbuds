@@ -15,6 +15,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Pagination, PaginationItem } from "@mui/material";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { Link } from 'react-router-dom';
 
 import style from "./report.module.css";
 import Swal from "sweetalert2";
@@ -359,7 +360,7 @@ const Track_Detail = () => {
                     <Grid item xs={12} md={11} className={styles.innerContainer}>
                         <Typography variant="h4">음원 정보</Typography>
                     </Grid>
-                    <Grid item xs={12} md={1}>
+                    <Grid item xs={12} md={1} className={styles.reportButton}>
                         <div onClick={handleReport} className={style.report}>
                             <ErrorOutlineIcon />&nbsp;&nbsp;신고
                         </div>
@@ -404,10 +405,12 @@ const Track_Detail = () => {
                     <Grid item className={styles.innerContainer2}>
                         <Grid item xs={12} md={12} container className={styles.profileContainer}>
                             <Grid item xs={12} md={12} className={styles.user_info}>
-                                <Avatar alt="Profile" src="/static/images/avatar/1.jpg" sx={{ width: '80px', height: '80px' }} />
-                                <Typography variant="body1">
-                                    {track.writeId}
-                                </Typography>
+                                <Link className={styles.linkurl} to={`/Profile/${track.writeId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <Avatar alt="Profile" src="/static/images/avatar/1.jpg" sx={{ width: '80px', height: '80px' }} />
+                                    <Typography variant="body1">
+                                        {track.writeId}
+                                    </Typography>
+                                </Link>
                                 <div className={styles.like}>
                                     <FavoriteBorderIcon />
                                     <Typography variant="body1">16.9K</Typography>

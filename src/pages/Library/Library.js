@@ -64,7 +64,7 @@ const Library = () => {
                             style: { backgroundColor: '#4CAF50' }  // 선택된 탭의 라벨 밑에 있는 줄의 색상
                         }}
                     >
-                        <Tab label="Overview" component={Link} to="" {...a11yProps(0)}
+                        <Tab label="개요" component={Link} to="" {...a11yProps(0)}
                             sx={{
                                 '&.Mui-selected': {
                                     color: '#4CAF50',
@@ -75,7 +75,7 @@ const Library = () => {
                                     textDecoration: 'none', // 밑줄 제거
                                 },
                             }} />
-                        <Tab label="Likes" component={Link} to="likes" {...a11yProps(1)}
+                        <Tab label="좋아요" component={Link} to="likes" {...a11yProps(1)}
                          sx={{
                             '&.Mui-selected': {
                                 color: '#4CAF50',
@@ -86,7 +86,7 @@ const Library = () => {
                                 textDecoration: 'none', // 밑줄 제거
                             },
                         }} />
-                        <Tab label="Albums" component={Link} to="albums" {...a11yProps(3)}
+                        <Tab label="앨범" component={Link} to="albums" {...a11yProps(3)}
                          sx={{
                             '&.Mui-selected': {
                                 color: '#4CAF50',
@@ -97,7 +97,7 @@ const Library = () => {
                                 textDecoration: 'none', // 밑줄 제거
                             },
                         }} />
-                        <Tab label="Following" component={Link} to="following" {...a11yProps(4)}
+                        <Tab label="팔로잉" component={Link} to="following" {...a11yProps(4)}
                          sx={{
                             '&.Mui-selected': {
                                 color: '#4CAF50',
@@ -108,7 +108,7 @@ const Library = () => {
                                 textDecoration: 'none', // 밑줄 제거
                             },
                         }} />
-                        <Tab label="History" component={Link} to="history" {...a11yProps(5)}
+                        <Tab label="최근 재생 목록" component={Link} to="history" {...a11yProps(5)}
                          sx={{
                             '&.Mui-selected': {
                                 color: '#4CAF50',

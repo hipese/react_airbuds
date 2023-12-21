@@ -6,16 +6,16 @@
     align-items: center;
 }
 
-.Panel{
+.Panel {
     height: 700px;
 }
 
-.like_edit{
+.like_edit {
     margin-left: auto;
 }
 
 .followersInfo {
-    height: 200px;
+    height: 100px;
     margin-top: 20px;
     display: flex;
     justify-content: space-around;
@@ -42,4 +42,34 @@
     background-color: whitesmoke;
     border-radius: 10px;
     opacity: 0.5;
+}
+
+.myreply {
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+
+.commentList {
+    margin-top: 10px;
+}
+
+.comment {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comment:hover {
+    background-color: whitesmoke;
+}
+
+.commentContent {
+    margin-bottom: 5px;
+}
+
+.commentDate {
+    font-size: 12px;
+    color: #888;
 }

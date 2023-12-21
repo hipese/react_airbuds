@@ -46,7 +46,7 @@ function a11yProps(index) {
 
 export default function Upload_Main() {
   const [value, setValue] = React.useState(0);
-  
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -54,16 +54,53 @@ export default function Upload_Main() {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="upload" component={Link} to="" {...a11yProps(0)} />
-          <Tab label="yourtracks" component={Link} to="yourtracks" {...a11yProps(1)} />
-          <Tab label="myAlbums" component={Link} to="myAlbums" {...a11yProps(2)}  />
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example"
+          TabIndicatorProps={{
+            style: { backgroundColor: '#4CAF50' }  // 선택된 탭의 라벨 밑에 있는 줄의 색상
+          }}
+        >
+          <Tab label="upload" component={Link} to="" {...a11yProps(0)}
+            sx={{
+              '&.Mui-selected': {
+                color: '#4CAF50',
+                textDecoration: 'none', // 밑줄 제거
+              },
+              '&:hover': {
+                color: '#4CAF50',
+                textDecoration: 'none', // 밑줄 제거
+              },
+            }}
+          />
+          <Tab label="yourtracks" component={Link} to="yourtracks" {...a11yProps(1)}
+            sx={{
+              '&.Mui-selected': {
+                color: '#4CAF50',
+                textDecoration: 'none', // 밑줄 제거
+              },
+              '&:hover': {
+                color: '#4CAF50',
+                textDecoration: 'none', // 밑줄 제거
+              },
+            }}
+          />
+          <Tab label="myAlbums" component={Link} to="myAlbums" {...a11yProps(2)}
+            sx={{
+              '&.Mui-selected': {
+                color: '#4CAF50',
+                textDecoration: 'none', // 밑줄 제거
+              },
+              '&:hover': {
+                color: '#4CAF50',
+                textDecoration: 'none', // 밑줄 제거
+              },
+            }}
+          />
         </Tabs>
       </Box>
       <Routes>
         <Route path="/" element={<Track_Upload />} />
-        <Route path="/yourtracks" element={<YourTracks/>} />
-        <Route path="/myAlbums" element={<MyAlbums/>} />
+        <Route path="/yourtracks" element={<YourTracks />} />
+        <Route path="/myAlbums" element={<MyAlbums />} />
       </Routes>
     </Box>
   );
