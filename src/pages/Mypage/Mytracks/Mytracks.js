@@ -34,10 +34,6 @@ const Mytracks = () => {
     const [trackCount, setTrackCount] = useState([]);
 
     useEffect(() => {
-        if (!loginID) {
-            return;
-        }
-
         axios.get(`/api/track/findById/${targetID}`).then((resp) => {
             const tracksWithImages = resp.data.map((track) => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
