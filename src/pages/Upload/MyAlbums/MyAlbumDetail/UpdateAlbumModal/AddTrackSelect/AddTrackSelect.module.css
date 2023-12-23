@@ -1,0 +1,42 @@
+.image {
+    border: 1px solid #e0e0e0;
+    width: 100px !important;;
+    height: 100px !important;;
+    object-fit: cover;
+    position: relative;
+  }
+  .contentBox{
+    height: 600px;
+    overflow: auto;
+  }
+  .contents{
+    border: 1px solid black;
+    margin-top: 20px;
+  }
+  .addButton{
+    background-color: #2196F3; /* 적절한 색상으로 변경하세요 */
+    color: #fff;
+    float: right;
+    transition: transform 0.2s ease-in-out; /* hover 시 부드러운 애니메이션을 위해 추가 */
+    transform: scale(1);
+  }
+  .addButton:hover {
+    /* hover 시 크기 확대 */
+    background-color: #2196F3; /* 적절한 색상으로 변경하세요 */
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.cancelButton{
+    background-color: #c50606; /* 적절한 색상으로 변경하세요 */
+    color: #fff;
+    float: right;
+    transition: transform 0.2s ease-in-out; /* hover 시 부드러운 애니메이션을 위해 추가 */
+    transform: scale(1);
+}
+.cancelButton:hover {
+    /* hover 시 크기 확대 */
+    background-color: #c50606; /* 적절한 색상으로 변경하세요 */
+    color: #fff;
+    transform: scale(1.1);
+}

@@ -7,6 +7,8 @@ import MusicTagList from "../../../Track_Upload/MuiscTagList/MuiscTagList";
 import { Chip } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import axios from "axios";
+import AddTrackSelect from "./AddTrackSelect/AddTrackSelect";
+import Dialog from '@mui/material/Dialog';
 
 const ModalStyle = {
     position: 'absolute',
@@ -23,13 +25,31 @@ const ModalStyle = {
 
 const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClose }, ref) => {
 
+// 안에서 모달 또 띄우기
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+
+        const iscancle=window.confirm("창을 닫으시겠습니까?")
+
+        if(!iscancle){
+            return;
+        }
+
+        setOpen(false);
+    };
+
 
     console.log(albumUpdate);
 
     // 선택된 태그를 가져오는 방법
     const [trackTags, setTrackTags] = useState([]);
     const [titleImage, setTitleImage] = useState();
-    
+
     const [imageView, setImageView] = useState("/tracks/image/" + albumUpdate.coverImagePath);
     const [prevImage, setPrevImage] = useState(albumUpdate.coverImagePath);
     const [files, setFiles] = useState([]);
@@ -37,7 +57,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     const [deleteTrack, setDeleteTrack] = useState([]);
 
-    
+
     // 그냥 닫을때는 다시 원래 데이터로 설정
     const handleCancle = () => {
         onClose();
@@ -263,10 +283,10 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     const handleFileDelete = (fileIndex) => {
 
-        console.log("몇개 남아있냐?"+(files.length+albumUpdate.tracks.length));
-        console.log("몇개 재거함?"+(deleteTrack.length));
-        console.log("몇개 추가함?"+(files.length));
-        if((albumUpdate.tracks.length+files.length)<=1){
+        console.log("몇개 남아있냐?" + (files.length + albumUpdate.tracks.length));
+        console.log("몇개 재거함?" + (deleteTrack.length));
+        console.log("몇개 추가함?" + (files.length));
+        if ((albumUpdate.tracks.length + files.length) <= 1) {
             alert("앨범에 파일이 하나라도 존재해야 합니다.");
             return;
         }
@@ -285,10 +305,10 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     };
 
     const handleAddFileDelete = (fileIndex) => {
-        console.log("몇개 남아있냐?"+(files.length+albumUpdate.tracks.length))
-        console.log("몇개 재거함?"+(deleteTrack.length))
+        console.log("몇개 남아있냐?" + (files.length + albumUpdate.tracks.length))
+        console.log("몇개 재거함?" + (deleteTrack.length))
 
-        if((albumUpdate.tracks.length+files.length)<=1){
+        if ((albumUpdate.tracks.length + files.length) <= 1) {
             alert("앨범에 파일이 하나라도 존재해야 합니다.");
             return;
         }
@@ -518,17 +538,32 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                     </Fragment>
                 ))}
             </Row>
-            <Col sm="12">
-                <input
-                    type="file"
-                    ref={hiddenAudioInput}
-                    onChange={handleAudioFileChange}
-                    style={{ display: 'none' }}
-                    accept="audio/*"
-                />
-                <Button onClick={handleAddTrackClick}>다른 트렉 추가하기</Button></Col>
-            <hr />
+            <Row>
+                <Col sm="6">
+                    <input
+                        type="file"
+                        ref={hiddenAudioInput}
+                        onChange={handleAudioFileChange}
+                        style={{ display: 'none' }}
+                        accept="audio/*"
+                    />
+                    <Button onClick={handleAddTrackClick}>다른 트렉 추가하기</Button>
+                </Col>
+                <Col sm="6">
+                    <Button onClick={handleClickOpen}>기존 트랙에서 선택</Button>
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <AddTrackSelect  handleClose={handleClose} setAlbumUpdate={setAlbumUpdate} albumId={albumUpdate.albumId} />
+                    </Dialog>
+                </Col>
+            </Row>
+
             <Col>
+                <hr />
                 <Button onClick={handleCancle}>Close</Button>
                 <Button color="primary" onClick={handleUpdate}>수정하기</Button>
             </Col>
