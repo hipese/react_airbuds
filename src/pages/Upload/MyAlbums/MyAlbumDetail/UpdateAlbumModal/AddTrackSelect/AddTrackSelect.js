@@ -2,7 +2,6 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 import { Col, Row } from 'reactstrap';
@@ -23,7 +22,8 @@ const AddTrackSelect = ({ handleClose, setAlbumUpdate, albumId }) => {
 
     const handleAddTrack = (selectedTrack) => {
         const isTrackAdded = addedTracks.includes(selectedTrack.trackId);
-
+       
+        // 추가 트랙에 해당 id값 없으면 넣고 있으면 안넣는다.
         if (isTrackAdded) {
             setAlbumUpdate((prevAlbumUpdate) => ({
                 ...prevAlbumUpdate,
@@ -31,6 +31,21 @@ const AddTrackSelect = ({ handleClose, setAlbumUpdate, albumId }) => {
             }));
             setAddedTracks(prevAddedTracks => prevAddedTracks.filter(trackId => trackId !== selectedTrack.trackId));
         } else {
+
+            const isAdd=window.confirm("앨범에 추가하시겠습니까?(확인을 클릭하면 바로 반영됩니다.)")
+            if(!isAdd){
+                return;
+            }
+
+            const formData = new FormData();
+
+            formData.append("trackId",selectedTrack.trackId);
+            formData.append("albumId",albumId);
+
+            axios.post("/api/track/albumIdSave", formData).then(resp => {
+                console.log("id추가 성공!!");
+            })
+
             setAlbumUpdate((prevAlbumUpdate) => ({
                 ...prevAlbumUpdate,
                 tracks: [...prevAlbumUpdate.tracks, { ...selectedTrack, albumId: albumId }],
@@ -40,6 +55,20 @@ const AddTrackSelect = ({ handleClose, setAlbumUpdate, albumId }) => {
     };
 
     const handleCancelTrack = (selectedTrack) => {
+
+        const isAdd=window.confirm("앨범에서 제거하시겠습니까?(확인을 클릭하면 바로 반영됩니다.)")
+        if(!isAdd){
+            return;
+        }
+        
+        const formData = new FormData();
+
+        formData.append("trackId",selectedTrack.trackId);
+
+        axios.post("/api/track/albumIdDelete", formData).then(resp => {
+            console.log("id삭제 성공!!");
+        })
+
         setAlbumUpdate((prevAlbumUpdate) => ({
             ...prevAlbumUpdate,
             tracks: prevAlbumUpdate.tracks.filter(track => track.trackId !== selectedTrack.trackId),

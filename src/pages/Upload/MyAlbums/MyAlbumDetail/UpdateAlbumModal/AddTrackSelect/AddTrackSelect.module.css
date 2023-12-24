@@ -22,8 +22,9 @@
   }
   .addButton:hover {
     /* hover 시 크기 확대 */
+    border: 1px solid black;
     background-color: #2196F3; /* 적절한 색상으로 변경하세요 */
-    color: #fff;
+    color: #2196F3;
     transform: scale(1.1);
 }
 
@@ -36,7 +37,8 @@
 }
 .cancelButton:hover {
     /* hover 시 크기 확대 */
+    border: 1px solid black;
     background-color: #c50606; /* 적절한 색상으로 변경하세요 */
-    color: #fff;
+    color: #2196F3;
     transform: scale(1.1);
 }

@@ -1,0 +1,11 @@
+.albumImage {
+    border: 1px solid #e0e0e0;
+    width: 200px !important;;
+    height: 200px !important;;
+    object-fit: cover;
+    position: relative;
+  }
+  .container{
+    height: 600px;
+    overflow: auto;
+  }
