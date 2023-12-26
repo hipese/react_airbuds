@@ -5,7 +5,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { QnaContext } from './qnaList';
 import { Link } from 'react-router-dom';
-import { LoginContext } from '../../App';
+import { LoginContext, RoleContext } from '../../App';
 const QnaContents = () => {
     const {seq} = useParams();
     const [isChanged,setChanged] = useState(0);
@@ -19,6 +19,7 @@ const QnaContents = () => {
     const [isUpdateState,setUpdateState] = useState(false);
     const [isUpdateSeq,setUpdateSeq] = useState(0);
     const {loginID} = useContext(LoginContext);
+    const {userRole} = useContext(RoleContext);
     const contentEditableRef = useRef(null);
     
     //관리자 및 글 작성자 외에는 못들어오도록 하기
@@ -80,7 +81,7 @@ const QnaContents = () => {
 
         axios.get(`/api/qna/contents/${seq}`).then(res=>{
             if(res.data.qnaPublic == 0){
-                if(loginID == res.data.qnaWriter || loginID == "devel"){
+                if(loginID == res.data.qnaWriter || userRole == "ROLE_MANAGER"){
                     setSelectedQna(res.data);
                     setFiles(res.data.files);
                     axios.get(`/api/qna/replylist/${seq}`).then(res=>{
