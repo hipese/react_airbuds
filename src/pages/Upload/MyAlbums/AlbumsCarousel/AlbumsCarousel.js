@@ -6,12 +6,11 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import styles from "./AlbumsCarousel.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import axios from 'axios';
 import { LoginContext } from '../../../../App';
 import { Button } from 'reactstrap';
 
-const Carousel = React.memo(({ myAlbumsInfo, albumInfoAll }) => {
+const Carousel = React.memo(({ myAlbumsInfo}) => {
     const carouselRef = useRef(null);
 
 
@@ -37,7 +36,7 @@ const Carousel = React.memo(({ myAlbumsInfo, albumInfoAll }) => {
 
     const handleAlbumClick = (albumId) => {
         const albumData = myAlbumsInfo.find(album => album.albumId === albumId);
-        navigate(`/Album/Detail/`, { state: { albumData } });
+        navigate(`/Album/Detail/${albumId}`, { state: { albumData } });
     }
 
     const uniqueAlbums = myAlbumsInfo.filter((v, i, a) => a.findIndex(t => (t.albumId === v.albumId)) === i);
@@ -90,10 +89,7 @@ const Carousel = React.memo(({ myAlbumsInfo, albumInfoAll }) => {
                 <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button>
                 <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button>
             </div>
-            <Button className={styles.button_custom}>
-                <PlaylistAddIcon className={styles.icon_custom} />
-                앨범 생성하기
-            </Button>
+          
         </div>
     );
 });

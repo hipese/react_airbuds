@@ -79,10 +79,17 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
 
     // 데이터베이스에 음원정보를 저장하고 파일을 업로드 하는 장소
     const handleSave = () => {
+
         const formData = new FormData();
 
         // files 배열에 있는 각 파일을 formData에 추가
         files.forEach((fileData) => {
+
+            if(fileData.imageFile==null){
+                alert("이미지를 선택해주세요.")
+                return 
+            }
+
             formData.append(`file`, fileData.file);
             formData.append(`name`, fileData.name);
             formData.append('duration', fileData.duration);
@@ -129,6 +136,13 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
     }
 
     const handleFileNameChange = (index, newName) => {
+
+        if (newName && newName.length > 30) {
+            alert("30자 이하로 입력해주세요.");
+            return;
+        }
+
+
         setFiles(currentFiles => {
             // 현재 파일 목록 복사
             const updatedFiles = [...currentFiles];
@@ -163,6 +177,12 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
 
 
     const handleWriterChange = (index, newWriter) => {
+
+        if (newWriter && newWriter.length > 20) {
+            alert("20자 이하로 입력해주세요.");
+            return;
+        }
+
         setFiles(currentFiles => {
             const updatedFiles = [...currentFiles];
             updatedFiles[index] = { ...updatedFiles[index], writer: newWriter };

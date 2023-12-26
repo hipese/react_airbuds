@@ -12,6 +12,7 @@ import "@sweetalert2/themes/bootstrap-4";
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
 import { DropdownDivider } from "react-bootstrap";
+import SearchBar from "./SearchBar/SearchBar";
 
 const TopNavigator = () => {
 
@@ -407,11 +408,8 @@ const TopNavigator = () => {
                 </Col>
                 <Col className={styles.header_center}>
                     <Row>
-                        <Col className={styles.search}>
-                            <input className={styles.searchbar} type="text" placeholder="Search..."></input>
-                            <img src={`/assets/Search.svg`} alt="" className={styles.search_icon} />
-                        </Col>
-                    </Row>
+                        <SearchBar/>
+                    </Row>  
                 </Col>
                 <Col className={styles.header_right}>
                     <Row>
