@@ -87,6 +87,14 @@ const BottomMusic = () => {
             writer: nextTrackInfo.writer,
             imagePath: nextTrackInfo.imagePath
         });
+
+        axios.post(`/api/cplist`, {
+            trackId: nextTrackInfo.trackId,
+            id: loginID
+        }).then(resp => {
+
+        })
+        
         setAutoPlayAfterSrcChange(true);
 
         // 현재 재생 중인 트랙을 업데이트합니다.
@@ -116,6 +124,13 @@ const BottomMusic = () => {
             writer: previousTrackInfo.writer,
             imagePath: previousTrackInfo.imagePath
         });
+
+        axios.post(`/api/cplist`, {
+            trackId: previousTrackInfo.trackId,
+            id: loginID
+        }).then(resp => {
+
+        })
 
         setAutoPlayAfterSrcChange(true);
         // 현재 재생 중인 트랙을 업데이트합니다.

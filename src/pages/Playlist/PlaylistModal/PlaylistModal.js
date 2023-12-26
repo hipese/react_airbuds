@@ -2,20 +2,20 @@ import React, { useContext, useEffect, useState } from 'react';
 import styles from './PlaylistModal.module.css';
 import axios from 'axios';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import { AutoPlayContext, CurrentTrackContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../App';
+import { AutoPlayContext, CurrentTrackContext, LoginContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../App';
 
 const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
     const [formattedTracks, setFormattedTracks] = useState([]);
     const [tracksWithImages, setTracksWithImages] = useState([]);
     const [totalDuration, setTotalDuration] = useState('');
     const [trackCount, setTrackCount] = useState(0);
-    const [track, setTrack] = useState({});
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
     const { isPlaying, setIsPlaying } = useContext(PlayingContext);
     const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
     const { track_info, setTrack_info } = useContext(TrackInfoContext);
     const { tracks, setTracks } = useContext(TrackContext);
     const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
+    const { loginID, setLoginID } = useContext(LoginContext);
 
     useEffect(() => {
         if (showModal) {
@@ -115,6 +115,13 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
             title: playlistTitle,
             writer: playlistWriter,
         });
+
+        axios.post(`/api/cplist`, {
+            trackId: playlistTrackId,
+            id: loginID
+        }).then(resp => {
+
+        })
 
         const newAudioFiles = track.map(track => `/tracks/${track.playlistFilePath}`);
 
