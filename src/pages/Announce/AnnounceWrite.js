@@ -1,4 +1,4 @@
-import { Button, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 import style from './announce.module.css'
 import Reactquill from './ReactQuill';
 import { useContext, useEffect, useState } from 'react';
@@ -13,14 +13,15 @@ const AnnounceWriteMain = () =>{
     const {userRole} = useContext(RoleContext);
     
     //페이지 접근제한 구현
+
+    //페이지 접근제한 구현
     useEffect(()=>{
-        console.log(userRole);
-        if(userRole !== null || userRole !== undefined){
+        if(userRole){
             if(userRole == "ROLE_MEMBER"){
                 alert("잘못된 접근입니다.");
                 navi("/");
             }else if(userRole == "ROLE_MANAGER"){
-                
+                setLoading(false);
             }
         }
     },[userRole]);
@@ -61,7 +62,18 @@ const AnnounceWriteMain = () =>{
     const handleCancel = () => {
         navi(-1);
     }
-    return(
+
+    const [loading, setLoading] = useState(true);
+
+    const CircularIndeterminate = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    };
+
+    return !loading ? (
         <div className={`${style.wrap}`}>
             <div className={`${style.announceWrite} ${style.ma} `}>
                 <div className={`${style.marginT70}`}>
@@ -158,6 +170,8 @@ const AnnounceWriteMain = () =>{
                 </div>
             </div>
         </div>
+    ) : (
+        <CircularIndeterminate/>
     )
 }
 export default AnnounceWriteMain;

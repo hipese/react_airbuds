@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import style from './dashboard.module.css'
 import { styled } from '@mui/material/styles';
-import { Box, Button, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tab, Tooltip, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tab, Tooltip, Typography } from "@mui/material";
 import LineChart from './charts/line'
 import FunnelChart from './charts/funnel'
 import { Line } from "@nivo/line";
@@ -127,7 +127,6 @@ const DashBoardDisplay = () => {
 
     const {loginID} = React.useContext(LoginContext);
     const {userRole} = React.useContext(RoleContext);
-    //const [userRole, setUserRole] = React.useState(null);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -166,22 +165,22 @@ const DashBoardDisplay = () => {
         });
     
     return reactData;
-    };   
+    };
 
     //페이지 접근제한 구현
     React.useEffect(()=>{
-        console.log(userRole);
-        if(userRole !== null || userRole !== undefined){
+        if(userRole){
             if(userRole == "ROLE_MEMBER"){
                 alert("잘못된 접근입니다.");
                 navi("/");
             }else if(userRole == "ROLE_MANAGER"){
+                setLoading(false);
                 getDatas();
             }
         }
     },[userRole]);
 
-    const getDatas = () => {
+    const getDatas = () => {        
         axios.get(`/api/dashboard/report`).then(res=>{
             console.log(res.data);
             const groupedData = groupByYear(res.data);
@@ -234,8 +233,18 @@ const DashBoardDisplay = () => {
             console.log(e);
         });
     }
+
+    const [loading, setLoading] = React.useState(true);
+
+    const CircularIndeterminate = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    };
     
-    return(
+    return !loading ? (
         <Box className={`${style.dashcontainer} ${style.ma}`}>
             <div id="title" className={`${style.pad10}`}>
                 <Typography fontSize={13}>
@@ -360,6 +369,8 @@ const DashBoardDisplay = () => {
                 </TabContext>
             </Box>
         </Box>
+    ) : (
+        <CircularIndeterminate/>
     )
 }
 
