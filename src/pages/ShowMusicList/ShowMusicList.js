@@ -9,6 +9,8 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import { Box, CircularProgress } from '@mui/material';
 
 import { LoginContext } from "../../App";
+import TrackSearchResult from "./SearchResult/TrackSearchResult";
+import AlbumSearchResult from "./SearchResult/AlbumSearchResult";
 
 
 const LoadingSpinner = () => (
@@ -32,35 +34,40 @@ const ShowMusicList = () => {
 
     useEffect(() => {
 
-        console.log(searchText)
-
         axios.get(`/api/track/searchText/${searchText}`).then(resp => {
-            console.log(resp.data);
             setSearchTracks(resp.data);
             setSearch(searchText);
             setLoading(false);
         })
 
         axios.get(`/api/album/searchText/${searchText}`).then(resp => {
-            console.log(resp.data);
             setSearchAlbums(resp.data);
             setSearch(searchText);
             setLoading(false);
         })
+
     }, [searchText])
 
     const handleAlbumDtail = (albumId, albumData) => {
         navigate(`/Album/Detail/${albumId}`, { state: { albumData } });
-      };
-      
+    };
+
     return (
         <Row className={style.mainContaier}>
-           <Col sm='12'>
-             "{searchText}" 검색결과
-           </Col>
-           <Col>
-            
-           </Col>
+            <Col sm='12' className={style.titleBox}>
+                "{searchText}" 검색결과
+            </Col>
+            <Col sm='12' className={style.searchResult}>
+                <Row>
+                    <Col sm='6'>
+                        <TrackSearchResult searchTracks={searchTracks} />
+                    </Col>
+                    <Col sm='6'>
+                        <AlbumSearchResult searchAlbums={searchAlbums} />
+                    </Col>
+                </Row>
+            </Col>
+
         </Row>
     )
 }
