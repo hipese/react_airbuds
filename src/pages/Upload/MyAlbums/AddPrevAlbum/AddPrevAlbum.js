@@ -1,13 +1,13 @@
 import { Button, Col, Input, Row } from "reactstrap";
-import styles from "./UpdateAlbumModal.module.css"
+import styles from "./AddPrevAlbum.module.css"
 import Box from '@mui/material/Box';
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import AlbumTagList from "../../../Track_Upload/AlbumTagList/AlbumTagList";
-import MusicTagList from "../../../Track_Upload/MuiscTagList/MuiscTagList";
+import AlbumTagList from "../../Track_Upload/AlbumTagList/AlbumTagList";
+import MusicTagList from "../../Track_Upload/MuiscTagList/MuiscTagList";
 import { Chip } from "@mui/material";
 import Stack from '@mui/material/Stack';
 import axios from "axios";
-import AddTrackSelect from "./AddTrackSelect/AddTrackSelect";
+import AddTrackSelect from "../MyAlbumDetail/UpdateAlbumModal/AddTrackSelect/AddTrackSelect"
 import Dialog from '@mui/material/Dialog';
 
 const ModalStyle = {
@@ -22,10 +22,9 @@ const ModalStyle = {
     p: 4,
 };
 
+const AddPrevAlbum = React.forwardRef(({ createAlbum, setCreateAlbum, onClose }, ref) => {
 
-const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClose }, ref) => {
-
-// 안에서 모달 또 띄우기
+    // 안에서 모달 또 띄우기
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -34,9 +33,9 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     const handleClose = () => {
 
-        const iscancle=window.confirm("창을 닫으시겠습니까?")
+        const iscancle = window.confirm("창을 닫으시겠습니까?")
 
-        if(!iscancle){
+        if (!iscancle) {
             return;
         }
 
@@ -44,14 +43,14 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     };
 
 
-    console.log(albumUpdate);
+    console.log(createAlbum);
 
     // 선택된 태그를 가져오는 방법
     const [trackTags, setTrackTags] = useState([]);
     const [titleImage, setTitleImage] = useState();
 
-    const [imageView, setImageView] = useState("/tracks/image/" + albumUpdate.coverImagePath);
-    const [prevImage, setPrevImage] = useState(albumUpdate.coverImagePath);
+    const [imageView, setImageView] = useState();
+    const [prevImage, setPrevImage] = useState();
     const [files, setFiles] = useState([]);
 
 
@@ -77,10 +76,6 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     const handleUpdate = () => {
         const formData = new FormData();
-        // 보내야할 데이터들 
-        console.log(albumUpdate)
-        console.log(trackTags)
-        console.log(titleImage);
 
         if (files && files.length > 0) {
             files.forEach((fileData, index) => {
@@ -101,19 +96,19 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
         // 예전 이미지 값
         formData.append(`prevImage`, prevImage);
-        formData.append('albumTitle', albumUpdate.title);
+        formData.append('albumTitle', createAlbum.title);
         // 앨범의 테그 보내기 
-        albumUpdate.albumTag.forEach(tag => {
+        createAlbum.albumTag.forEach(tag => {
             formData.append('albumselectTag', tag.albumTagList.tagId);
         });
 
         // 변한 트랙에 작성자 전송
-        albumUpdate.tracks.forEach(track => {
+        createAlbum.tracks.forEach(track => {
             formData.append('albumsWriters', track.writer);
         });
 
         // 변한 트랙에 작성자 전송
-        albumUpdate.tracks.forEach(track => {
+        createAlbum.tracks.forEach(track => {
             formData.append('Tracktitles', track.title);
         });
 
@@ -127,7 +122,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
         trackTags.forEach(tag => {
             formData.append('trackTags', tag.id);
         });
-        formData.append("albumId", albumUpdate.albumId);
+        formData.append("albumId", createAlbum.albumId);
 
         axios.post("/api/album/updateAlbum", formData, {
             headers: {
@@ -136,7 +131,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
         }).then(resp => {
             console.log("성공!");
             console.log(resp.data);
-            setAlbumUpdate(resp.data);
+            setCreateAlbum(resp.data);
             setFiles([]);
             setTitleImage();
             setImageView();
@@ -222,7 +217,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     const handleAlbumTitleChange = (e) => {
         const newTitle = e.target.value;
-        setAlbumUpdate((prevAlbum) => {
+        setCreateAlbum((prevAlbum) => {
             return {
                 ...prevAlbum,
                 title: newTitle
@@ -231,9 +226,9 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     };
 
     const handleTitleNameChange = (index, newTitle) => {
-        setAlbumUpdate((prevAlbumUpdate) => {
+        setCreateAlbum((prevCreateAlbum) => {
 
-            const updatedTracks = prevAlbumUpdate.tracks.map((track, idx) => {
+            const updatedTracks = prevCreateAlbum.tracks.map((track, idx) => {
                 if (idx === index) {
 
                     return { ...track, title: newTitle };
@@ -242,16 +237,16 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
             });
 
             return {
-                ...prevAlbumUpdate,
+                ...prevCreateAlbum,
                 tracks: updatedTracks
             };
         });
     };
 
     const handleWriterChange = (index, newWriter) => {
-        setAlbumUpdate((prevAlbumUpdate) => {
+        setCreateAlbum((prevCreateAlbum) => {
 
-            const updatedTracks = prevAlbumUpdate.tracks.map((track, idx) => {
+            const updatedTracks = prevCreateAlbum.tracks.map((track, idx) => {
                 if (idx === index) {
 
                     return { ...track, writer: newWriter };
@@ -260,7 +255,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
             });
 
             return {
-                ...prevAlbumUpdate,
+                ...prevCreateAlbum,
                 tracks: updatedTracks
             };
         });
@@ -269,13 +264,13 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
 
     const handleTagDelete = (tagToDelete) => {
-        setAlbumUpdate((prevAlbumUpdate) => {
-            const updatedAlbumTags = prevAlbumUpdate.albumTag.filter(
+        setCreateAlbum((prevCreateAlbum) => {
+            const updatedAlbumTags = prevCreateAlbum.albumTag.filter(
                 (tag) => tag.albumTagList.tagId !== tagToDelete.albumTagList.tagId
             );
 
             return {
-                ...prevAlbumUpdate,
+                ...prevCreateAlbum,
                 albumTag: updatedAlbumTags,
             };
         });
@@ -283,15 +278,15 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     const handleFileDelete = (fileIndex) => {
 
-        console.log("몇개 남아있냐?" + (files.length + albumUpdate.tracks.length));
+        console.log("몇개 남아있냐?" + (files.length + createAlbum.tracks.length));
         console.log("몇개 재거함?" + (deleteTrack.length));
         console.log("몇개 추가함?" + (files.length));
-        if ((albumUpdate.tracks.length + files.length) <= 1) {
+        if ((createAlbum.tracks.length + files.length) <= 1) {
             alert("앨범에 파일이 하나라도 존재해야 합니다.");
             return;
         }
 
-        setAlbumUpdate(currentAlbum => {
+        setCreateAlbum(currentAlbum => {
             const newTracks = [...currentAlbum.tracks];
             const removedTrack = newTracks.splice(fileIndex, 1)[0];
 
@@ -305,10 +300,10 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     };
 
     const handleAddFileDelete = (fileIndex) => {
-        console.log("몇개 남아있냐?" + (files.length + albumUpdate.tracks.length))
+        console.log("몇개 남아있냐?" + (files.length + createAlbum.tracks.length))
         console.log("몇개 재거함?" + (deleteTrack.length))
 
-        if ((albumUpdate.tracks.length + files.length) <= 1) {
+        if ((createAlbum.tracks.length + files.length) <= 1) {
             alert("앨범에 파일이 하나라도 존재해야 합니다.");
             return;
         }
@@ -347,9 +342,9 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     };
 
     const handleTagSelection = (selectedTagObject) => {
-        setAlbumUpdate((prevAlbumUpdate) => {
+        setCreateAlbum((prevCreateAlbum) => {
             // Check if the tag is already in the albumTag list
-            const isTagPresent = prevAlbumUpdate.albumTag.some(
+            const isTagPresent = prevCreateAlbum.albumTag.some(
                 (tag) => tag.albumTagList.tagId === selectedTagObject.tagId
             );
 
@@ -365,13 +360,13 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                 };
 
                 return {
-                    ...prevAlbumUpdate,
-                    albumTag: [...prevAlbumUpdate.albumTag, newTag],
+                    ...prevCreateAlbum,
+                    albumTag: [...prevCreateAlbum.albumTag, newTag],
                 };
             }
 
 
-            return prevAlbumUpdate;
+            return prevCreateAlbum;
         });
     };
 
@@ -393,8 +388,8 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
             <Row className={styles.container}>
                 <Col sx='12' md='4'>
                     <img
-                        src={albumUpdate.coverImagePath ? imageView : "/assets/groovy2.png"}
-                        alt={albumUpdate.title}
+                        src={createAlbum.coverImagePath ? imageView : "/assets/groovy2.png"}
+                        alt={createAlbum.title}
                         onClick={handleClickImage}
                         className={styles.albumImage}
                     />
@@ -413,7 +408,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                         <Col sx='12' md='12'>
                             <Input type="text"
                                 placeholder="제목을 입력하세요"
-                                value={albumUpdate.title}
+                                value={createAlbum.title}
                                 onChange={handleAlbumTitleChange}
                             ></Input>
                         </Col>
@@ -424,12 +419,14 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                         <Col sm='12' md='8' style={{ marginBottom: '10px' }}>
                             <Row className={styles.chipRow}>
                                 <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                                    {albumUpdate.albumTag.map((tag, index) => (
-                                        <Chip
-                                            key={index}
-                                            label={tag.albumTagList.tagName}
-                                            onDelete={() => handleTagDelete(tag)}
-                                        />
+                                    {createAlbum.albumTag && createAlbum.albumTag.map((tag, index) => (
+                                        tag.albumTagList && (
+                                            <Chip
+                                                key={index}
+                                                label={tag.albumTagList.tagName}
+                                                onDelete={() => handleTagDelete(tag)}
+                                            />
+                                        )
                                     ))}
                                 </Stack>
                             </Row>
@@ -443,7 +440,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                 <Col sm="10" style={{ marginBottom: '10px' }}>
                     트랙제목
                 </Col>
-                {albumUpdate.tracks.map((file, index) => (
+                {createAlbum.tracks&&createAlbum.tracks.map((file, index) => (
                     <Fragment key={index}>
                         <Col sm="2" style={{ marginBottom: '10px' }}>
                             <Input
@@ -487,7 +484,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                                 className={styles.detail_input_filename}
                                 type="text"
                                 placeholder="순서를 입력하세요"
-                                value={index + albumUpdate.tracks.length}
+                                value={index + createAlbum.tracks.length}
                                 readOnly={true}
                             />
                         </Col>
@@ -557,7 +554,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
                     >
-                        <AddTrackSelect  handleClose={handleClose} setAlbumUpdate={setAlbumUpdate} albumId={albumUpdate.albumId} />
+                        <AddTrackSelect handleClose={handleClose} setCreateAlbum={setCreateAlbum} albumId={createAlbum.albumId} />
                     </Dialog>
                 </Col>
             </Row>
@@ -571,4 +568,4 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     );
 });
 
-export default UpdateAlbumModal;
+export default AddPrevAlbum;

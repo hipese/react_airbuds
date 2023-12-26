@@ -34,10 +34,6 @@ const Mytracks = () => {
     const [trackCount, setTrackCount] = useState([]);
 
     useEffect(() => {
-        if (!loginID) {
-            return;
-        }
-
         axios.get(`/api/track/findById/${targetID}`).then((resp) => {
             const tracksWithImages = resp.data.map((track) => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
@@ -60,9 +56,10 @@ const Mytracks = () => {
         setAutoPlayAfterSrcChange(true);
 
         // 트랙에서 관련 정보 추출
-        const { filePath, imagePath, title, writer } = track;
+        const { trackId, filePath, imagePath, title, writer } = track;
         // TrackInfoContext를 선택한 트랙 정보로 업데이트
         setTrack_info({
+            trackId,
             filePath,
             imagePath,
             title,
