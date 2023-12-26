@@ -44,13 +44,26 @@ const Mytracks = () => {
         });
     }, [loginID]);
 
+    const addStreamCount = (trackId, singerId, e) => {
+        const formdata = new FormData();
+        const date = new Date().toISOString();
+        formdata.append("trackId",trackId);
+        formdata.append("streamDate",date);
+        formdata.append("streamSinger",singerId);
+        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
     const addTrackToPlaylist = (track) => {
 
         axios.post(`/api/cplist`, {
             trackId: track.trackId,
             id: loginID
         }).then(resp => {
-
+            addStreamCount(track.trackId,track.writeId);
         })
 
         setAutoPlayAfterSrcChange(true);

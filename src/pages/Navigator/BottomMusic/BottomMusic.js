@@ -70,6 +70,19 @@ const BottomMusic = () => {
         setLoading(false);
     };
 
+    const addStreamCount = (trackId, singerId, e) => {
+        const formdata = new FormData();
+        const date = new Date().toISOString();
+        formdata.append("trackId",trackId);
+        formdata.append("streamDate",date);
+        formdata.append("streamSinger",singerId);
+        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
     const handleNextTrack = () => {
         if (!loginID) {
             // If loginID is not available, do nothing
@@ -88,6 +101,7 @@ const BottomMusic = () => {
             imagePath: nextTrackInfo.imagePath
         });
         setAutoPlayAfterSrcChange(true);
+        addStreamCount(nextTrackInfo.trackId,nextTrackInfo.writer);
 
         // 현재 재생 중인 트랙을 업데이트합니다.
         setCurrentTrack(nextTrack);
@@ -120,6 +134,7 @@ const BottomMusic = () => {
         setAutoPlayAfterSrcChange(true);
         // 현재 재생 중인 트랙을 업데이트합니다.
         setCurrentTrack(previousTrack);
+        addStreamCount(previousTrackInfo.trackId,previousTrackInfo.writer);
     };
 
     const handleEnded = () => {
