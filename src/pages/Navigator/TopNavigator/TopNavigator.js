@@ -317,7 +317,6 @@ const TopNavigator = () => {
             <input type="text" id="username" class="swal2-input" placeholder="Username">
             <input type="password" id="password" class="swal2-input" placeholder="Password">
             <hr></hr>
-            나중에 소셜 로그인 추가 예정<br>
             <a id="findIdLink" style="cursor: pointer; text-decoration: underline;">아이디 찾기</a>
             <a id="findPwLink" style="cursor: pointer; text-decoration: underline;">비밀번호 찾기</a>
           `,
