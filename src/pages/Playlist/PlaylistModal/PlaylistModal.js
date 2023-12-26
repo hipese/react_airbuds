@@ -95,7 +95,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
 
             // Extract relevant information from the track object and create a new structure
             const newTrack = {
-                trackId: track.playlistSeq,
+                trackId: track.playlistTrackId,
                 filePath: track.playlistFilePath,
                 imagePath: track.playlistImagePath,
                 title: track.playlistTitle,
@@ -106,10 +106,10 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
         });
 
         // Extract relevant information from the track object
-        const { playlistSeq, playlistFilePath, playlistImagePath, playlistTitle, playlistWriter } = track[0];
+        const { playlistTrackId, playlistFilePath, playlistImagePath, playlistTitle, playlistWriter } = track[0];
         // Update TrackInfoContext with the selected track information
         setTrack_info({
-            trackId: playlistSeq,
+            trackId: playlistTrackId,
             filePath: playlistFilePath,
             imagePath: playlistImagePath,
             title: playlistTitle,

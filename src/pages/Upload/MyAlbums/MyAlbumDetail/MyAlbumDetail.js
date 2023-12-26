@@ -3,7 +3,7 @@ import { Button, Col, Row } from 'reactstrap';
 import ShareIcon from '@mui/icons-material/Share';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
-
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import style from "./MyAlbumDetail.module.css";
 import Modal from '@mui/material/Modal';

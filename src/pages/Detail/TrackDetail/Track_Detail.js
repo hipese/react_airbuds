@@ -516,7 +516,9 @@ const Track_Detail = () => {
                                     </Grid>
                                 ) : (
                                     <div className={styles.reply_info}>
-                                        <Typography variant="h6">{comment.writer}</Typography>
+                                        <Link to={`/Profile/${comment.writer}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Typography variant="h6">{comment.writer}</Typography>
+                                        </Link>
                                         <Typography variant="body1">{comment.contents}</Typography>
                                         <Typography variant="caption">{formatDate(comment.writeDate)}</Typography>
                                     </div>
