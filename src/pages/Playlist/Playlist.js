@@ -52,7 +52,7 @@ const Playlist = () => {
                 <h1>내 플레이리스트</h1>
                 <ul className={styles.playlistContent}>
                     {playlist.map((list, index) => {
-                        const tracksWithImages = uniqueImages(list.playlistTrack.filter(track => track && track.playlistImagePath));
+                        const tracksWithImages = uniqueImages(list.playlistTracks.filter(track => track && track.playlistImagePath));
                         const images = tracksWithImages.length > 0 ? tracksWithImages.slice(0, 4) : [];
                         const imgContainerClass = images.length === 4 ? styles.playlistImgContainer : styles.playlistImgContainerSingle;
                         return (
@@ -81,14 +81,14 @@ const Playlist = () => {
                                 </div>
                                 <div className={styles.playlistTitle}>{list.playlistPlTitle}</div>
                                 <div className={styles.playlistWriter}>
-                                    {[...new Set(list.playlistTrack.map(track => track.playlistWriter))]
+                                    {[...new Set(list.playlistTracks.map(track => track.playlistWriter))]
                                         .map((writer, index, array) => (
                                             <span key={index}>
                                                 {writer}{index < array.length - 1 ? ',\u00A0' : ''}
                                             </span>
                                         ))}
                                 </div>
-                                <div className={styles.playlistLength}><span>재생 목록 : {list.playlistTrack.length}곡</span></div>
+                                <div className={styles.playlistLength}><span>재생 목록 : {list.playlistTracks.length}곡</span></div>
                             </li>
                         );
                     })}
