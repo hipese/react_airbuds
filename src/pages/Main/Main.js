@@ -131,6 +131,18 @@ const Main = () => {
             </Box>
         );
     };
+    const addStreamCount = (trackId, singerId, e) => {
+        const formdata = new FormData();
+        const date = new Date().toISOString();
+        formdata.append("trackId",trackId);
+        formdata.append("streamDate",date);
+        formdata.append("streamSinger",singerId);
+        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
 
     const addTrackToPlaylist = (track) => {
 
@@ -138,7 +150,7 @@ const Main = () => {
             trackId: track.trackId,
             id: loginID
         }).then(resp => {
-
+            addStreamCount(track.trackId,track.writeId);
         })
 
         setAutoPlayAfterSrcChange(true);

@@ -1,14 +1,29 @@
-import { Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 import style from './announce.module.css'
 import Reactquill from './ReactQuill';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
-import { LoginContext } from '../../App';
+import { LoginContext, RoleContext } from '../../App';
 const AnnounceWriteMain = () =>{
 
     const {loginID} = useContext(LoginContext);
     const [announce, setAnnounce] = useState({announceTitle:"",announceWriter:loginID, announceCategory:"none",announcePublic:1, announceContents:"",announceAnswerState:0,announceWriteDate:new Date().toISOString(),files:[]});
+
+    const {userRole} = useContext(RoleContext);
+    
+    //페이지 접근제한 구현
+    useEffect(()=>{
+        console.log(userRole);
+        if(userRole !== null || userRole !== undefined){
+            if(userRole == "ROLE_MEMBER"){
+                alert("잘못된 접근입니다.");
+                navi("/");
+            }else if(userRole == "ROLE_MANAGER"){
+                
+            }
+        }
+    },[userRole]);
 
     const navi = useNavigate();
     const handleChange = (e) => {
@@ -115,8 +130,28 @@ const AnnounceWriteMain = () =>{
                         </Grid>
                         <Grid item xs={12}>
                             <div className={`${style.center} ${style.btnEven}`}>
-                                <button onClick={handleCancel}>취소</button>   
-                                <button onClick={handleSubmit}>작성</button>
+                                <Button variant="outlined" onClick={handleCancel}
+                                    sx={{
+                                        backgroundColor: '#4CAF50', // Default background color
+                                        color: 'white', // Default text color
+                                        '&:hover': {
+                                            backgroundColor: '#45a049', // Change background color on hover
+                                        },
+                                    }}
+                                >
+                                    취소
+                                </Button>
+                                <Button variant="outlined" onClick={handleSubmit}
+                                    sx={{
+                                        backgroundColor: '#4CAF50', // Default background color
+                                        color: 'white', // Default text color
+                                        '&:hover': {
+                                            backgroundColor: '#45a049', // Change background color on hover
+                                        },
+                                    }}
+                                >
+                                    작성
+                                </Button>
                             </div>
                         </Grid>
                     </Grid>                    

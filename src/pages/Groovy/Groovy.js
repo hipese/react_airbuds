@@ -22,31 +22,36 @@ import Track_Detail from "../Detail/TrackDetail/Track_Detail";
 import Editpage from "../Mypage/Editpage";
 import MyAlbumDetail from "../Upload/MyAlbums/MyAlbumDetail/MyAlbumDetail";
 
-import { RoleContext } from '../../App';
+import { LoginContext, RoleContext } from '../../App';
 import Swal from "sweetalert2";
 import ShowMusicList from "../ShowMusicList/ShowMusicList";
 
 const Groovy = () => {
+    const { loginID } = useContext(LoginContext);
     const { userRole } = useContext(RoleContext);
     const navigate = useNavigate();
     const location = useLocation();
 
-    useEffect(() => {
-        if (userRole != null) {
-            if (location.pathname.includes("/report") && userRole !== "ROLE_MANAGER") {
-                alert("이 페이지에 대한 권한이 없음!");
-                navigate("/");
-            }
-            if (location.pathname.includes("/dashboard") && userRole !== "ROLE_MANAGER") {
-                alert("이 페이지에 대한 권한이 없음!");
-                navigate("/");
-            }
-            if (location.pathname.includes("/announce/write") && userRole !== "ROLE_MANAGER") {
-                alert("이 페이지에 대한 권한이 없음!");
-                navigate("/");
-            }
-        }
-    }, [location, userRole, navigate]);
+    // useEffect(() => {
+    //     console.log(userRole);
+    //     if(loginID != "" || loginID != null || loginID != undefined){
+    //         if (userRole != undefined) {
+    //             if (location.pathname.includes("/report") && userRole !== "ROLE_MANAGER") {
+    //                 alert("이 페이지에 대한 권한이 없음!");
+    //                 navigate("/");
+    //             }
+    //             if (location.pathname.includes("/dashboard") && userRole !== "ROLE_MANAGER") {
+    //                 alert("이 페이지에 대한 권한이 없음!");
+    //                 navigate("/");
+    //             }
+    //             if (location.pathname.includes("/announce/write") && userRole !== "ROLE_MANAGER") {
+    //                 alert("이 페이지에 대한 권한이 없음!");
+    //                 navigate("/");
+    //             }
+    //         }
+    //     }
+        
+    // }, [location, userRole, navigate]);
 
     const showAlert = (message) => {
         Swal.fire({

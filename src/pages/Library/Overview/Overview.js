@@ -133,6 +133,19 @@ const Overview = () => {
     </div>
   ));
 
+  const addStreamCount = (trackId, singerId, e) => {
+      const formdata = new FormData();
+      const date = new Date().toISOString();
+      formdata.append("trackId",trackId);
+      formdata.append("streamDate",date);
+      formdata.append("streamSinger",singerId);
+      axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+
+      }).catch((e)=>{
+          console.log(e);
+      });
+  }
+
   // 특정 트랙을 재생 목록에 추가하는 함수
   const addTrackToPlaylist = (track) => {
 
@@ -140,7 +153,7 @@ const Overview = () => {
       trackId: track.trackId,
       id: loginID
     }).then(resp => {
-
+      addStreamCount(track.trackId,track.writeId);
     })
 
     setAutoPlayAfterSrcChange(true);
