@@ -7,9 +7,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import style from "./MyAlbumDetail.module.css";
 import Modal from '@mui/material/Modal';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UpdateAlbumModal from './UpdateAlbumModal/UpdateAlbumModal';
 import axios from 'axios';
+import { LoginContext } from '../../../../App';
 
 const MyAlbumDetail = () => {
 
@@ -17,16 +18,29 @@ const MyAlbumDetail = () => {
     const navigate = useNavigate();
     const albumData = location.state.albumData;
 
+
+    const { loginID, setLoginID } = useContext(LoginContext);
     const [albumUpdate, setAlbumUpdate] = useState(albumData);
     const [backUpAlbum, setBackUpAlbum] = useState(albumData);
+    const [isEditAlbum, setIsEditAlbum] = useState(false);
 
     // 모달창을 띄우기 위한 변수
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
 
+
+    useEffect(() => {
+        console.log(albumData.artistId)
+        axios.get(`/api/album/isEdit/${albumData.artistId}`).then(resp => {
+            console.log(resp.data);
+            setIsEditAlbum(resp.data);
+        })
+
+    }, [loginID])
+
     const handleCancle = () => {
         setOpen(false);
-        axios.get(`/api/album/findByAlbumId/${backUpAlbum.albumId}`).then(resp=>{
+        axios.get(`/api/album/findByAlbumId/${backUpAlbum.albumId}`).then(resp => {
             console.log(resp.data);
             setAlbumUpdate(resp.data);
         })
@@ -40,7 +54,7 @@ const MyAlbumDetail = () => {
         }
     };
 
-    const hnadleCarousel=()=>{
+    const hnadleCarousel = () => {
         navigate('/Upload/myAlbums');
     }
 
@@ -64,8 +78,8 @@ const MyAlbumDetail = () => {
             <Row>
                 <Col sm='12'>
                     <div className={style.button_group}>
-                        <Button className={style.button_custom} onClick={hnadleCarousel}> 
-                          돌아가기
+                        <Button className={style.button_custom} onClick={hnadleCarousel}>
+                            돌아가기
                         </Button>
                         <Button className={style.button_custom}>
                             <ShareIcon className={style.icon_custom} />
@@ -75,15 +89,20 @@ const MyAlbumDetail = () => {
                             <ContentCopyIcon className={style.icon_custom} />
                             Copy Link
                         </Button>
-                        <Button className={style.button_custom} onClick={handleOpen}>
-                            <EditIcon className={style.icon_custom} />
-                            수정
 
-                        </Button>
-                        <Button className={style.button_custom} onClick={handledelete}>
-                            <DeleteIcon className={style.icon_custom} />
-                            앨범삭제
-                        </Button>
+                        {isEditAlbum && (
+                            <Button className={style.button_custom} onClick={handleOpen}>
+                                <EditIcon className={style.icon_custom} />
+                                수정
+                            </Button>
+                        )}
+
+                        {isEditAlbum && (
+                            <Button className={style.button_custom} onClick={handledelete}>
+                                <DeleteIcon className={style.icon_custom} />
+                                앨범삭제
+                            </Button>
+                        )}
                     </div>
                     <Modal
                         open={open}

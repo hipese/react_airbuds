@@ -1,4 +1,4 @@
-import {  useContext, useEffect, useRef, useState } from 'react';
+import {  useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import MusicTagList from '../../Track_Upload/MuiscTagList/MuiscTagList';
 import { Button, Col, Input, Row } from 'reactstrap';
@@ -6,7 +6,6 @@ import axios from 'axios';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import singlestyle from "./UpdateModal.module.css"
-import { LoginContext } from '../../../../App';
 
 
 const Modalstyle = {
@@ -27,7 +26,7 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
   console.log(selectedTrack);
   const [previmagePath, setPrevImagePath] = useState({});
   const [imageview, setImageview] = useState({});
-  const { loginID, setLoginID } = useContext(LoginContext);
+
 
   // 선택된 태그를 가져오는 방법
   const [selectTag, setSelectTag] = useState([]);
@@ -130,10 +129,22 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
 
 
   const handleTitleChange = (e) => {
+
+    if (e.target.value && e.target.value.length > 30) {
+      alert("제목은 30자 이하로 입력해주세요.");
+      return;
+  }
+
     setSelectedTrack(prev => ({ ...prev, title: e.target.value }));
   };
 
   const handleWriterChange = (e) => {
+
+    if (e.target.value && e.target.value.length > 30) {
+      alert("제작자는 20자 이하로 입력해주세요.");
+      return;
+  }
+
     setSelectedTrack(prev => ({ ...prev, writer: e.target.value }));
   };
 

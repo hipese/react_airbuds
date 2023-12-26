@@ -15,7 +15,9 @@
 }
 .uploadDetail{
     width: 50%;
+    height: 800px;
     border: 1px solid black;
+    overflow: auto;
 }
 .imageContainer{
     margin-top: 10px;

@@ -24,6 +24,7 @@ import MyAlbumDetail from "../Upload/MyAlbums/MyAlbumDetail/MyAlbumDetail";
 
 import { RoleContext } from '../../App';
 import Swal from "sweetalert2";
+import ShowMusicList from "../ShowMusicList/ShowMusicList";
 
 const Groovy = () => {
     const { userRole } = useContext(RoleContext);
@@ -79,6 +80,7 @@ const Groovy = () => {
                     <Route path="Announce/*" element={<AnnounceList />} />
                     <Route path="Detail/:trackId/*" element={<Track_Detail />} />
                     <Route path="/Album/Detail/*" element={<MyAlbumDetail />} />
+                    <Route path="ShowMusicList/:searchText/*" element={<ShowMusicList />} />
                     <Route path="QnA/*" element={<QnaList />} />
                     <Route path="Dashboard/*" element={<DashBoardMain />} />
                 </Routes>
