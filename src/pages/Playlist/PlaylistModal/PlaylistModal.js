@@ -1,16 +1,26 @@
-import React, {useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './PlaylistModal.module.css';
 import axios from 'axios';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import { AutoPlayContext, CurrentTrackContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../App';
 
 const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
     const [formattedTracks, setFormattedTracks] = useState([]);
     const [tracksWithImages, setTracksWithImages] = useState([]);
     const [totalDuration, setTotalDuration] = useState('');
     const [trackCount, setTrackCount] = useState(0);
+    const [track, setTrack] = useState({});
+    const { audioFiles, setAudioFiles } = useContext(MusicContext);
+    const { isPlaying, setIsPlaying } = useContext(PlayingContext);
+    const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
+    const { track_info, setTrack_info } = useContext(TrackInfoContext);
+    const { tracks, setTracks } = useContext(TrackContext);
+    const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
+
     useEffect(() => {
         if (showModal) {
             document.body.style.overflow = 'hidden';
-            const formatted = playlist.playlistTracks.map(track => ({ 
+            const formatted = playlist.playlistTracks.map(track => ({
                 ...track,
                 playlistDuration: formatDuration(track.playlistDuration)
             }));
@@ -25,7 +35,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
         }
         return () => {
             document.body.style.overflow = 'unset';
-        } 
+        }
     }, [showModal, playlist]);
     if (!showModal) return null;
 
@@ -38,7 +48,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
         return `${hours}${minutes}:${seconds}`;
     };
     // const totalDuration = getTotalDurationInHoursAndMinutes(playlist.playlistTracks);
-        const uniqueImages = (tracks) => {
+    const uniqueImages = (tracks) => {
         const uniquePaths = new Set();
         return tracks.filter(track => {
             if (!uniquePaths.has(track.playlistImagePath)) {
@@ -78,6 +88,47 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
         });
     }
 
+    const addTrackToPlaylist = (track) => {
+        const newTracks = track.map((track) => {
+
+            setAutoPlayAfterSrcChange(true);
+
+            // Extract relevant information from the track object and create a new structure
+            const newTrack = {
+                trackId: track.playlistTrackId,
+                filePath: track.playlistFilePath,
+                imagePath: track.playlistImagePath,
+                title: track.playlistTitle,
+                writer: track.playlistWriter,
+            };
+
+            return newTrack;
+        });
+
+        // Extract relevant information from the track object
+        const { playlistTrackId, playlistFilePath, playlistImagePath, playlistTitle, playlistWriter } = track[0];
+        // Update TrackInfoContext with the selected track information
+        setTrack_info({
+            trackId: playlistTrackId,
+            filePath: playlistFilePath,
+            imagePath: playlistImagePath,
+            title: playlistTitle,
+            writer: playlistWriter,
+        });
+
+        const newAudioFiles = track.map(track => `/tracks/${track.playlistFilePath}`);
+
+        setAutoPlayAfterSrcChange(true);
+
+        // 현재 트랙을 중지하고 새 트랙을 재생 목록에 추가하고 재생 시작
+        setAudioFiles((prevAudioFiles) => [...newAudioFiles, ...prevAudioFiles]);
+        setCurrentTrack(0);
+        setIsPlaying(true);
+
+        // Update the state with the new array of tracks
+        setTracks((prevTracks) => [...newTracks, ...prevTracks]);
+    };
+
 
 
     return (
@@ -89,18 +140,18 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
                         {tracksWithImages.length > 0 ? (
                             imgContainerClass === styles.modalImgContainerGrid ? (
                                 images.map((track, imgIndex) => (
-                                    <img 
-                                        key={imgIndex} 
+                                    <img
+                                        key={imgIndex}
                                         className={styles.modalImg}
-                                        src={`/tracks/image/${track.playlistImagePath}`} 
-                                        alt={track.playlistTitle || '플레이리스트 이미지'} 
+                                        src={`/tracks/image/${track.playlistImagePath}`}
+                                        alt={track.playlistTitle || '플레이리스트 이미지'}
                                     />
                                 ))
                             ) : (
-                                <img 
+                                <img
                                     className={styles.modalImg}
-                                    src={`/tracks/image/${images[0].playlistImagePath}`} 
-                                    alt={images[0].playlistTitle || '플레이리스트 이미지'} 
+                                    src={`/tracks/image/${images[0].playlistImagePath}`}
+                                    alt={images[0].playlistTitle || '플레이리스트 이미지'}
                                 />
                             )
                         ) : (
@@ -120,13 +171,16 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted }) => {
                             <button className={styles.deleteBtn} onClick={() => handleDelete(playlist)}>삭제</button>
                         </div>
                     </div>
+                    <div className={styles.play_button} onClick={() => addTrackToPlaylist(playlist.playlistTracks)} >
+                        <PlayCircleIcon sx={{ width: '200px', height: '200px' }} />
+                    </div>
                 </div>
                 <div className={styles.modalBody}>
                     <ul className={styles.modalTrackList}>
                         {formattedTracks.map((track, index) => (
                             <li className={styles.modalTrack} key={index}>
                                 <div className={styles.modalTrackImg}>
-                                    <img src={`/tracks/image/${track.playlistImagePath}`}  alt="track" />
+                                    <img src={`/tracks/image/${track.playlistImagePath}`} alt="track" />
                                 </div>
                                 <div className={styles.modalTrackInfo}>
                                     <div className={styles.modalTrackTitle}>{track.playlistTitle}</div>
