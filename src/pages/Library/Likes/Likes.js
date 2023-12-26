@@ -32,7 +32,6 @@ const Likes = () => {
     const containerRef = useRef(null);  // 컨테이너 div를 위한 Ref
     const [myLikes,setMyLikes] = useState([]);
     const [isFavorite, setFavorite] = useState(0);
-    const [trackLike,setLike] = useState([]);
 
     useEffect(() => {
 
@@ -134,7 +133,6 @@ const Likes = () => {
                 }
 
                 setPage(prevPage => prevPage + 1);
-                setLoading(false);
             }).catch(error => {
                 console.error('데이터를 불러오는 중 오류 발생:', error);
                 setLoading(false);
@@ -218,7 +216,7 @@ const Likes = () => {
                 formData.append("userId",loginID);
                 formData.append("trackId",trackId);                
                 axios.post(`/api/like`,formData).then(res=>{
-                    setLike([...trackLike, { trackId : trackId, userId: loginID, likeSeq: res.data}]);
+                    setMyLikes([...myLikes, { trackId : trackId, userId: loginID, likeSeq: res.data}]);
                     setFavorite(isFavorite+1);
                     e.target.classList.add(styles.onClickHeart);
                     e.target.classList.remove(styles.NonClickHeart);
@@ -230,9 +228,8 @@ const Likes = () => {
                 deleteData.append("trackId",trackId);
                 deleteData.append("userId",loginID);
                 axios.post(`/api/like/delete`,deleteData).then(res=>{
-                    const newLikeList = trackLike.filter(e => e.trackId !== trackId);
-                    console.log("carousel delete",newLikeList);
-                    setLike(newLikeList);
+                    const newLikeList = myLikes.filter(e => e.trackId !== trackId);
+                    setMyLikes(newLikeList);
                     setFavorite(isFavorite+1);
                     e.target.classList.remove(styles.onClickHeart);
                     e.target.classList.add(styles.NonClickHeart);

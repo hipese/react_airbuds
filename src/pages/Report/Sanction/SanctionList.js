@@ -22,18 +22,20 @@ const SanctionList = () => {
 
   const { loginID } = useContext(LoginContext);
   const [search, setSearch] = useState('');
+  const [isChange, setIsChange] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sanctions, setSanctions] = useState([]);
   const COUNT_PER_PAGE = 8;
 
   useEffect(() => {
+    setLoading(true);
     axios.get('/api/report/sanctionList').then((resp) => {
       setSanctions(resp.data);
       setLoading(false);
     }).catch((e) => {
       console.log(e);
     });
-  }, [sanctions]);
+  }, [isChange]);
 
   const totalItems = sanctions.length;
   const totalPages = Math.ceil(totalItems / COUNT_PER_PAGE);
@@ -63,6 +65,7 @@ const SanctionList = () => {
 
   const handleChangeState = (trackId) => {
     axios.put(`/api/report/sanction/release/${trackId}`).then(resp => {
+      setIsChange(true);
     })
   }
 
@@ -85,7 +88,7 @@ const SanctionList = () => {
             곡명
           </Typography>
         </Grid>
-        <Grid item xs={2}className={`${style.center}`}>
+        <Grid item xs={2} className={`${style.center}`}>
           <Typography fontSize={{ xs: "13px", lg: "14px" }}>
             가수
           </Typography>

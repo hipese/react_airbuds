@@ -35,7 +35,7 @@ const History = () => {
 
     const [myLikes,setMyLikes] = useState([]);
     const [isFavorite, setFavorite] = useState(0);
-    const [trackLike,setLike] = useState([]);
+    const [trackLike, setLike] = useState([]);
     
     useEffect(() => {
         if (!loginID) {
@@ -175,7 +175,7 @@ const History = () => {
                 formData.append("userId",loginID);
                 formData.append("trackId",trackId);                
                 axios.post(`/api/like`,formData).then(res=>{
-                    setLike([...trackLike, { trackId : trackId, userId: loginID, likeSeq: res.data}]);
+                    setMyLikes([...myLikes, { trackId : trackId, userId: loginID, likeSeq: res.data}]);
                     setFavorite(isFavorite+1);
                     e.target.classList.add(styles.onClickHeart);
                     e.target.classList.remove(styles.NonClickHeart);
@@ -187,9 +187,9 @@ const History = () => {
                 deleteData.append("trackId",trackId);
                 deleteData.append("userId",loginID);
                 axios.post(`/api/like/delete`,deleteData).then(res=>{
-                    const newLikeList = trackLike.filter(e => e.trackId !== trackId);
+                    const newLikeList = myLikes.filter(e => e.trackId !== trackId);
                     console.log("carousel delete",newLikeList);
-                    setLike(newLikeList);
+                    setMyLikes(newLikeList);
                     setFavorite(isFavorite+1);
                     e.target.classList.remove(styles.onClickHeart);
                     e.target.classList.add(styles.NonClickHeart);
@@ -204,17 +204,31 @@ const History = () => {
     };
 
     const loadingLikes = () =>{
-        axios.get(`/api/like/myLikes/${loginID}`).then(res=>{
+        // axios.get(`/api/like/historyLike/${loginID}`).then(res=>{
+        //     console.log(res.data);
+        //     setMyLikes(res.data);
+        // }).catch((e)=>{
+        //     console.log(e);
+        // });
+
+        axios.get(`/api/like/historyLikeCount/${loginID}`).then(res=>{
             console.log(res.data);
             setMyLikes(res.data);
         }).catch((e)=>{
             console.log(e);
         });
+        
+        axios.get(`/api/like/${loginID}`).then(res => {
+            console.log(res.data);
+            setLike(res.data);
+        }).catch((e) => {
+            console.log(e);
+        });
     }
-
     const countForTrack = (trackId) => {
         const countInfo = myLikes.find(item => item.trackId === trackId);
-        return countInfo ? countInfo.count : 0;
+        console.log(countInfo);
+        return countInfo ? countInfo.likeCount : 0;
     }
 
     useEffect(()=>{
@@ -266,9 +280,9 @@ const History = () => {
                                             src={heart} 
                                             alt="" 
                                             className={
-                                                myLikes.some(trackLike => trackLike.trackId === track.trackId) 
+                                                trackLike.some(trackLike => trackLike.trackId === track.trackId) 
                                                 ? styles.onClickHeart : styles.NonClickHeart} 
-                                            onClick={(e)=>{handleFavorite(track.trackId,myLikes.some(trackLike => trackLike.trackId === track.trackId),e)}}/>
+                                            onClick={(e)=>{handleFavorite(track.trackId,trackLike.some(trackLike => trackLike.trackId === track.trackId),e)}}/>
                                             {countForTrack(track.trackId)}
                                         </div>
                                         <div className={styles.share}>

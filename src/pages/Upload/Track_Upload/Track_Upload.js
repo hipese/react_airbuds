@@ -20,7 +20,7 @@ const Track_Upload = () => {
 
     const [imageview, setImageview] = useState({});
 
-    // 선택된 태그를 가져오는 방법
+    // 선택된 태그를 가져지고 있는 state
     const [selectTag, setSelectTag] = useState([]);
 
 
@@ -32,15 +32,6 @@ const Track_Upload = () => {
         })
     }
     
-    // 선택한 id값의 음원 정보를 삭제하는 기능
-    const handleDelete = (trackId) => {
-        console.log("뭐임" + trackId);
-        axios.delete(`/api/track/${trackId}`).then(resp => {
-            console.log("삭제 성공..")
-        }).catch(resp => {
-            console.log("삭제 실패...")
-        })
-    }
 
     const onDrop = (acceptedFiles) => {
         acceptedFiles.forEach(file => {
@@ -111,25 +102,6 @@ const Track_Upload = () => {
                         selectTag={selectTag} setSelectTag={setSelectTag}  />
                 }
             </Row>
-
-            <Row>
-                {files.length > 0 && (
-                    <div>
-                        <h3>업로드된 파일:</h3>
-                        <ul>{filesList}</ul>
-                    </div>
-                )}
-            </Row>
-
-            <button onClick={handlelist}>목록 보여주기</button>
-            <div>
-                {tracks.map((track, index) => (
-                    <div key={index} >
-                        {track.title} <button onClick={() => handleDelete(track.trackId)}>삭제하기</button>
-                    </div>
-                ))}
-            </div>
-
         </Container>
 
     );
