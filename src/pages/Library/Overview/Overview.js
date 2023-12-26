@@ -135,7 +135,7 @@ const Overview = () => {
 
   // 특정 트랙을 재생 목록에 추가하는 함수
   const addTrackToPlaylist = (track) => {
-
+    console.log(track);
     axios.post(`/api/cplist`, {
       trackId: track.trackId,
       id: loginID
@@ -146,9 +146,10 @@ const Overview = () => {
     setAutoPlayAfterSrcChange(true);
 
     // 트랙에서 관련 정보 추출
-    const { filePath, imagePath, title, writer } = track;
+    const { trackId, filePath, imagePath, title, writer } = track;
     // TrackInfoContext를 선택한 트랙 정보로 업데이트
     setTrack_info({
+      trackId,
       filePath,
       imagePath,
       title,
