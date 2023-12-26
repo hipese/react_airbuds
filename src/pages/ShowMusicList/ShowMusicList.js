@@ -31,7 +31,6 @@ const ShowMusicList = () => {
 
     const navigate = useNavigate();
 
-    console.log(searchText);
 
     useEffect(() => {
 
@@ -84,8 +83,8 @@ const ShowMusicList = () => {
         }
     };
 
-    // 최대 12개까지의 빈 아이템을 생성
-    const emptyItems = Array.from({ length: Math.max(0, 11 - searchTracks.length) }, (_, index) => (
+    
+    const emptyItems = Array.from({ length: Math.max(0, searchTracks.length) }, (_, index) => (
         <div key={`empty-${index}`} className={style.item}>
             <img src="http://placehold.it/150x150" alt={`Empty Image ${index + 1}`} />
             <div className={style.carouselTitle}>빈 곡</div>
@@ -93,7 +92,7 @@ const ShowMusicList = () => {
         </div>
     ));
 
-    const emptyItems2 = Array.from({ length: Math.max(0, 11 - searchAlbums.length) }, (_, index) => (
+    const emptyItems2 = Array.from({ length: Math.max(0, searchAlbums.length) }, (_, index) => (
         <div key={`empty-${index}`} className={style.item}>
             <img src="http://placehold.it/150x150" alt={`Empty Image ${index + 1}`} />
             <div className={style.carouselTitle}>빈 곡</div>
@@ -126,11 +125,20 @@ const ShowMusicList = () => {
             <div className={style.item} key={index}>
                 <div>
                     <Link to={`/Detail/${track.trackId}`}>
-                        <img src={`/tracks/image/${track.trackImages[0].imagePath}`} alt={`Image ${index + 1}`} />
-                        <div className={style.carouselTitle}>{track.title}</div>
-                        <div className={style.carouselSinger}>
-                            {track.writer}
-                        </div>
+                        {track.trackImages && track.trackImages.length > 0 ? (
+                            <>
+                                <img src={`/tracks/image/${track.trackImages[0].imagePath}`} alt={`Image ${index + 1}`} />
+                                <div className={style.carouselTitle}>{track.title}</div>
+                                <div className={style.carouselSinger}>{track.writer}</div>
+                            </>
+                        ) : (
+                            // 대체 내용 또는 처리 로직 추가
+                            <>
+                                <img src="http://placehold.it/150x150" alt={`Empty Image ${index + 1}`} />
+                                <div className={style.carouselTitle}>{track.title}</div>
+                                <div className={style.carouselSinger}>{track.writer}</div>
+                            </>
+                        )}
                     </Link>
                 </div>
                 <div className={style.audioPath}>{track.filePath}</div>
@@ -150,7 +158,7 @@ const ShowMusicList = () => {
                 <React.Fragment>
                     {searchAlbums.length > 0 && (
                         <>
-                            <div className={style.carouselTitle1}>최근에 재생한 노래들</div>
+                            <div className={style.carouselTitle1}>"{searchText}"로 앨범 검색결과</div>
                             <div className={style.carousel}>
                                 <div className={style.Carousel}>
                                     <OwlCarousel
@@ -186,7 +194,7 @@ const ShowMusicList = () => {
                     )}
                     {searchTracks.length > 0 && (
                         <>
-                            <div className={style.carouselTitle1}>좋아요한 노래들</div>
+                            <div className={style.carouselTitle1}>"{searchText}"로 트랙 검색결과</div>
                             <div className={style.carousel}>
                                 <div className={style.Carousel}>
                                     <OwlCarousel

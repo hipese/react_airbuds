@@ -3,12 +3,15 @@
     align-items: center;
   }
   
-  .album_image img {
-    max-width: 250px; /* 이미지 최대 크기 설정 */
+  .album_image{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  
-  .album_info {
-    margin-left: 20px;
+  .album_image img {
+   
+    max-width: 250px; /* 이미지 최대 크기 설정 */
   }
   
   .album_writers {
@@ -23,6 +26,7 @@
   .track {
     display: flex;
     align-items: center;
+    border: 1px solid silver;
   }
   
   .track_number {
@@ -56,4 +60,14 @@
   .icon_custom {
     color: white; /* Set the icon color */
   }
-  
+  .trackCol{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .mainAlbumTitle{
+    margin-top: 15px;
+  }
+  .AlbumCols{
+    margin-bottom: 10px;
+  }
