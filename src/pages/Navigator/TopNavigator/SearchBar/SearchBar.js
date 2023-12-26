@@ -71,17 +71,12 @@ const SearchBar = () => {
     const handleSearch = () => {
         setSearchHistory((prevHistory) => [searchText, ...prevHistory]);
 
-        // 같은 페이지에서 검색하면 페이지 전환을 안함(나중에 최적화 할때나 신경슬 요소라 일단 배재함)
-        // const currentLocation = window.location.pathname;
-        // const targetLocation = '/ShowMusicList';
-        // if (currentLocation !== targetLocation) {
-        //     navigate(`ShowMusicList/${searchText}`);
-        //     console.log("이거임?");
-        // }
+        if(searchText==""){
+            alert("검색어를 입력해주세요");
+            return;
+        }
 
         navigate(`ShowMusicList/${searchText}`);
-            console.log("이거임?");
-  
     };
 
     return (

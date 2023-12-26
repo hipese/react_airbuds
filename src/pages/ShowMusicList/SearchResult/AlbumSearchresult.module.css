@@ -4,10 +4,8 @@
   }
   
   .album_image{
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 10px;
+    padding: 0px;
   }
   .album_image img {
    
@@ -63,11 +61,22 @@
   .trackCol{
     display: flex;
     align-items: center;
-    margin-top: 10px;
   }
   .mainAlbumTitle{
-    margin-top: 15px;
+    margin-top: 0px;
   }
   .AlbumCols{
     margin-bottom: 10px;
+  }
+  .trackBox{
+    margin-top: 10px;
+  }
+  .album_title{
+
+  }
+  .album_writer{
+    margin-left: 5px;
+  }
+  .album_margin{
+    margin-top: 10px;
   }

@@ -4,6 +4,13 @@
   align-items: center;
   font-size: 40px;
 }
-.searchResult{
-  padding: auto;
+.searchResultBox{
+  width: 100%;
+  margin-bottom: 100px;
+}
+.noSearchText{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
 }
