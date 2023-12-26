@@ -21,6 +21,8 @@ import style from "./report.module.css";
 import Swal from "sweetalert2";
 import "@sweetalert2/themes/bootstrap-4";
 
+import PersonIcon from '@mui/icons-material/Person';
+
 const theme = createTheme({
     components: {
         MuiMenu: {
@@ -55,6 +57,7 @@ const Track_Detail = () => {
     const [isFavorite, setFavorite] = useState(0);
     const [replyLike, setReplyLike] = useState([]);
     const [likeCount, setLikeCount] = useState([]);
+    const [isFollowed, setFollow] = useState(false);
 
     const loadingReplies = async () => {
         axios.get(`/api/track/bytrack_id/${trackId}`).then(resp => {
@@ -82,14 +85,26 @@ const Track_Detail = () => {
     const endIndex = Math.min(startIndex + COUNT_PER_PAGE, totalItems);
     const visibleSignList = replyList.slice(startIndex, endIndex);
 
+    const addStreamCount = (trackId, singerId, e) => {
+        const formdata = new FormData();
+        const date = new Date().toISOString();
+        formdata.append("trackId",trackId);
+        formdata.append("streamDate",date);
+        formdata.append("streamSinger",singerId);
+        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
     // 특정 트랙을 재생 목록에 추가하는 함수
     const addTrackToPlaylist = (track) => {
-
         axios.post(`/api/cplist`, {
             trackId: track.trackId,
             id: loginID
         }).then(resp => {
-
+            addStreamCount(track.trackId,track.writeId);
         })
 
         setAutoPlayAfterSrcChange(true);
@@ -259,6 +274,46 @@ const Track_Detail = () => {
         }
     };
 
+    const checkFollowState = () => {
+        const formData = new FormData();
+        formData.append("memberId", loginID);
+        formData.append("singerId", track.writeId);
+
+        axios.post(`/api/like/isfollow`, formData).then(res => {
+            setFollow(res.data);
+        }).catch((e) => {
+            console.log(e);
+        });
+    }
+
+    const handleFollowBtn = (state) => {
+        if (loginID != "") {
+            if (!state) {
+                const formData = new FormData();
+                formData.append("memberId", loginID);
+                formData.append("singerId", track.writeId)
+                axios.post(`/api/like/follow`, formData).then(res => {
+                    checkFollowState();
+                }).catch((e) => {
+                    console.log(e);
+                });
+            } else {
+                const formData = new FormData();
+                formData.append("memberId", loginID);
+                formData.append("singerId", track.writeId)
+                axios.post(`/api/like/followDelete`, formData).then(res => {
+                    checkFollowState();
+                }).catch((e) => {
+                    console.log(e);
+                });
+            }
+
+        } else {
+            alert("로그인 필요");
+            return;
+        }
+    }
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault(); // 엔터키 기본 동작 막기 (개행 추가 방지)
@@ -418,12 +473,58 @@ const Track_Detail = () => {
                                     </Typography>
                                 </Link>
                                 <div className={styles.like}>
-                                    <FavoriteBorderIcon />
+                                {
+                                    loginID == track.writeId ?
+                                        ""
+                                        :
+                                        !isFollowed ?
+                                            //팔로우 안한 상태일때.
+                                            <Button variant="outlined" startIcon={<PersonIcon />}
+                                                sx={{
+                                                    width: '100px',
+                                                    height: '30px',
+                                                    color: '#212529',
+                                                    borderColor: '#4CAF50',
+                                                    marginTop: '10px',
+                                                    marginBottom: '10px',
+                                                    marginRight: '10px',
+                                                    '&:hover': {
+                                                        borderColor: '#4CAF50',
+                                                        backgroundColor: '#4CAF50',
+                                                        color: "white"
+                                                    },
+                                                }}
+                                                onClick={() => { handleFollowBtn(isFollowed) }}>
+                                                Follow
+                                            </Button>
+                                            :
+                                            //팔로우 한 상태일때.
+                                            <Button variant="outlined" startIcon={<PersonIcon />}
+                                                sx={{
+                                                    width: '120px',
+                                                    height: '30px',
+                                                    color: 'white',
+                                                    borderColor: '#4CAF50',
+                                                    backgroundColor: '#4CAF50',
+                                                    marginTop: '10px',
+                                                    marginBottom: '10px',
+                                                    marginRight: '10px',
+                                                    '&:hover': {
+                                                        backgroundColor: 'white',
+                                                        borderColor: '#4CAF50',
+                                                        color: '#212529',
+                                                    },
+                                                }}
+                                                onClick={() => { handleFollowBtn(isFollowed) }}>
+                                                Followed
+                                            </Button>
+                                }
+                                    {/* <FavoriteBorderIcon />
                                     <Typography variant="body1">16.9K</Typography>
                                     <RepeatIcon />
                                     <Typography variant="body1">368</Typography>
                                     <FormatAlignLeftIcon />
-                                    <Typography variant="body1">5</Typography>
+                                    <Typography variant="body1">5</Typography> */}
                                 </div>
                             </Grid>
                         </Grid>
