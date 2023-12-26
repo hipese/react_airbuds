@@ -95,9 +95,10 @@ const Track_Detail = () => {
         setAutoPlayAfterSrcChange(true);
 
         // 트랙에서 관련 정보 추출
-        const { filePath, imagePath, title, writer } = track;
+        const { trackId, filePath, imagePath, title, writer } = track;
         // TrackInfoContext를 선택한 트랙 정보로 업데이트
         setTrack_info({
+            trackId,
             filePath,
             imagePath,
             title,
@@ -206,7 +207,7 @@ const Track_Detail = () => {
     useEffect(() => {
         loadingLikes();
         loadingReplies();
-    }, [isFavorite, loginID]);
+    }, [isFavorite, loginID, trackId]);
 
     const handleFavorite = (replySeq, isLiked, e) => {
         if (loginID !== "") {
