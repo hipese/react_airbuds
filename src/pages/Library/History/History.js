@@ -7,9 +7,7 @@ import { AutoPlayContext, CurrentTrackContext, LoginContext, MusicContext, Playi
 import { Link } from 'react-router-dom';
 import None_login_info from '../../Components/None_login_info';
 import { Avatar, Box, CircularProgress, Typography } from '@mui/material';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import RepeatIcon from '@mui/icons-material/Repeat';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { useInView } from 'react-intersection-observer';
 import heart from '../assets/heart.svg'
 
@@ -33,10 +31,10 @@ const History = () => {
     const [hasMore, setHasMore] = useState(true);  // 더 불러올 아이템이 있는지 추적
     const containerRef = useRef(null);  // 컨테이너 div를 위한 Ref
 
-    const [myLikes,setMyLikes] = useState([]);
+    const [myLikes, setMyLikes] = useState([]);
     const [isFavorite, setFavorite] = useState(0);
     const [trackLike, setLike] = useState([]);
-    
+
     useEffect(() => {
         if (!loginID) {
             setLoading(false);
@@ -71,6 +69,7 @@ const History = () => {
 
     // 바닥에 스크롤이 닿았을 때 실행될 함수
     const handleScrollToBottom = () => {
+        console.log("gd");
         if (hasMore) {
             // 다음 데이터를 불러오기 위한 API 호출
             axios.get(`/api/cplist`, {
@@ -140,12 +139,12 @@ const History = () => {
     const addStreamCount = (trackId, singerId, e) => {
         const formdata = new FormData();
         const date = new Date().toISOString();
-        formdata.append("trackId",trackId);
-        formdata.append("streamDate",date);
-        formdata.append("streamSinger",singerId);
-        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+        formdata.append("trackId", trackId);
+        formdata.append("streamDate", date);
+        formdata.append("streamSinger", singerId);
+        axios.put(`/api/dashboard/addStream`, formdata).then(res => {
 
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log(e);
         });
     }
@@ -157,7 +156,7 @@ const History = () => {
             trackId: track.trackId,
             id: loginID
         }).then(resp => {
-            addStreamCount(track.trackId,track.writeId);
+            addStreamCount(track.trackId, track.writeId);
         })
 
         setAutoPlayAfterSrcChange(true);
@@ -181,43 +180,43 @@ const History = () => {
         setIsPlaying(true);
     };
 
-    const handleFavorite = (trackId, isLiked,e) => {
-        if(loginID !== ""){
-            if(!isLiked){
+    const handleFavorite = (trackId, isLiked, e) => {
+        if (loginID !== "") {
+            if (!isLiked) {
                 const formData = new FormData();
-                formData.append("likeSeq",0);
-                formData.append("userId",loginID);
-                formData.append("trackId",trackId);                
-                axios.post(`/api/like`,formData).then(res=>{
-                    setMyLikes([...myLikes, { trackId : trackId, userId: loginID, likeSeq: res.data}]);
-                    setFavorite(isFavorite+1);
+                formData.append("likeSeq", 0);
+                formData.append("userId", loginID);
+                formData.append("trackId", trackId);
+                axios.post(`/api/like`, formData).then(res => {
+                    setMyLikes([...myLikes, { trackId: trackId, userId: loginID, likeSeq: res.data }]);
+                    setFavorite(isFavorite + 1);
                     e.target.classList.add(styles.onClickHeart);
                     e.target.classList.remove(styles.NonClickHeart);
-                }).catch((e)=>{
+                }).catch((e) => {
                     console.log(e);
                 });
-            }else{
+            } else {
                 const deleteData = new FormData();
-                deleteData.append("trackId",trackId);
-                deleteData.append("userId",loginID);
-                axios.post(`/api/like/delete`,deleteData).then(res=>{
+                deleteData.append("trackId", trackId);
+                deleteData.append("userId", loginID);
+                axios.post(`/api/like/delete`, deleteData).then(res => {
                     const newLikeList = myLikes.filter(e => e.trackId !== trackId);
-                    console.log("carousel delete",newLikeList);
+                    console.log("carousel delete", newLikeList);
                     setMyLikes(newLikeList);
-                    setFavorite(isFavorite+1);
+                    setFavorite(isFavorite + 1);
                     e.target.classList.remove(styles.onClickHeart);
                     e.target.classList.add(styles.NonClickHeart);
-                }).catch((e)=>{
+                }).catch((e) => {
                     console.log(e);
-                });            
+                });
             }
-        }else{
+        } else {
             alert("좋아요는 로그인을 해야 합니다.")
             return;
         }
     };
 
-    const loadingLikes = () =>{
+    const loadingLikes = () => {
         // axios.get(`/api/like/historyLike/${loginID}`).then(res=>{
         //     console.log(res.data);
         //     setMyLikes(res.data);
@@ -225,15 +224,13 @@ const History = () => {
         //     console.log(e);
         // });
 
-        axios.get(`/api/like/historyLikeCount/${loginID}`).then(res=>{
-            console.log(res.data);
+        axios.get(`/api/like/historyLikeCount/${loginID}`).then(res => {
             setMyLikes(res.data);
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log(e);
         });
-        
+
         axios.get(`/api/like/${loginID}`).then(res => {
-            console.log(res.data);
             setLike(res.data);
         }).catch((e) => {
             console.log(e);
@@ -241,13 +238,12 @@ const History = () => {
     }
     const countForTrack = (trackId) => {
         const countInfo = myLikes.find(item => item.trackId === trackId);
-        console.log(countInfo);
         return countInfo ? countInfo.likeCount : 0;
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         loadingLikes();
-    },[isFavorite]);
+    }, [isFavorite]);
 
     return (
         <>
@@ -258,7 +254,7 @@ const History = () => {
             ) : (
                 loginID ? (
                     <>
-                        <div className={styles.container}>
+                        <div ref={containerRef} className={styles.container}>
                             {track.map((track, index) => (
                                 <div className={styles.track_info} key={index}>
                                     <Link to={`/Detail/${track.trackId}`} className={styles.linkContainer}>
@@ -280,28 +276,26 @@ const History = () => {
                                             </div>
                                         </div>
                                     </Link>
-                                    <div className={styles.play_button}
-                                        onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
-                                    >
-                                        <PlayArrowIcon sx={{ width: '60px', height: '60px' }} />
-                                    </div>
-                                    <div className={styles.track_duration}>
-                                        {formatDurationFromHHMMSS(track.duration)}
-                                    </div>
-                                    <div className={styles.like_share}>
-                                        <div className={styles.like}>
-                                            <img 
-                                            src={heart} 
-                                            alt="" 
-                                            className={
-                                                trackLike.some(trackLike => trackLike.trackId === track.trackId) 
-                                                ? styles.onClickHeart : styles.NonClickHeart} 
-                                            onClick={(e)=>{handleFavorite(track.trackId,trackLike.some(trackLike => trackLike.trackId === track.trackId),e)}}/>
-                                            {countForTrack(track.trackId)}
+                                    <div className={styles.track_button}>
+                                        <div className={styles.play_button}
+                                            onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
+                                        >
+                                            <PlayCircleIcon sx={{ width: '60px', height: '60px' }} />
                                         </div>
-                                        <div className={styles.share}>
-                                            <RepeatIcon />
-                                            368
+                                        <div className={styles.track_duration}>
+                                            {formatDurationFromHHMMSS(track.duration)}
+                                        </div>
+                                        <div className={styles.like_share}>
+                                            <div className={styles.like}>
+                                                <img
+                                                    src={heart}
+                                                    alt=""
+                                                    className={
+                                                        trackLike.some(trackLike => trackLike.trackId === track.trackId)
+                                                            ? styles.onClickHeart : styles.NonClickHeart}
+                                                    onClick={(e) => { handleFavorite(track.trackId, trackLike.some(trackLike => trackLike.trackId === track.trackId), e) }} />
+                                                {countForTrack(track.trackId)}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

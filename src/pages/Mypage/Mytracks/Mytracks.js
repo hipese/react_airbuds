@@ -1,10 +1,7 @@
 import axios from "axios";
 import { useEffect, useContext, useState } from "react";
 import { Avatar, Typography } from "@mui/material";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import styles from "./Mytracks.module.css";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import RepeatIcon from '@mui/icons-material/Repeat';
 import {
     AutoPlayContext,
     CurrentTrackContext,
@@ -17,6 +14,7 @@ import {
 import { Link, useParams } from "react-router-dom";
 import heart from "../assets/heart.svg";
 import None_track_info from "../../Components/None_track_info";
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 const Mytracks = () => {
     const { targetID } = useParams();
@@ -47,12 +45,12 @@ const Mytracks = () => {
     const addStreamCount = (trackId, singerId, e) => {
         const formdata = new FormData();
         const date = new Date().toISOString();
-        formdata.append("trackId",trackId);
-        formdata.append("streamDate",date);
-        formdata.append("streamSinger",singerId);
-        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+        formdata.append("trackId", trackId);
+        formdata.append("streamDate", date);
+        formdata.append("streamSinger", singerId);
+        axios.put(`/api/dashboard/addStream`, formdata).then(res => {
 
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log(e);
         });
     }
@@ -63,7 +61,7 @@ const Mytracks = () => {
             trackId: track.trackId,
             id: loginID
         }).then(resp => {
-            addStreamCount(track.trackId,track.writeId);
+            addStreamCount(track.trackId, track.writeId);
         })
 
         setAutoPlayAfterSrcChange(true);
@@ -178,28 +176,26 @@ const Mytracks = () => {
                                 </div>
                             </div>
                         </Link>
-                        <div className={styles.play_button}
-                            onClick={() => addTrackToPlaylist(track)}
-                        >
-                            <PlayArrowIcon sx={{ width: '60px', height: '60px' }} />
-                        </div>
-                        <div className={styles.track_duration}>
-                            {formatDurationFromHHMMSS(track.duration)}
-                        </div>
-                        <div className={styles.like_share}>
-                            <div className={styles.like}>
-                                <img
-                                    src={heart}
-                                    alt=""
-                                    className={
-                                        trackLike.some(trackLike => trackLike.trackId === track.trackId)
-                                            ? styles.onClickHeart : styles.NonClickHeart}
-                                    onClick={(e) => { handleFavorite(track.trackId, trackLike.some(trackLike => trackLike.trackId === track.trackId), e) }} />
-                                {" " + getLikeCount(track.trackId)}
+                        <div className={styles.track_button}>
+                            <div className={styles.play_button}
+                                onClick={() => addTrackToPlaylist(track)}
+                            >
+                                <PlayCircleIcon sx={{ width: '60px', height: '60px' }} />
                             </div>
-                            <div className={styles.share}>
-                                <RepeatIcon />
-                                368
+                            <div className={styles.track_duration}>
+                                {formatDurationFromHHMMSS(track.duration)}
+                            </div>
+                            <div className={styles.like_share}>
+                                <div className={styles.like}>
+                                    <img
+                                        src={heart}
+                                        alt=""
+                                        className={
+                                            trackLike.some(trackLike => trackLike.trackId === track.trackId)
+                                                ? styles.onClickHeart : styles.NonClickHeart}
+                                        onClick={(e) => { handleFavorite(track.trackId, trackLike.some(trackLike => trackLike.trackId === track.trackId), e) }} />
+                                    {" " + getLikeCount(track.trackId)}
+                                </div>
                             </div>
                         </div>
                     </div>

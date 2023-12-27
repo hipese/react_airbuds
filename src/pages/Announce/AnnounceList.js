@@ -45,7 +45,7 @@ const AnnounceList = () =>{
             setCookie("isViewed", true, { path: "/", expires: expiration });
             setTimeout(() => {
                 setCookie("isViewed", false, { path: "/", expires: expiration });
-            }, time * 1000); // 3초 후에 실행
+            }, time * 1000);
         }
         navi(`contents/${seq}`)
     };

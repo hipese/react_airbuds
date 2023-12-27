@@ -17,7 +17,7 @@ import Mytracks from "./Mytracks/Mytracks";
 import All from "./All/All";
 import Myalbums from "./Myalbums/Myalbums";
 import Myplaylists from "./Myplaylists/Myplaylists";
-import { LoginContext } from "../../App";
+import { LoginContext, RoleContext } from "../../App";
 import axios from "axios";
 import PersonIcon from '@mui/icons-material/Person';
 
@@ -66,6 +66,7 @@ const MusicWithTabs = () => {
     const { targetID } = useParams();
     const [value, setValue] = React.useState(0);
     const { loginID } = useContext(LoginContext);
+    const { userRole } = useContext(RoleContext);
     const [tracks, setTracks] = useState([]);
     const [profileImage, setProfileImage] = useState("");
     const [backgroundImage, setBackgroundImage] = useState("");
@@ -75,6 +76,7 @@ const MusicWithTabs = () => {
     const [isFollowed, setFollow] = useState(false);
     const [followNumber, setFollowNumber] = useState({});
     const [slicedReplies, setSlicedReplies] = useState([]);
+    const navi = useNavigate();
 
     useEffect(() => {
         axios.get(`/api/track/findById/${targetID}`).then((resp) => {
@@ -192,15 +194,19 @@ const MusicWithTabs = () => {
         }
     }
 
+    const handleToDash = () => {
+        navi("/dashboard");
+    }
+
     return (
         <Grid container>
             <Grid item className={styles.user_info} style={backgroundState}>
                 <Grid item md={2}>
-                    <Avatar alt="Remy Sharp" sx={{ width: 180, height: 180, marginLeft: 2 }} />
+                    <Avatar alt="Remy Sharp" sx={{ width: 180, height: 180, marginLeft: 2 }} src={profileImage} />
                 </Grid>
                 <Grid item md={7}>
                     <Box className={styles.target_id_container}>
-                        <Typography variant="h2" gutterBottom>
+                        <Typography variant="h2" gutterBottom style={{backgroundColor : "rgba(0,0,0,0)"}}>
                             {targetID}
                         </Typography>
                         <Typography variant="h5" gutterBottom>
@@ -248,33 +254,37 @@ const MusicWithTabs = () => {
                                 style: { backgroundColor: '#4CAF50' }  // 선택된 탭의 라벨 밑에 있는 줄의 색상
                             }}
                         >
-                            <Tab label="Tracks" component={Link} to="" {...a11yProps(0)}
+                            <Tab label="트랙" component={Link} to="" {...a11yProps(0)}
                                 sx={{
                                     '&.Mui-selected': {
                                         color: '#4CAF50',
                                         textDecoration: 'none', // 밑줄 제거
+                                        fontWeight: 'bold'
                                     },
                                     '&:hover': {
                                         color: '#4CAF50',
                                         textDecoration: 'none', // 밑줄 제거
                                     },
                                 }} />
-                            <Tab label="Albums" component={Link} to="albums" {...a11yProps(1)}
+                            <Tab label="앨범" component={Link} to="albums" {...a11yProps(1)}
                                 sx={{
                                     '&.Mui-selected': {
                                         color: '#4CAF50',
                                         textDecoration: 'none', // 밑줄 제거
+                                        fontWeight: 'bold'
                                     },
                                     '&:hover': {
                                         color: '#4CAF50',
                                         textDecoration: 'none', // 밑줄 제거
                                     },
                                 }} />
-                            <Tab label="Playlists" component={Link} to="playlists" {...a11yProps(2)}
+                            <Tab label="플레이리스트" component={Link} to="playlists" {...a11yProps(2)}
                                 sx={{
                                     '&.Mui-selected': {
                                         color: '#4CAF50',
                                         textDecoration: 'none', // 밑줄 제거
+                                        fontWeight: 'bold'
+
                                     },
                                     '&:hover': {
                                         color: '#4CAF50',
@@ -282,6 +292,29 @@ const MusicWithTabs = () => {
                                     },
                                 }} />
                             <div className={styles.like_edit}>
+                                {
+                                    loginID == targetID && userRole == "ROLE_MANAGER" ?
+                                    <Button variant="outlined"
+                                                sx={{
+                                                    width: '100px',
+                                                    height: '30px',
+                                                    color: '#212529',
+                                                    borderColor: '#4CAF50',
+                                                    marginTop: '10px',
+                                                    marginBottom: '10px',
+                                                    marginRight: '10px',
+                                                    '&:hover': {
+                                                        borderColor: '#4CAF50',
+                                                        backgroundColor: '#4CAF50',
+                                                        color: "white"
+                                                    },
+                                                }}
+                                                onClick={handleToDash}>
+                                                관리자 페이지
+                                            </Button>
+                                            :
+                                            ""
+                                }
                                 {
                                     loginID == targetID ?
                                         ""
@@ -344,7 +377,7 @@ const MusicWithTabs = () => {
                                                         backgroundColor: '#4CAF50',
                                                     },
                                                 }}>
-                                                Edit
+                                                수정하기
                                             </Button>
                                         </Link>
                                         :
