@@ -130,6 +130,12 @@ const Track_Detail = () => {
 
     const handleReplyChange = (e) => {
         const value = e.target.value;
+
+        if (value.length > 450) {
+            alert('댓글은 최대 450자까지 입력할 수 있습니다.');
+            return; // 입력이 450자를 초과하면 더 이상 처리하지 않음
+        }
+
         setReply(prev => ({ ...prev, contents: value, writer: loginID, }));
     }
 
@@ -180,7 +186,6 @@ const Track_Detail = () => {
     }
 
     const handleEditClick = (seq, currentReply) => {
-        console.log(seq);
         setEditMode(seq);
         setEditedReply(currentReply); // 편집을 위한 초기값 설정
         handleClose();
@@ -192,6 +197,10 @@ const Track_Detail = () => {
 
     const changeEditedData = (e) => {
         const value = e.target.value;
+        if (value.length > 450) {
+            alert('댓글은 최대 450자까지 입력할 수 있습니다.');
+            return; // 입력이 450자를 초과하면 더 이상 처리하지 않음
+        }
         setEditedReply(prev => ({ ...prev, contents: value, writer: loginID, }));
     };
 
