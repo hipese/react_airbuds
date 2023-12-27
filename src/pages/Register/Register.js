@@ -99,7 +99,6 @@ const Register = () => {
             axios.post(`/api/member/register/${userInfo.email}`)
             .then(response => {
                 if (response.data === 'success') {
-                    setIsCodeSended(true);
                     
                     Swal.fire({
                         icon: "success",
@@ -350,7 +349,8 @@ const Register = () => {
                 icon: "success",
                 title: "회원가입이 완료되었습니다!",
                 text: "자동으로 메인화면으로 이동합니다!",
-                timer: 2000
+                timer: 3000,
+                showConfirmButton : false
             }).finally(() => {
                 navi("/");
             })
@@ -380,11 +380,11 @@ const Register = () => {
                         <button className={`${style.btn_next} ${style.btn_css}`} onClick={FirstNextBtnHandler}>이메일로 시작하기</button>
                     </Row>
 
-                    <hr className={style.hrTag}></hr>
+                    {/*<hr className={style.hrTag}></hr>*/}
 
-                    <Row className={style.kakao_sign_up_container}>
+                    {/*<Row className={style.kakao_sign_up_container}>
                         <img src="/assets/kakao_sign_up_medium_wide_kor.png" className={style.social_image}></img>
-                    </Row>
+                    </Row>*/}
 
 
                 </Col>
@@ -392,7 +392,7 @@ const Register = () => {
                 <Col xs={4}>
 
                     <Row className={style.row_center}>
-                        <Input className={style.input_email} name="email" type="text" placeholder="이메일로 계속하기..." onChange={InputChangeHandler} readOnly={isCodeSended}></Input>
+                        <Input className={style.input_email} name="email" type="text" placeholder="이메일로 계속하기..." onChange={InputChangeHandler}></Input>
                         <button className={`${style.btn_send_verify} ${style.btn_css}`} onClick={EmailVerifyHandler}>인증번호 발송</button>
                     </Row>
 

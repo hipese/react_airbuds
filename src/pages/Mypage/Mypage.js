@@ -196,11 +196,11 @@ const MusicWithTabs = () => {
         <Grid container>
             <Grid item className={styles.user_info} style={backgroundState}>
                 <Grid item md={2}>
-                    <Avatar alt="Remy Sharp" sx={{ width: 180, height: 180, marginLeft: 2 }} />
+                    <Avatar alt="Remy Sharp" sx={{ width: 180, height: 180, marginLeft: 2 }} src={profileImage} />
                 </Grid>
                 <Grid item md={7}>
                     <Box className={styles.target_id_container}>
-                        <Typography variant="h2" gutterBottom>
+                        <Typography variant="h2" gutterBottom style={{backgroundColor : "rgba(0,0,0,0)"}}>
                             {targetID}
                         </Typography>
                         <Typography variant="h5" gutterBottom>
