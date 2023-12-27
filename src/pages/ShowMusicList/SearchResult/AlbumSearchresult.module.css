@@ -1,6 +1,5 @@
 .album_detail_container {
-    display: flex;
-    align-items: center;
+    overflow: auto;
   }
   
   .album_image{

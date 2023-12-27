@@ -14,7 +14,7 @@ const AlbumSearchResult = ({ searchAlbums }) => {
 
 
     return (
-        <Row>
+        <Row className={style.album_detail_container}>
             {searchAlbums.map((album, index) => (
                 <Row key={index} className={style.container}>
                     <Col sm='12' lg='12' xl='3'>
