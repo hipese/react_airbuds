@@ -85,9 +85,9 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
         // files 배열에 있는 각 파일을 formData에 추가
         files.forEach((fileData) => {
 
-            if(fileData.imageFile==null){
+            if (fileData.imageFile == null) {
                 alert("이미지를 선택해주세요.")
-                return 
+                return
             }
 
             formData.append(`file`, fileData.file);
@@ -284,11 +284,18 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
                         style={{ display: 'none' }}
                         accept="audio/*"
                     />
-                    <Button color="primary" onClick={handleAddTrackClick}>파일추가</Button>
+                    <Button color="primary" onClick={handleAddTrackClick} style={{ marginLeft: '15px' }}>파일추가</Button>
                 </Col>
                 <Col sm='8' style={{ marginBottom: '10px' }}>
-                    <Button color="primary" onClick={handleCancle}>취소</Button>
-                    <Button color="primary" onClick={handleSave}>저장하기</Button>
+                    <Row>
+                        <Col sm='8'>
+                          
+                        </Col>
+                        <Col sm='4'>
+                            <Button color="primary" onClick={handleSave}>저장하기</Button>
+                            <Button color="primary" onClick={handleCancle} style={{ marginLeft: '10px' }}>취소</Button>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
         </div>

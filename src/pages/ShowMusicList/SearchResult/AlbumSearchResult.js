@@ -6,6 +6,8 @@ import { useNavigate } from "react-router";
 
 const AlbumSearchResult = ({ searchAlbums }) => {
 
+    console.log(searchAlbums);
+
     const navigate=useNavigate();
 
     const handleAlbumDtail = (albumId, albumData) => {
@@ -14,13 +16,13 @@ const AlbumSearchResult = ({ searchAlbums }) => {
 
 
     return (
-        <Row>
+        <Row className={style.album_detail_container}>
             {searchAlbums.map((album, index) => (
-                <Row key={index}>
+                <Row key={index} className={style.container}>
                     <Col sm='12' lg='12' xl='3'>
                         <Row className={style.mainAlbumTitle}>
                             <Col sm="12">
-                            <a href={`/Album/Detail/${album.id}`} onClick={() => handleAlbumDtail(album.id, album)}>
+                            <a href={`/Album/Detail/${album.albumId}`} onClick={() => handleAlbumDtail(album.albumId, album)}>
                                 <div className={style.album_image}>
                                     <img src={`/tracks/image/${album.coverImagePath}`} alt={album.title} style={{ width: '150px', height: '150px' }} />
                                 </div>
@@ -57,7 +59,7 @@ const AlbumSearchResult = ({ searchAlbums }) => {
                             </Row>
                         ))}
                         {album.tracks.length > 3 && (
-                            <p>and {album.tracks.length - 3} more...</p>
+                            <p onClick={() => handleAlbumDtail(album.albumId, album)}>and {album.tracks.length - 3} more...</p>
                         )}
                     </Col>
                 </Row>

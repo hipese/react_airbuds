@@ -2,6 +2,7 @@
 import { Col, Row } from "reactstrap"
 import style from "./Myalbums.module.css"
 import { useNavigate } from "react-router";
+import { useParams } from 'react-router-dom';
 import { LoginContext } from "../../../App";
 import { useContext, useEffect, useState } from "react";
 import { Box, CircularProgress } from "@mui/material";
@@ -15,16 +16,19 @@ const LoadingSpinner = () => (
 );
 
 const Myalbums = () => {
+    const { targetID } = useParams();
     const [loading, setLoading] = useState(true);
     const [albums, setAlbums] = useState([]);
     const { loginID, setLoginID } = useContext(LoginContext);
 
+    console.log(targetID);
+    
     useEffect(() => {
         if (!loginID) {
             setLoading(false);
             return;
         }
-        axios.get(`/api/album/findByLogin`).then(resp => {
+        axios.get(`/api/album/profileAlbum/${targetID}`,).then(resp => {
             setAlbums(resp.data);
             setLoading(false);
         }).catch((e) => {

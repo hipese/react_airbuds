@@ -27,14 +27,16 @@
     min-width: 1100px;
     height: 100%;
     padding-right: 40px;
-    border-right: 1px solid #e0e0e0;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
 
 .leftBottom {
-    margin-bottom: 200px;
+    margin-top: 50px;
+    display: flex;
+    justify-content: end;
+    align-items: end;
 }
 
 .rightSide {
