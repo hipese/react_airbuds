@@ -17,7 +17,7 @@ import Mytracks from "./Mytracks/Mytracks";
 import All from "./All/All";
 import Myalbums from "./Myalbums/Myalbums";
 import Myplaylists from "./Myplaylists/Myplaylists";
-import { LoginContext } from "../../App";
+import { LoginContext, RoleContext } from "../../App";
 import axios from "axios";
 import PersonIcon from '@mui/icons-material/Person';
 
@@ -66,6 +66,7 @@ const MusicWithTabs = () => {
     const { targetID } = useParams();
     const [value, setValue] = React.useState(0);
     const { loginID } = useContext(LoginContext);
+    const { userRole } = useContext(RoleContext);
     const [tracks, setTracks] = useState([]);
     const [profileImage, setProfileImage] = useState("");
     const [backgroundImage, setBackgroundImage] = useState("");
@@ -75,6 +76,7 @@ const MusicWithTabs = () => {
     const [isFollowed, setFollow] = useState(false);
     const [followNumber, setFollowNumber] = useState({});
     const [slicedReplies, setSlicedReplies] = useState([]);
+    const navi = useNavigate();
 
     useEffect(() => {
         axios.get(`/api/track/findById/${targetID}`).then((resp) => {
@@ -192,6 +194,10 @@ const MusicWithTabs = () => {
         }
     }
 
+    const handleToDash = () => {
+        navi("/dashboard");
+    }
+
     return (
         <Grid container>
             <Grid item className={styles.user_info} style={backgroundState}>
@@ -282,6 +288,29 @@ const MusicWithTabs = () => {
                                     },
                                 }} />
                             <div className={styles.like_edit}>
+                                {
+                                    loginID == targetID && userRole == "ROLE_MANAGER" ?
+                                    <Button variant="outlined"
+                                                sx={{
+                                                    width: '100px',
+                                                    height: '30px',
+                                                    color: '#212529',
+                                                    borderColor: '#4CAF50',
+                                                    marginTop: '10px',
+                                                    marginBottom: '10px',
+                                                    marginRight: '10px',
+                                                    '&:hover': {
+                                                        borderColor: '#4CAF50',
+                                                        backgroundColor: '#4CAF50',
+                                                        color: "white"
+                                                    },
+                                                }}
+                                                onClick={handleToDash}>
+                                                관리자 페이지
+                                            </Button>
+                                            :
+                                            ""
+                                }
                                 {
                                     loginID == targetID ?
                                         ""
