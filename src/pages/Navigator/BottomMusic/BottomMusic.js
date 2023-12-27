@@ -26,7 +26,7 @@ const BottomMusic = () => {
         }
 
         axios.get(`/api/cplist/all`).then(resp => {
-
+            setAutoPlayAfterSrcChange(false);
             const allTracks = [];
             const updatedAudioFiles = [];
 
@@ -58,6 +58,7 @@ const BottomMusic = () => {
     }, [loginID]);
 
     const handlePlay = () => {
+        
         setIsPlaying(true);
         setLoading(true);
     };
