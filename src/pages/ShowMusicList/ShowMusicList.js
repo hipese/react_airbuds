@@ -95,16 +95,22 @@ const ShowMusicList = () => {
                         {(viewState === 0 && searchTracks && searchAlbums && (searchTracks.length > 0 || searchAlbums.length > 0)) && (
                             <>
                                 <Col sm='12'>
-                                    <Col sm='12' className={style.titleText}>
-                                        앨범목록
-                                    </Col>
+
+                                    {searchAlbums.length > 0 && (
+                                        <Col sm='12' className={style.titleText}>
+                                            앨범목록
+                                        </Col>
+                                    )}
+
                                     <AlbumSearchResult searchAlbums={searchAlbums} />
                                 </Col>
 
                                 <Col sm='12'>
-                                    <Col sm='12' className={style.titleText}>
-                                        트랙목록
-                                    </Col>
+                                    {searchTracks.length > 0 && (
+                                        <Col sm='12' className={style.titleText}>
+                                            트랙목록
+                                        </Col>
+                                    )}
                                     <TrackSearchResult searchTracks={searchTracks} />
                                 </Col>
                             </>
