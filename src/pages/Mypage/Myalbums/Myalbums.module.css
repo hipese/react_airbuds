@@ -1,0 +1,110 @@
+.album_detail_container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .album_image {
+    margin-top: 10px;
+    padding: 0px;
+    width: 150px;
+    /* 고정된 너비 설정 */
+    height: 150px;
+    /* 고정된 높이 설정 */
+  }
+  
+  .album_image img {
+  
+    max-width: 250px;
+    /* 이미지 최대 크기 설정 */
+  }
+  
+  .album_writers {
+    font-style: italic;
+  }
+  
+  .album_tracks {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .track {
+    display: flex;
+    align-items: center;
+    border: 1px solid silver;
+  }
+  
+  .track_number {
+    margin-right: 10px;
+  }
+  
+  .track_title {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .track_duration {
+    font-size: 0.8em;
+  }
+  
+  .button_group {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .button {
+    background-color: none;
+  }
+  
+  .button_custom {
+    background-color: black;
+    /* Set the background color */
+    color: white;
+    /* Set the text color */
+    border: none;
+    /* Remove border if needed */
+  }
+  
+  .icon_custom {
+    color: white;
+    /* Set the icon color */
+  }
+  
+  .trackCol {
+    display: flex;
+    align-items: center;
+  }
+  
+  .mainAlbumTitle {
+    margin-top: 0px;
+  }
+  
+  .AlbumCols {
+    margin-bottom: 10px;
+  }
+  
+  .trackBox {
+    margin-top: 10px;
+  }
+  
+  .album_title {}
+  
+  .album_writer {
+    margin-left: 5px;
+  }
+  
+  .album_margin {
+    margin-top: 10px;
+  }
+  
+  .container{
+    width: 90%;
+    margin-bottom: 30px;
+    margin-left: 20px;
+  }
+  
+  .realContainer{
+    width: 100%;
+    overflow: auto;
+    height: 500px;
+  }
