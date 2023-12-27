@@ -21,6 +21,8 @@ import style from "./report.module.css";
 import Swal from "sweetalert2";
 import "@sweetalert2/themes/bootstrap-4";
 
+import PersonIcon from '@mui/icons-material/Person';
+
 const theme = createTheme({
     components: {
         MuiMenu: {
@@ -55,6 +57,7 @@ const Track_Detail = () => {
     const [isFavorite, setFavorite] = useState(0);
     const [replyLike, setReplyLike] = useState([]);
     const [likeCount, setLikeCount] = useState([]);
+    const [isFollowed, setFollow] = useState(false);
 
     const loadingReplies = async () => {
         axios.get(`/api/track/bytrack_id/${trackId}`).then(resp => {
@@ -82,22 +85,35 @@ const Track_Detail = () => {
     const endIndex = Math.min(startIndex + COUNT_PER_PAGE, totalItems);
     const visibleSignList = replyList.slice(startIndex, endIndex);
 
+    const addStreamCount = (trackId, singerId, e) => {
+        const formdata = new FormData();
+        const date = new Date().toISOString();
+        formdata.append("trackId",trackId);
+        formdata.append("streamDate",date);
+        formdata.append("streamSinger",singerId);
+        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
     // 특정 트랙을 재생 목록에 추가하는 함수
     const addTrackToPlaylist = (track) => {
-
         axios.post(`/api/cplist`, {
             trackId: track.trackId,
             id: loginID
         }).then(resp => {
-
+            addStreamCount(track.trackId,track.writeId);
         })
 
         setAutoPlayAfterSrcChange(true);
 
         // 트랙에서 관련 정보 추출
-        const { filePath, imagePath, title, writer } = track;
+        const { trackId, filePath, imagePath, title, writer } = track;
         // TrackInfoContext를 선택한 트랙 정보로 업데이트
         setTrack_info({
+            trackId,
             filePath,
             imagePath,
             title,
@@ -114,6 +130,12 @@ const Track_Detail = () => {
 
     const handleReplyChange = (e) => {
         const value = e.target.value;
+
+        if (value.length > 450) {
+            alert('댓글은 최대 450자까지 입력할 수 있습니다.');
+            return; // 입력이 450자를 초과하면 더 이상 처리하지 않음
+        }
+
         setReply(prev => ({ ...prev, contents: value, writer: loginID, }));
     }
 
@@ -164,7 +186,6 @@ const Track_Detail = () => {
     }
 
     const handleEditClick = (seq, currentReply) => {
-        console.log(seq);
         setEditMode(seq);
         setEditedReply(currentReply); // 편집을 위한 초기값 설정
         handleClose();
@@ -176,6 +197,10 @@ const Track_Detail = () => {
 
     const changeEditedData = (e) => {
         const value = e.target.value;
+        if (value.length > 450) {
+            alert('댓글은 최대 450자까지 입력할 수 있습니다.');
+            return; // 입력이 450자를 초과하면 더 이상 처리하지 않음
+        }
         setEditedReply(prev => ({ ...prev, contents: value, writer: loginID, }));
     };
 
@@ -206,7 +231,7 @@ const Track_Detail = () => {
     useEffect(() => {
         loadingLikes();
         loadingReplies();
-    }, [isFavorite, loginID]);
+    }, [isFavorite, loginID, trackId]);
 
     const handleFavorite = (replySeq, isLiked, e) => {
         if (loginID !== "") {
@@ -257,6 +282,46 @@ const Track_Detail = () => {
             return date.toLocaleDateString('ko-KR', options);
         }
     };
+
+    const checkFollowState = () => {
+        const formData = new FormData();
+        formData.append("memberId", loginID);
+        formData.append("singerId", track.writeId);
+
+        axios.post(`/api/like/isfollow`, formData).then(res => {
+            setFollow(res.data);
+        }).catch((e) => {
+            console.log(e);
+        });
+    }
+
+    const handleFollowBtn = (state) => {
+        if (loginID != "") {
+            if (!state) {
+                const formData = new FormData();
+                formData.append("memberId", loginID);
+                formData.append("singerId", track.writeId)
+                axios.post(`/api/like/follow`, formData).then(res => {
+                    checkFollowState();
+                }).catch((e) => {
+                    console.log(e);
+                });
+            } else {
+                const formData = new FormData();
+                formData.append("memberId", loginID);
+                formData.append("singerId", track.writeId)
+                axios.post(`/api/like/followDelete`, formData).then(res => {
+                    checkFollowState();
+                }).catch((e) => {
+                    console.log(e);
+                });
+            }
+
+        } else {
+            alert("로그인 필요");
+            return;
+        }
+    }
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -417,12 +482,58 @@ const Track_Detail = () => {
                                     </Typography>
                                 </Link>
                                 <div className={styles.like}>
-                                    <FavoriteBorderIcon />
+                                {
+                                    loginID == track.writeId ?
+                                        ""
+                                        :
+                                        !isFollowed ?
+                                            //팔로우 안한 상태일때.
+                                            <Button variant="outlined" startIcon={<PersonIcon />}
+                                                sx={{
+                                                    width: '100px',
+                                                    height: '30px',
+                                                    color: '#212529',
+                                                    borderColor: '#4CAF50',
+                                                    marginTop: '10px',
+                                                    marginBottom: '10px',
+                                                    marginRight: '10px',
+                                                    '&:hover': {
+                                                        borderColor: '#4CAF50',
+                                                        backgroundColor: '#4CAF50',
+                                                        color: "white"
+                                                    },
+                                                }}
+                                                onClick={() => { handleFollowBtn(isFollowed) }}>
+                                                Follow
+                                            </Button>
+                                            :
+                                            //팔로우 한 상태일때.
+                                            <Button variant="outlined" startIcon={<PersonIcon />}
+                                                sx={{
+                                                    width: '120px',
+                                                    height: '30px',
+                                                    color: 'white',
+                                                    borderColor: '#4CAF50',
+                                                    backgroundColor: '#4CAF50',
+                                                    marginTop: '10px',
+                                                    marginBottom: '10px',
+                                                    marginRight: '10px',
+                                                    '&:hover': {
+                                                        backgroundColor: 'white',
+                                                        borderColor: '#4CAF50',
+                                                        color: '#212529',
+                                                    },
+                                                }}
+                                                onClick={() => { handleFollowBtn(isFollowed) }}>
+                                                Followed
+                                            </Button>
+                                }
+                                    {/* <FavoriteBorderIcon />
                                     <Typography variant="body1">16.9K</Typography>
                                     <RepeatIcon />
                                     <Typography variant="body1">368</Typography>
                                     <FormatAlignLeftIcon />
-                                    <Typography variant="body1">5</Typography>
+                                    <Typography variant="body1">5</Typography> */}
                                 </div>
                             </Grid>
                         </Grid>
@@ -515,7 +626,9 @@ const Track_Detail = () => {
                                     </Grid>
                                 ) : (
                                     <div className={styles.reply_info}>
-                                        <Typography variant="h6">{comment.writer}</Typography>
+                                        <Link to={`/Profile/${comment.writer}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Typography variant="h6">{comment.writer}</Typography>
+                                        </Link>
                                         <Typography variant="body1">{comment.contents}</Typography>
                                         <Typography variant="caption">{formatDate(comment.writeDate)}</Typography>
                                     </div>

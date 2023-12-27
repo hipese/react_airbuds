@@ -2,13 +2,14 @@ import * as React from 'react';
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import style from './dashboard.module.css'
 import { styled } from '@mui/material/styles';
-import { Box, Button, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tab, Tooltip, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Divider, Drawer, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tab, Tooltip, Typography } from "@mui/material";
 import LineChart from './charts/line'
 import FunnelChart from './charts/funnel'
 import { Line } from "@nivo/line";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import axios from 'axios';
+import { LoginContext, RoleContext } from '../../App';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
@@ -115,15 +116,17 @@ const DashBoardDisplay = () => {
 
     const [value, setValue] = React.useState('1');
 
-    const [visitor,setVisitor] = React.useState(40);
-    const [streaming,setStreaming] = React.useState(23);
-    const [report,setReport] = React.useState(58);
     const [formdReport,setFormdReport] = React.useState([]);
     const [formdMusic,setFormdMusic] = React.useState([]);
     const [formdmember,setFormdMember] = React.useState([]);
     const [dailyReport,setDailyReport] = React.useState(0);
     const [dailyVisitor,setDailyVisitor] = React.useState(0);
     const [dailyStream,setDailyStream] = React.useState(0);
+    const [roleName,setRoleName] = React.useState("ROLE_MEMBER");
+    const [roleChange,setRoleChange] = React.useState(0);
+
+    const {loginID} = React.useContext(LoginContext);
+    const {userRole} = React.useContext(RoleContext);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -142,18 +145,6 @@ const DashBoardDisplay = () => {
         return groupedData;
     };
 
-    // const transformToLineData = (groupedData) => {
-    //     const reactData = Object.entries(groupedData).map(([year, data]) => ({
-    //         id: parseInt(year),
-    //         color : `hsl(166, 70%, 50%)`,
-    //         data: data.map(item => ({
-    //         x: `${item.month}월`,
-    //         y: item.count,
-    //         })),
-    //     }));
-        
-    //     return reactData;
-    // };
     const transformToLineData = (groupedData) => {
         const reactData = Object.entries(groupedData).map(([year, data]) => {
         const months = Array.from({ length: 12 }, (_, index) => index + 1); // 1부터 12까지의 숫자 배열 생성
@@ -174,9 +165,22 @@ const DashBoardDisplay = () => {
         });
     
     return reactData;
-    };   
+    };
 
+    //페이지 접근제한 구현
     React.useEffect(()=>{
+        if(userRole){
+            if(userRole == "ROLE_MEMBER"){
+                alert("잘못된 접근입니다.");
+                navi("/");
+            }else if(userRole == "ROLE_MANAGER"){
+                setLoading(false);
+                getDatas();
+            }
+        }
+    },[userRole]);
+
+    const getDatas = () => {        
         axios.get(`/api/dashboard/report`).then(res=>{
             console.log(res.data);
             const groupedData = groupByYear(res.data);
@@ -228,10 +232,19 @@ const DashBoardDisplay = () => {
         }).catch((e)=>{
             console.log(e);
         });
+    }
 
-    },[]);
+    const [loading, setLoading] = React.useState(true);
+
+    const CircularIndeterminate = () => {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    };
     
-    return(
+    return !loading ? (
         <Box className={`${style.dashcontainer} ${style.ma}`}>
             <div id="title" className={`${style.pad10}`}>
                 <Typography fontSize={13}>
@@ -356,6 +369,8 @@ const DashBoardDisplay = () => {
                 </TabContext>
             </Box>
         </Box>
+    ) : (
+        <CircularIndeterminate/>
     )
 }
 

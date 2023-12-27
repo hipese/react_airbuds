@@ -6,6 +6,7 @@ import styles from "./BottomMusic.module.css";
 import axios from "axios"
 import { AutoPlayContext, CurrentTrackContext, LoginContext, MusicContext, TrackContext, TrackInfoContext } from '../../../App';
 import { PlayingContext } from '../../../App';
+import { Link } from 'react-router-dom';
 
 const BottomMusic = () => {
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
@@ -25,6 +26,7 @@ const BottomMusic = () => {
         }
 
         axios.get(`/api/cplist/all`).then(resp => {
+
             const allTracks = [];
             const updatedAudioFiles = [];
 
@@ -47,9 +49,10 @@ const BottomMusic = () => {
             setTracks(allTracks);
             const firstTrackInfo = allTracks[0];
             setTrack_info({
+                trackId: firstTrackInfo?.trackId ?? '0',
                 title: firstTrackInfo?.title ?? '알 수 없는 제목',
                 writer: firstTrackInfo?.writer ?? '알 수 없는 작곡가',
-                imagePath: firstTrackInfo?.imagePath ?? '기본 이미지 경로'
+                imagePath: firstTrackInfo?.imagePath ?? ''
             });
         });
     }, [loginID]);
@@ -67,7 +70,24 @@ const BottomMusic = () => {
         setLoading(false);
     };
 
+    const addStreamCount = (trackId, singerId, e) => {
+        const formdata = new FormData();
+        const date = new Date().toISOString();
+        formdata.append("trackId",trackId);
+        formdata.append("streamDate",date);
+        formdata.append("streamSinger",singerId);
+        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
     const handleNextTrack = () => {
+        if (!loginID) {
+            // If loginID is not available, do nothing
+            return;
+        }
         const nextTrack = (currentTrack + 1) % audioFiles.length;
 
         // 'tracks' 상태에서 다음 곡의 정보를 가져옵니다.
@@ -75,17 +95,31 @@ const BottomMusic = () => {
 
         // 곡 정보 컨텍스트를 업데이트합니다.
         setTrack_info({
+            trackId: nextTrackInfo.trackId,
             title: nextTrackInfo.title,
             writer: nextTrackInfo.writer,
             imagePath: nextTrackInfo.imagePath
         });
+
+        axios.post(`/api/cplist`, {
+            trackId: nextTrackInfo.trackId,
+            id: loginID
+        }).then(resp => {
+
+        })
+        
         setAutoPlayAfterSrcChange(true);
+        addStreamCount(nextTrackInfo.trackId,nextTrackInfo.writer);
 
         // 현재 재생 중인 트랙을 업데이트합니다.
         setCurrentTrack(nextTrack);
     };
 
     const handlePreviousTrack = () => {
+        if (!loginID) {
+            // If loginID is not available, do nothing
+            return;
+        }
         // 이전 트랙으로 이동하는 논리
         let previousTrack = (currentTrack - 1 + audioFiles.length) % audioFiles.length;
 
@@ -99,14 +133,23 @@ const BottomMusic = () => {
 
         // 곡 정보 컨텍스트를 업데이트합니다.
         setTrack_info({
+            trackId: previousTrackInfo.trackId,
             title: previousTrackInfo.title,
             writer: previousTrackInfo.writer,
             imagePath: previousTrackInfo.imagePath
         });
 
+        axios.post(`/api/cplist`, {
+            trackId: previousTrackInfo.trackId,
+            id: loginID
+        }).then(resp => {
+
+        })
+
         setAutoPlayAfterSrcChange(true);
         // 현재 재생 중인 트랙을 업데이트합니다.
         setCurrentTrack(previousTrack);
+        addStreamCount(previousTrackInfo.trackId,previousTrackInfo.writer);
     };
 
     const handleEnded = () => {
@@ -115,13 +158,15 @@ const BottomMusic = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.imageContainer}>
-                <img
-                    src={`/tracks/image/${track_info.imagePath}`}
-                    alt="Description of the image"
-                    className={styles.image}
-                />
-            </div>
+            <Link to={`/detail/${track_info.trackId}`}>
+                <div className={styles.imageContainer}>
+                    <img
+                        src={track_info.imagePath ? `/tracks/image/${track_info.imagePath}` : '/assets/groovy2.png'}
+                        alt="Description of the image"
+                        className={styles.image}
+                    />
+                </div>
+            </Link>
             <AudioPlayer
                 autoPlayAfterSrcChange={autoPlayAfterSrcChange}
                 src={audioFiles[currentTrack]}

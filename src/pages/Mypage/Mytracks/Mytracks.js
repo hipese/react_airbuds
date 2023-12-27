@@ -44,21 +44,35 @@ const Mytracks = () => {
         });
     }, [loginID]);
 
+    const addStreamCount = (trackId, singerId, e) => {
+        const formdata = new FormData();
+        const date = new Date().toISOString();
+        formdata.append("trackId",trackId);
+        formdata.append("streamDate",date);
+        formdata.append("streamSinger",singerId);
+        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+
+        }).catch((e)=>{
+            console.log(e);
+        });
+    }
+
     const addTrackToPlaylist = (track) => {
 
         axios.post(`/api/cplist`, {
             trackId: track.trackId,
             id: loginID
         }).then(resp => {
-
+            addStreamCount(track.trackId,track.writeId);
         })
 
         setAutoPlayAfterSrcChange(true);
 
         // 트랙에서 관련 정보 추출
-        const { filePath, imagePath, title, writer } = track;
+        const { trackId, filePath, imagePath, title, writer } = track;
         // TrackInfoContext를 선택한 트랙 정보로 업데이트
         setTrack_info({
+            trackId,
             filePath,
             imagePath,
             title,
