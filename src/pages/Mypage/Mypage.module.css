@@ -37,11 +37,11 @@
 
 .target_id_container {
     width: fit-content;
-    padding-left: 5px;
-    padding-right: 5px;
-    background-color: whitesmoke;
+    padding-left: 25px;
+    padding-right: 25px;
+    background-color: rgba(245,245,245,0.5);
     border-radius: 10px;
-    opacity: 0.5;
+    /* opacity: 0.5; */
 }
 
 .myreply {
