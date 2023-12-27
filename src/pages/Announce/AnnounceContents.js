@@ -46,7 +46,13 @@ const AnnounceContentsMain = () => {
                     <Grid container className={`${style.pl10} ${style.center}`}>
                         <Grid item xs={12} sm={6}>
                             <Typography fontSize={12}>
-                                카테고리 : {detail.announceCategory}
+                                카테고리 : {
+                                    detail.announceCategory == "open" ? "서비스 오픈" :
+                                    detail.announceCategory == "info" ? "안내" :
+                                    detail.announceCategory == "news" ? "서비스 소식" :
+                                    detail.announceCategory == "inspection" ? "서비스 점검" :
+                                    detail.announceCategory == "close" ? "서비스 오픈종료" : ""
+                                }
                             </Typography>
                         </Grid>                        
                         <Grid item xs={12} sm={6}>

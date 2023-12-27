@@ -52,7 +52,7 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
         axios.get(`/api/like/follwingData/${loginID}`).then(res=>{
             console.log(res.data);
             const sortedData = res.data.sort((a, b) => b.followerNumber - a.followerNumber);
-            const threeData = sortedData.filter((e,i)=>i <= 3);
+            const threeData = sortedData.filter((e,i)=>i < 3);
             setArtist(threeData);
         }).catch((e)=>{
             console.log(e);
@@ -62,19 +62,6 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
     useEffect(()=>{        
         sideLoading();        
     },[trackLike]);
-
-    const addStreamCount = (trackId, singerId, e) => {
-        const formdata = new FormData();
-        const date = new Date().toISOString();
-        formdata.append("trackId",trackId);
-        formdata.append("streamDate",date);
-        formdata.append("streamSinger",singerId);
-        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
-
-        }).catch((e)=>{
-            console.log(e);
-        });
-    }
 
     const handleMoveToProfile = (id) => {
         navi(`/profile/${id}`);
