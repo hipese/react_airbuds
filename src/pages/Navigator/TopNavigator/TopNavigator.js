@@ -399,7 +399,7 @@ const TopNavigator = () => {
                             <Link className={styles.linkurl} to="/"><div className={activeLink === 'home' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('home')}>홈</div></Link>
                         </Col>
                         <Col>
-                            <Link className={styles.linkurl} to="/Feed"><div className={activeLink === 'Feed' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Feed')}>피드</div></Link>
+                            <Link className={styles.linkurl} to="/Announce"><div className={activeLink === 'Announce' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('announce')}>공지사항</div></Link>
                         </Col>
                         <Col>
                             <Link className={styles.linkurl} to="/Library"><div className={activeLink === 'Library' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Library')}>라이브러리</div></Link>
@@ -424,6 +424,9 @@ const TopNavigator = () => {
                                     </Col>
                                     <Col>
                                         <Link className={styles.linkurl} to={`/Profile/${loginID}`}><div>프로필</div></Link>
+                                    </Col>
+                                    <Col>
+                                        <Link className={styles.linkurl} to={`/qna`}><div>Q&A</div></Link>
                                     </Col>
                                     <Col>
                                         <div className={styles.linkurl} onClick={handleLogoutClick}><div className={activeLink === 'logout' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('logoutt')}>로그아웃</div></div>
