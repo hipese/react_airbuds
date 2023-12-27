@@ -9,6 +9,9 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
     const [tracksWithImages, setTracksWithImages] = useState([]);
     const [totalDuration, setTotalDuration] = useState('');
     const [trackCount, setTrackCount] = useState(0);
+    const [playlistTitle, setPlaylistTitle] = useState('');
+    const [playlistVisibility, setPlaylistVisibility] = useState('');
+    const [isEditMode, setIsEditMode] = useState(false); // New state for edit mode
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
     const { isPlaying, setIsPlaying } = useContext(PlayingContext);
     const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
@@ -33,10 +36,14 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
         } else {
             document.body.style.overflow = 'unset';
         }
+        if (showModal && isEditMode) {
+            setPlaylistTitle(playlist.playlistPlTitle);
+            setPlaylistVisibility(playlist.playlistVisibility);
+        }
         return () => {
             document.body.style.overflow = 'unset';
-        }
-    }, [showModal, playlist]);
+        };
+    }, [showModal, playlist, isEditMode]);
     if (!showModal) return null;
 
     const formatDuration = (duration) => {
@@ -47,7 +54,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
 
         return `${hours}${minutes}:${seconds}`;
     };
-    // const totalDuration = getTotalDurationInHoursAndMinutes(playlist.playlistTracks);
+
     const uniqueImages = (tracks) => {
         const uniquePaths = new Set();
         return tracks.filter(track => {
@@ -72,6 +79,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
             console.log(err);
         });
     };
+
     const handlePlaylistDeleted = (trackId) => {
         axios.delete(`/api/playlist/track/${trackId}`).then((res) => {
             if (onPlaylistDeleted) {
@@ -86,35 +94,48 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
         }).catch((err) => {
             console.log(err);
         });
-    }
+    };
 
     const handleUpdate = (playlist) => {
-        const newTitle = prompt('Enter the new playlist title:', playlist.playlistPlTitle);
-
-        if (newTitle !== null) {
-            axios.put(`/api/playlist/update/${playlist.playlistSeq}`, { playlistPlTitle: newTitle })
+        if (playlistTitle !== null || playlistVisibility !== null) {
+            axios
+                .put(`/api/playlist/update/${playlist.playlistSeq}`, {
+                    playlistPlTitle: playlistTitle,
+                    playlistVisibility: playlistVisibility,
+                })
                 .then((res) => {
-                    setSelectedPlaylist(prev => ({
-                        ...prev, playlistPlTitle: newTitle
-                    }))
+                    setSelectedPlaylist((prev) => ({
+                        ...prev,
+                        playlistPlTitle: playlistTitle,
+                        playlistVisibility: playlistVisibility,
+                    }));
                     setFormattedTracks((prevTracks) => {
                         const updatedTracks = prevTracks.map((track) =>
                             track.playlistSeq === playlist.playlistSeq
-                                ? { ...track, playlistPlTitle: newTitle }
+                                ? { ...track, playlistPlTitle: playlistTitle }
                                 : track
                         );
                         return updatedTracks;
                     });
+                    setIsEditMode(false);
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         }
-    }
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'playlistTitle') {
+            setPlaylistTitle(value);
+        } else if (name === 'playlistVisibility') {
+            setPlaylistVisibility(value);
+        }
+    };
 
     const addTrackToPlaylist = (track) => {
         const newTracks = track.map((track) => {
-
             setAutoPlayAfterSrcChange(true);
 
             // Extract relevant information from the track object and create a new structure
@@ -129,9 +150,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
             return newTrack;
         });
 
-        // Extract relevant information from the track object
         const { playlistTrackId, playlistFilePath, playlistImagePath, playlistTitle, playlistWriter } = track[0];
-        // Update TrackInfoContext with the selected track information
         setTrack_info({
             trackId: playlistTrackId,
             filePath: playlistFilePath,
@@ -188,16 +207,75 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
                         )}
                     </div>
                     <div className={styles.modalDetailHeader}>
-                        <div className={styles.modalTitle}>{playlist.playlistPlTitle}</div>
+                        <div className={styles.modalTitle}>
+                            {isEditMode ? (
+                                <input type="text" name="playlistTitle" value={playlistTitle} onChange={handleChange} />
+                            ) : (
+                                <>
+                                    {playlist.playlistPlTitle}
+                                </>
+                            )}
+                        </div>
                         <div className={styles.modalDetailContents}>
                             <div className={styles.modalTrackCount}>트랙 {trackCount}개</div>
                             <div className={styles.modalDivider}>•</div>
                             <div className={styles.modalDuration}>총 {totalDuration}</div>
                         </div>
-                        <div className={styles.modalVisibility}>{playlist.playlistVisibility}</div>
+                        <div className={styles.modalVisibility}>
+                            {isEditMode ? (
+                                <>
+                                    <input type="radio" name="playlistVisibility" value="public" checked={playlistVisibility === 'public'} onChange={handleChange} />
+                                    Public
+                                    <input type="radio" name="playlistVisibility" value="private" checked={playlistVisibility === 'private'} onChange={handleChange} />
+                                    Private
+                                </>
+                            ) : (
+                                <>
+                                    {playlist.playlistVisibility}
+                                </>
+                            )}
+                        </div>
                         <div className={styles.modalButtons}>
-                            <button className={styles.modifiedBtn} onClick={() => handleUpdate(playlist)}>수정</button>
-                            <button className={styles.deleteBtn} onClick={() => handleDelete(playlist)}>삭제</button>
+                            {isEditMode ? (
+                                <>
+                                    <button
+                                        className={styles.modifiedBtn}
+                                        onClick={() => {
+                                            handleUpdate(playlist);
+                                            setIsEditMode(false);
+                                        }}
+                                    >
+                                        완료
+                                    </button>
+                                    <button
+                                        className={styles.deleteBtn}
+                                        onClick={() => {
+                                            setPlaylistTitle(playlist.playlistPlTitle);
+                                            setPlaylistVisibility(playlist.playlistVisibility);
+                                            setIsEditMode(false);
+                                        }}
+                                    >
+                                        취소
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        className={styles.modifiedBtn}
+                                        onClick={() => {
+                                            setIsEditMode(true);
+                                        }}
+                                    >
+                                        수정
+                                    </button>
+                                    <button
+                                        className={styles.deleteBtn}
+                                        onClick={() => handleDelete(playlist)}
+                                    >
+                                        삭제
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                     <div className={styles.play_button} onClick={() => addTrackToPlaylist(playlist.playlistTracks)} >
