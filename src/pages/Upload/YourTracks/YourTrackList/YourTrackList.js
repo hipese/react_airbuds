@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useContext, useState } from "react";
 import { Avatar, Typography } from "@mui/material";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import styles from "./YourTrackList.module.css"
 import {
     AutoPlayContext,
@@ -76,12 +76,12 @@ const YourTrackList = () => {
     const addStreamCount = (trackId, singerId, e) => {
         const formdata = new FormData();
         const date = new Date().toISOString();
-        formdata.append("trackId",trackId);
-        formdata.append("streamDate",date);
-        formdata.append("streamSinger",singerId);
-        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+        formdata.append("trackId", trackId);
+        formdata.append("streamDate", date);
+        formdata.append("streamSinger", singerId);
+        axios.put(`/api/dashboard/addStream`, formdata).then(res => {
 
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log(e);
         });
     }
@@ -92,7 +92,7 @@ const YourTrackList = () => {
             trackId: track.trackId,
             id: loginID
         }).then(resp => {
-            addStreamCount(track.trackId,track.writeId);
+            addStreamCount(track.trackId, track.writeId);
         })
 
         setAutoPlayAfterSrcChange(true);
@@ -124,9 +124,9 @@ const YourTrackList = () => {
 
     // 선택한 id값의 음원 정보를 삭제하는 기능
     const handleDelete = (trackId) => {
-        const isDelete =window.confirm("다음 곡을 삭제하시겠습니까?")
+        const isDelete = window.confirm("다음 곡을 삭제하시겠습니까?")
 
-        if(isDelete){
+        if (isDelete) {
             axios.delete(`/api/track/${trackId}`).then(resp => {
                 axios.get(`/api/track/LoginTracks`).then((resp) => {
                     const tracksWithImages = resp.data.map((track) => {
@@ -144,36 +144,38 @@ const YourTrackList = () => {
 
     return (
         <div className={styles.container}>
-            {track.map((trackone, index) => (
+            {track.map((track, index) => (
                 <div className={styles.track_info} key={index}>
-                    <Link to={`/Detail/${trackone.trackId}`} className={styles.linkContainer}>
+                    <Link to={`/Detail/${track.trackId}`} className={styles.linkContainer}>
                         <div className={styles.track_image}>
                             <Avatar
                                 alt="Remy Sharp"
-                                src={`/tracks/image/${trackone.imagePath}`}
+                                src={`/tracks/image/${track.imagePath}`}
                                 sx={{ width: '80px', height: '80px' }}
                             />
                         </div>
                         <div className={styles.track_title}>
                             <div>
                                 <Typography variant="h5" gutterBottom>
-                                    {trackone.title}
+                                    {track.title}
                                 </Typography>
                             </div>
                             <div>
-                                {trackone.writer}
+                                {track.writer}
                             </div>
                         </div>
                     </Link>
-                    
-                    <div className={styles.play_button}
-                        onClick={() => addTrackToPlaylist(trackone)} // div를 클릭할 때마다 호출됨
-                    >
-                        <PlayArrowIcon sx={{ width: '60px', height: '60px' }} />
+                    <div className={styles.track_button}>
+                        <div className={styles.play_button}
+                            onClick={() => addTrackToPlaylist(track)}
+                        >
+                            <PlayCircleIcon sx={{ width: '60px', height: '60px' }} />
+                        </div>
+                        <div className={styles.track_duration}>
+                            {formatDurationFromHHMMSS(track.duration)}
+                        </div>
                     </div>
-                    <div className={styles.track_duration}>
-                        {formatDurationFromHHMMSS(trackone.duration)}
-                    </div>
+
                     <div className={styles.buttoncontainer}>
                         <div className={styles.buttonbox}>
                             <div>
@@ -185,15 +187,15 @@ const YourTrackList = () => {
                             </div>
 
                             <div>
-                                <EditIcon className={styles.largeIcon} onClick={(event) => handleEditClick(event, trackone)} />
+                                <EditIcon className={styles.largeIcon} onClick={(event) => handleEditClick(event, track)} />
                             </div>
                             <div>
-                                <DeleteIcon className={styles.largeIcon} onClick={() => handleDelete(trackone.trackId)} />
+                                <DeleteIcon className={styles.largeIcon} onClick={() => handleDelete(track.trackId)} />
                             </div>
                         </div>
                     </div>
-
                 </div>
+
             ))}
             {selectedTrack && (
                 <Modal

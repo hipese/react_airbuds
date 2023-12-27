@@ -59,7 +59,7 @@ export default function Upload_Main() {
             style: { backgroundColor: '#4CAF50' }  // 선택된 탭의 라벨 밑에 있는 줄의 색상
           }}
         >
-          <Tab label="upload" component={Link} to="" {...a11yProps(0)}
+          <Tab label="업로드" component={Link} to="" {...a11yProps(0)}
             sx={{
               '&.Mui-selected': {
                 color: '#4CAF50',
@@ -71,7 +71,7 @@ export default function Upload_Main() {
               },
             }}
           />
-          <Tab label="yourtracks" component={Link} to="yourtracks" {...a11yProps(1)}
+          <Tab label="내트랙" component={Link} to="yourtracks" {...a11yProps(1)}
             sx={{
               '&.Mui-selected': {
                 color: '#4CAF50',
@@ -83,7 +83,7 @@ export default function Upload_Main() {
               },
             }}
           />
-          <Tab label="myAlbums" component={Link} to="myAlbums" {...a11yProps(2)}
+          <Tab label="앨범" component={Link} to="myAlbums" {...a11yProps(2)}
             sx={{
               '&.Mui-selected': {
                 color: '#4CAF50',

@@ -9,6 +9,7 @@ import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import AddPrevAlbum from "./AddPrevAlbum/AddPrevAlbum";
 import Modal from '@mui/material/Modal';
 import { useNavigate } from "react-router";
+import AlbumSearchResult from "../../ShowMusicList/SearchResult/AlbumSearchResult";
 
 const MyAlbums = () => {
 
@@ -20,7 +21,7 @@ const MyAlbums = () => {
     const [isFavorite, setFavorite] = useState(0);
     const [loading, setLoading] = useState(true);
 
-    const [myAlbumsInfo, setMyAlbumsInfo] = useState([]);
+    const [searchAlbums, setSearchAlbums] = useState([]);
     const [createAlbum,setCreateAlbum]= useState([]);
 
     const navigator=useNavigate();
@@ -28,7 +29,7 @@ const MyAlbums = () => {
     useEffect(() => {
         axios.get(`/api/album/findByLogin`).then(resp => {
             console.log(resp.data)
-            setMyAlbumsInfo(resp.data);
+            setSearchAlbums(resp.data);
             setLoading(false);
         })
 
@@ -63,6 +64,12 @@ const MyAlbums = () => {
         navigator("/Upload");
     }
 
+    // 잠깐만 죽어봐
+    // const handleAlbumClick = (albumId) => {
+    //     const albumData = myAlbumsInfo.find(album => album.albumId === albumId);
+    //     navigate(`/Album/Detail/${albumId}`, { state: { albumData } });
+    // }
+
     // const CircularIndeterminate = () => {
     //     return (
     //         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -82,7 +89,8 @@ const MyAlbums = () => {
 
                     <div className={styles.carouselTitle}>내 앨범목록</div>
                     <div className={styles.carousel}>
-                        <AlbumsCarousel myAlbumsInfo={myAlbumsInfo} />
+                        
+                        <AlbumSearchResult searchAlbums={searchAlbums}/>
                     </div>
 
 

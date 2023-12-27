@@ -97,3 +97,9 @@
     filter: brightness(50%);
     cursor: pointer;
 }
+.titleText{
+    font-size: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

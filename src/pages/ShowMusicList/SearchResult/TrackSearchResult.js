@@ -91,9 +91,6 @@ const TrackSearchResult = ({ searchTracks }) => {
 
     return (
         <div className={styles.container}>
-             <Col sm='12' className={styles.titleText}>
-                트랙목록
-            </Col>
             {searchTracks.length === 0 ? (
                 <None_track_info />
             ) : (
