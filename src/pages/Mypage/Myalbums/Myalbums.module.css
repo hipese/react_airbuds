@@ -30,7 +30,6 @@
   .track {
     display: flex;
     align-items: center;
-    border: 1px solid silver;
   }
   
   .track_number {
@@ -85,6 +84,7 @@
   
   .trackBox {
     margin-top: 10px;
+    font-weight: bold;
   }
   
   .album_title {}
@@ -98,13 +98,20 @@
   }
   
   .container{
-    width: 90%;
-    margin-bottom: 30px;
+    width: 98%;
     margin-left: 20px;
+    background-color: whitesmoke;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+    transition: 0.2s;
+  }
+
+  .container:hover{
+    transform: scale(1.01);
   }
   
   .realContainer{
     width: 100%;
     overflow: auto;
-    height: 500px;
+    height: 600px;
   }
