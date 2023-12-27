@@ -11,6 +11,7 @@ import Overview from "./Overview/Overview";
 import History from "./History/History";
 import Likes from "./Likes/Likes";
 import Following from "./Following/Following";
+import Album from "./Album/Album";
 
 
 function CustomTabPanel(props) {
@@ -86,7 +87,7 @@ const Library = () => {
                                 textDecoration: 'none', // 밑줄 제거
                             },
                         }} />
-                        <Tab label="앨범" component={Link} to="albums" {...a11yProps(3)}
+                        <Tab label="앨범" component={Link} to="album" {...a11yProps(3)}
                          sx={{
                             '&.Mui-selected': {
                                 color: '#4CAF50',
@@ -124,7 +125,7 @@ const Library = () => {
                 <Routes>
                     <Route path="/" element={<Overview />} />
                     <Route path="/likes" element={<Likes />} />
-                    {/* <Route path="/albums" element={<Albums />} /> */}
+                    <Route path="/album" element={<Album />} />
                     <Route path="/following" element={<Following />} /> 
                     <Route path="/history" element={<History />} />
                 </Routes>

@@ -17,7 +17,7 @@ import SearchBar from "./SearchBar/SearchBar";
 const TopNavigator = () => {
 
     const [activeLink, setActiveLink] = useState("");
-    
+
     const handleLinkClick = (e) => {
         setActiveLink(e);
     }
@@ -27,9 +27,12 @@ const TopNavigator = () => {
     const emailRef = useRef();
     const idRef = useRef();
     // 이메일 인증 코드 전송 여부
-    const [isCodeSended, setIsCodeSended] = useState(false);
+    const isCodeSended = useRef(false);
     // 이메일 인증 여부
-    const [verified, setVerified] = useState(false);
+    const verified = useRef(false);
+
+    const isCodeSended2 = useRef(false);
+    const verified2 = useRef(false);
 
     const openIdModal = async () => {
 
@@ -93,7 +96,7 @@ const TopNavigator = () => {
                     } else {
                         try {
                             axios.post(`/api/member/register/${emailInput.value}`).then(() => {
-                                setIsCodeSended(true);
+                                isCodeSended.current = true;
                                 Swal.showValidationMessage(`이메일이 전송되었습니다`);
                             });
 
@@ -103,11 +106,11 @@ const TopNavigator = () => {
                                 } else {
                                     axios.post(`/api/member/verify/${codeInput.value}`).then((resp) => {
                                         if (resp.data === "success") {
+                                            verified.current = true;
                                             Swal.showValidationMessage(`인증되었습니다`);
-                                            setVerified(true);
+
                                         } else {
                                             Swal.showValidationMessage(`인증번호가 올바르지 않습니다`);
-                                            setVerified(false);
                                         }
                                     });
                                 }
@@ -117,18 +120,22 @@ const TopNavigator = () => {
                         }
                     }
                 });
-                if (nameInput.value === "") {
-                    Swal.showValidationMessage(`이름을 입력해주세요`)
-                }
-                if (!isCodeSended) {
-                    Swal.showValidationMessage(`이메일을 인증해주세요`)
-                }
-                if (!verified) {
-                    Swal.showValidationMessage(`인증코드를 확인해주세요`)
-                }
             }, preConfirm: () => {
                 nameRef.current = nameInput.value;
                 emailRef.current = emailInput.value;
+
+                if (nameRef.current === "") {
+                    Swal.showValidationMessage(`이름을 입력해주세요`)
+                } else {
+                    if (!isCodeSended.current) {
+                        Swal.showValidationMessage(`이메일을 인증해주세요`)
+                    } else {
+                        if (!verified.current) {
+                            Swal.showValidationMessage(`인증코드를 확인해주세요`)
+                        }
+                    }
+                }
+
             },
         });
 
@@ -238,7 +245,7 @@ const TopNavigator = () => {
                     } else {
                         try {
                             axios.post(`/api/member/register/${emailInput.value}`).then(() => {
-                                setIsCodeSended(true);
+                                isCodeSended2.current = true;
                                 Swal.showValidationMessage(`이메일이 전송되었습니다`);
                             });
 
@@ -248,11 +255,10 @@ const TopNavigator = () => {
                                 } else {
                                     axios.post(`/api/member/verify/${codeInput.value}`).then((resp) => {
                                         if (resp.data === "success") {
+                                            verified2.current = true;
                                             Swal.showValidationMessage(`인증되었습니다`);
-                                            setVerified(true);
                                         } else {
                                             Swal.showValidationMessage(`인증번호가 올바르지 않습니다`);
-                                            setVerified(false);
                                         }
                                     });
                                 }
@@ -261,19 +267,22 @@ const TopNavigator = () => {
                             Swal.showValidationMessage(`이메일 전송에 실패했습니다`);
                         }
                     }
-                    if (idInput.value === "") {
-                        Swal.showValidationMessage(`아이디를 입력해주세요`)
-                    }
-                    if (!isCodeSended) {
-                        Swal.showValidationMessage(`이메일을 인증해주세요`)
-                    }
-                    if (!verified) {
-                        Swal.showValidationMessage(`인증코드를 확인해주세요`)
-                    }
                 });
             }, preConfirm: () => {
                 idRef.current = idInput.value;
                 emailRef.current = emailInput.value;
+
+                if (idRef.current === "") {
+                    Swal.showValidationMessage(`아이디를 입력해주세요`)
+                } else {
+                    if (!isCodeSended2.current) {
+                        Swal.showValidationMessage(`이메일을 인증해주세요`)
+                    } else {
+                        if (!verified2.current) {
+                            Swal.showValidationMessage(`인증코드를 확인해주세요`)
+                        }
+                    }
+                }
             },
         });
 
@@ -310,7 +319,7 @@ const TopNavigator = () => {
             });
         }
     };
-    
+
     const handleLoginClick = async () => {
         const { value: formValues } = await Swal.fire({
             title: 'Welcome Back',
@@ -318,7 +327,6 @@ const TopNavigator = () => {
             <input type="text" id="username" class="swal2-input" placeholder="Username">
             <input type="password" id="password" class="swal2-input" placeholder="Password">
             <hr></hr>
-            나중에 소셜 로그인 추가 예정<br>
             <a id="findIdLink" style="cursor: pointer; text-decoration: underline;">아이디 찾기</a>
             <a id="findPwLink" style="cursor: pointer; text-decoration: underline;">비밀번호 찾기</a>
           `,
@@ -399,7 +407,7 @@ const TopNavigator = () => {
                             <Link className={styles.linkurl} to="/"><div className={activeLink === 'home' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('home')}>홈</div></Link>
                         </Col>
                         <Col>
-                            <Link className={styles.linkurl} to="/Feed"><div className={activeLink === 'Feed' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Feed')}>피드</div></Link>
+                            <Link className={styles.linkurl} to="/Announce"><div className={activeLink === 'Announce' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('announce')}>공지사항</div></Link>
                         </Col>
                         <Col>
                             <Link className={styles.linkurl} to="/Library"><div className={activeLink === 'Library' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Library')}>라이브러리</div></Link>
@@ -408,8 +416,8 @@ const TopNavigator = () => {
                 </Col>
                 <Col className={styles.header_center}>
                     <Row>
-                        <SearchBar/>
-                    </Row>  
+                        <SearchBar />
+                    </Row>
                 </Col>
                 <Col className={styles.header_right}>
                     <Row>
@@ -424,6 +432,9 @@ const TopNavigator = () => {
                                     </Col>
                                     <Col>
                                         <Link className={styles.linkurl} to={`/Profile/${loginID}`}><div>프로필</div></Link>
+                                    </Col>
+                                    <Col>
+                                        <Link className={styles.linkurl} to={`/qna`}><div>Q&A</div></Link>
                                     </Col>
                                     <Col>
                                         <div className={styles.linkurl} onClick={handleLogoutClick}><div className={activeLink === 'logout' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('logoutt')}>로그아웃</div></div>
