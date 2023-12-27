@@ -69,7 +69,6 @@ const History = () => {
 
     // 바닥에 스크롤이 닿았을 때 실행될 함수
     const handleScrollToBottom = () => {
-        console.log("gd");
         if (hasMore) {
             // 다음 데이터를 불러오기 위한 API 호출
             axios.get(`/api/cplist`, {
@@ -201,7 +200,6 @@ const History = () => {
                 deleteData.append("userId", loginID);
                 axios.post(`/api/like/delete`, deleteData).then(res => {
                     const newLikeList = myLikes.filter(e => e.trackId !== trackId);
-                    console.log("carousel delete", newLikeList);
                     setMyLikes(newLikeList);
                     setFavorite(isFavorite + 1);
                     e.target.classList.remove(styles.onClickHeart);
