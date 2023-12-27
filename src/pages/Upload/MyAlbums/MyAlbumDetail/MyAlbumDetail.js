@@ -10,7 +10,8 @@ import Modal from '@mui/material/Modal';
 import { useContext, useEffect, useState } from 'react';
 import UpdateAlbumModal from './UpdateAlbumModal/UpdateAlbumModal';
 import axios from 'axios';
-import { LoginContext } from '../../../../App';
+import { AutoPlayContext, CurrentTrackContext, LoginContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../../App';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 const MyAlbumDetail = () => {
 
@@ -23,6 +24,12 @@ const MyAlbumDetail = () => {
     const [albumUpdate, setAlbumUpdate] = useState(albumData);
     const [backUpAlbum, setBackUpAlbum] = useState(albumData);
     const [isEditAlbum, setIsEditAlbum] = useState(false);
+    const { audioFiles, setAudioFiles } = useContext(MusicContext);
+    const { isPlaying, setIsPlaying } = useContext(PlayingContext);
+    const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
+    const { track_info, setTrack_info } = useContext(TrackInfoContext);
+    const { tracks, setTracks } = useContext(TrackContext);
+    const { autoPlayAfterSrcChange, setAutoPlayAfterSrcChange } = useContext(AutoPlayContext);
 
     // 모달창을 띄우기 위한 변수
     const [open, setOpen] = useState(false);
@@ -30,20 +37,15 @@ const MyAlbumDetail = () => {
 
 
     useEffect(() => {
-        console.log(albumData.artistId)
         axios.get(`/api/album/isEdit/${albumData.artistId}`).then(resp => {
-            console.log(resp.data);
             setIsEditAlbum(resp.data);
         })
 
     }, [loginID])
 
-    console.log(albumUpdate);
-
     const handleCancle = () => {
         setOpen(false);
         axios.get(`/api/album/findByAlbumId/${backUpAlbum.albumId}`).then(resp => {
-            console.log(resp.data);
             setAlbumUpdate(resp.data);
         })
     };
@@ -66,7 +68,6 @@ const MyAlbumDetail = () => {
         const isDeleteConfirmed = window.confirm("정말로 삭제하시겠습니까? (트랙도 전부 삭제됩니다.)");
         if (isDeleteConfirmed) {
             axios.delete(`/api/album/delete/${albumUpdate.albumId}`).then(resp => {
-                console.log("삭제성공!!")
                 navigate('/Upload/myAlbums');
             })
         }
@@ -75,6 +76,47 @@ const MyAlbumDetail = () => {
     // 앨범 작성자들의 이름을 추출하여 문자열로 합치는 함수
     const uniqueWriters = [...new Set(albumUpdate.tracks.map(track => track.writer))];
     const albumWriters = uniqueWriters.join(', ');
+
+
+    const addTrackToPlaylist = (track) => {
+        console.log(track);
+        const tracksWithImages = track.map((track) => {
+            setAutoPlayAfterSrcChange(true);
+            const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+            return { ...track, imagePath };
+        });
+        console.log(tracksWithImages);
+
+        const { trackId, filePath, imagePath, title, writer } = tracksWithImages[0];
+        // Update TrackInfoContext with the selected track information
+        setTrack_info({
+            trackId,
+            filePath,
+            imagePath,
+            title,
+            writer
+        });
+
+        axios.post(`/api/cplist`, {
+            trackId: trackId,
+            id: loginID
+        }).then(resp => {
+
+        })
+
+        const newAudioFiles = track.map(track => `/tracks/${track.filePath}`);
+
+        console.log(newAudioFiles);
+        setAutoPlayAfterSrcChange(true);
+
+        // 현재 트랙을 중지하고 새 트랙을 재생 목록에 추가하고 재생 시작
+        setAudioFiles((prevAudioFiles) => [...newAudioFiles, ...prevAudioFiles]);
+        setCurrentTrack(0);
+        setIsPlaying(true);
+
+        // // Update the state with the new array of tracks
+        setTracks((prevTracks) => [...tracksWithImages, ...prevTracks]);
+    };
 
     return (
         <div className={style.album_detail_container}>
@@ -123,7 +165,7 @@ const MyAlbumDetail = () => {
                 </Col>
                 <Col sm='12'>
                     <Row>
-                        <Col sm='12'  lg='12' xl='3'>
+                        <Col sm='12' lg='12' xl='3'>
                             <Row className={style.mainAlbumTitle}>
                                 <Col sm='12'>
                                     <div className={style.album_image}>
@@ -136,6 +178,9 @@ const MyAlbumDetail = () => {
                                 <Col sm='12' className={style.album_image}>
                                     {albumWriters}
                                 </Col>
+                                <div className={style.play_button} >
+                                    <PlayCircleIcon sx={{ width: '200px', height: '200px' }} onClick={() => addTrackToPlaylist(albumUpdate.tracks)} />
+                                </div>
                             </Row>
                         </Col>
                         <Col sm='12' lg='12' xl='9'>
