@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useContext, useState } from "react";
 import { Avatar, Typography } from "@mui/material";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import styles from "./Mytracks.module.css";
 import {
     AutoPlayContext,
