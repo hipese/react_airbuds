@@ -1,4 +1,4 @@
-import react, {useEffect, useState, useContext} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import styles from "./Playlist.module.css";
 import axios from "axios";
 import { LoginContext } from "../../App";
