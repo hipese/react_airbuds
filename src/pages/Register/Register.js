@@ -32,6 +32,9 @@ const Register = () => {
     // 이메일 인증 여부
     const [verified, setVerified] = useState(false);
 
+    // 이메일 백업
+    const [backupEmail, setBackupEmail] = useState("");
+
     // ID 중복체크 여부
     const [isDupleChecked, setIsDupleChecked] = useState(false);
 
@@ -99,7 +102,7 @@ const Register = () => {
             axios.post(`/api/member/register/${userInfo.email}`)
             .then(response => {
                 if (response.data === 'success') {
-                    
+                    setBackupEmail(userInfo.email);
                     Swal.fire({
                         icon: "success",
                         title: "해당 이메일로 인증번호를\n 전송했습니다.",
@@ -344,7 +347,8 @@ const Register = () => {
             })
             return;
         }
-        axios.post("/api/member/register", userInfo).then(resp => {
+        const updatedUserInfo = {...userInfo, email : backupEmail}
+        axios.post("/api/member/register", updatedUserInfo).then(resp => {
             Swal.fire({
                 icon: "success",
                 title: "회원가입이 완료되었습니다!",
