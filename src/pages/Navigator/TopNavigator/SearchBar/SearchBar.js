@@ -56,7 +56,7 @@ const SearchBar = () => {
 
     const InputSearchText = (e) => {
 
-        if (e.target.value.length > 100) {
+        if (e.target.value.length > 50) {
             alert("너무 길다요");
             return;
         }
@@ -68,6 +68,10 @@ const SearchBar = () => {
         setShowHistory(true);
     };
 
+    const sanitizeSearchText = (text) => {
+        return text.replace(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/g, "");
+    };
+
     const handleSearch = () => {
         setSearchHistory((prevHistory) => [searchText, ...prevHistory]);
 
@@ -76,7 +80,13 @@ const SearchBar = () => {
             return;
         }
 
-        navigate(`ShowMusicList/${searchText}`);
+        const sanitizedText = sanitizeSearchText(searchText);
+
+        if(sanitizedText==""){
+            alert("특수문자를 제외하고 검색해주세요");
+            return;
+        }
+        navigate(`ShowMusicList/${sanitizedText}`);
     };
 
     return (

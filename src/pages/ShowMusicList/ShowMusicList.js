@@ -67,8 +67,8 @@ const ShowMusicList = () => {
                             </Col>
                         )}
                         {(viewState === 1 && searchTracks && searchTracks.length == 0) && (
-                            <Col sm='12'>
-                                검색한 트랙이 존재하지 않습니다.
+                            <Col sm='12' className={style.noSearchText}>
+                                 검색결과가 존재하지 않습니다.
                             </Col>
                         )}
                         {(viewState === 2 && searchAlbums && searchAlbums.length > 0) && (
@@ -76,9 +76,9 @@ const ShowMusicList = () => {
                                 <AlbumSearchResult searchAlbums={searchAlbums} />
                             </Col>
                         )}
-                        {(viewState === 2 && searchTracks && searchTracks.length == 0) && (
-                            <Col sm='12'>
-                                검색한 앨범이 존재하지 않습니다.
+                        {(viewState === 2 && searchAlbums && searchAlbums.length == 0) && (
+                            <Col sm='12' className={style.noSearchText}>
+                                 검색결과가 존재하지 않습니다.
                             </Col>
                         )}
                         {(viewState === 0 && searchTracks && searchAlbums && (searchTracks.length > 0 || searchAlbums.length > 0)) && (
@@ -91,9 +91,9 @@ const ShowMusicList = () => {
                                 </Col>
                             </>
                         )}
-                        {(searchTracks.length === 0 && searchAlbums.length === 0) && (
+                        {(viewState === 0&&searchTracks.length === 0 && searchAlbums.length === 0) && (
                             <Col sm='12' className={style.noSearchText}>
-                                No search results found.
+                               검색결과가 존재하지 않습니다.
                             </Col>
                         )}
                     </Row>

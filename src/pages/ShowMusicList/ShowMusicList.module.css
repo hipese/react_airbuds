@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   font-size: 40px;
+  overflow-x: hidden;
 }
 .searchResultBox{
   width: 100%;
@@ -10,7 +11,8 @@
 }
 .noSearchText{
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   font-size: 40px;
+  margin-left: 100px;
 }
