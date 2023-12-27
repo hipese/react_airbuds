@@ -1,4 +1,4 @@
-import { Avatar, Button, Grid, Menu, MenuItem, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, CircularProgress, Grid, Menu, MenuItem, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -22,6 +22,13 @@ import Swal from "sweetalert2";
 import "@sweetalert2/themes/bootstrap-4";
 
 import PersonIcon from '@mui/icons-material/Person';
+
+
+const LoadingSpinner = () => (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+        <CircularProgress color="inherit" />
+    </Box>
+);
 
 const theme = createTheme({
     components: {
@@ -58,6 +65,8 @@ const Track_Detail = () => {
     const [replyLike, setReplyLike] = useState([]);
     const [likeCount, setLikeCount] = useState([]);
     const [isFollowed, setFollow] = useState(false);
+    const [loading, setLoading] = useState(true);
+
 
     const loadingReplies = async () => {
         axios.get(`/api/track/bytrack_id/${trackId}`).then(resp => {
@@ -65,6 +74,7 @@ const Track_Detail = () => {
             const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
             const trackWithImage = { ...track, imagePath };
             setTrack(trackWithImage);
+            setLoading(false);
         });
 
         axios.get(`/api/reply/${trackId}`).then(resp => {
@@ -88,12 +98,12 @@ const Track_Detail = () => {
     const addStreamCount = (trackId, singerId, e) => {
         const formdata = new FormData();
         const date = new Date().toISOString();
-        formdata.append("trackId",trackId);
-        formdata.append("streamDate",date);
-        formdata.append("streamSinger",singerId);
-        axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+        formdata.append("trackId", trackId);
+        formdata.append("streamDate", date);
+        formdata.append("streamSinger", singerId);
+        axios.put(`/api/dashboard/addStream`, formdata).then(res => {
 
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log(e);
         });
     }
@@ -104,7 +114,7 @@ const Track_Detail = () => {
             trackId: track.trackId,
             id: loginID
         }).then(resp => {
-            addStreamCount(track.trackId,track.writeId);
+            addStreamCount(track.trackId, track.writeId);
         })
 
         setAutoPlayAfterSrcChange(true);
@@ -424,175 +434,144 @@ const Track_Detail = () => {
     };
 
     return (
-        <Grid container className={styles.container}>
-            <Grid item xs={12} md={8} className={styles.container2}>
-                <Grid container className={styles.flexContainer}>
-                    <Grid item xs={12} md={11} className={styles.innerContainer}>
-                        <Typography variant="h4">음원 정보</Typography>
-                    </Grid>
-                    <Grid item xs={12} md={1} className={styles.reportButton}>
-                        <div onClick={handleReport} className={style.report}>
-                            <ErrorOutlineIcon />&nbsp;&nbsp;신고
-                        </div>
-                    </Grid>
-                </Grid>
-                <Grid container className={styles.track_info}>
-                    <Grid item xs={12} md={4} className={styles.track_image}>
-                        {track.trackImages && track.trackImages.length > 0 && (
-                            <img
-                                alt=""
-                                className="w-full h-48"
-                                height="300px"
-                                src={`/tracks/image/${track.imagePath}`}
-                                style={{
-                                    aspectRatio: "9/7",
-                                    objectFit: "cover",
-                                }}
-                                width="100%"
-                            />
-                        )}
-                    </Grid>
-                    <Grid item xs={12} md={8} className={styles.track_title_writer}>
-                        <Grid item className={styles.flexContainer2}>
-                            <Grid item className={styles.title_writer}>
-                                <Grid item className={styles.track_title}>
-                                    <Typography variant="h3">제목: {track.title}</Typography>
-                                </Grid>
-                                <Grid item className={styles.track_writer}>
-                                    <Typography variant="h5">가수: {track.writer}</Typography>
-                                </Grid>
+        <>
+            {loading ? (
+                <div className={styles.loadingContainer}>
+                    <LoadingSpinner />
+                </div>
+            ) : (
+                <Grid container className={styles.container}>
+                    <Grid item xs={12} md={8} className={styles.container2}>
+                        <Grid container className={styles.flexContainer}>
+                            <Grid item xs={12} md={11} className={styles.innerContainer}>
+                                <Typography variant="h4">음원 정보</Typography>
                             </Grid>
-                            <Grid item className={styles.play_button}
-                                onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
-                            >
-                                <PlayCircleIcon sx={{ width: '200px', height: '200px' }} />
+                            <Grid item xs={12} md={1} className={styles.reportButton}>
+                                <div onClick={handleReport} className={style.report}>
+                                    <ErrorOutlineIcon />&nbsp;&nbsp;신고
+                                </div>
                             </Grid>
                         </Grid>
-                    </Grid>
-                </Grid>
-                <br></br>
-                <Grid container>
-                    <Grid item className={styles.innerContainer2}>
-                        <Grid item xs={12} md={12} container className={styles.profileContainer}>
-                            <Grid item xs={12} md={12} className={styles.user_info}>
-                                <Link className={styles.linkurl} to={`/Profile/${track.writeId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    <Avatar alt="Profile" src="/static/images/avatar/1.jpg" sx={{ width: '80px', height: '80px' }} />
-                                    <Typography variant="body1">
-                                        {track.writeId}
-                                    </Typography>
-                                </Link>
-                                <div className={styles.like}>
-                                {
-                                    loginID == track.writeId ?
-                                        ""
-                                        :
-                                        !isFollowed ?
-                                            //팔로우 안한 상태일때.
-                                            <Button variant="outlined" startIcon={<PersonIcon />}
-                                                sx={{
-                                                    width: '100px',
-                                                    height: '30px',
-                                                    color: '#212529',
-                                                    borderColor: '#4CAF50',
-                                                    marginTop: '10px',
-                                                    marginBottom: '10px',
-                                                    marginRight: '10px',
-                                                    '&:hover': {
-                                                        borderColor: '#4CAF50',
-                                                        backgroundColor: '#4CAF50',
-                                                        color: "white"
-                                                    },
-                                                }}
-                                                onClick={() => { handleFollowBtn(isFollowed) }}>
-                                                Follow
-                                            </Button>
-                                            :
-                                            //팔로우 한 상태일때.
-                                            <Button variant="outlined" startIcon={<PersonIcon />}
-                                                sx={{
-                                                    width: '120px',
-                                                    height: '30px',
-                                                    color: 'white',
-                                                    borderColor: '#4CAF50',
-                                                    backgroundColor: '#4CAF50',
-                                                    marginTop: '10px',
-                                                    marginBottom: '10px',
-                                                    marginRight: '10px',
-                                                    '&:hover': {
-                                                        backgroundColor: 'white',
-                                                        borderColor: '#4CAF50',
-                                                        color: '#212529',
-                                                    },
-                                                }}
-                                                onClick={() => { handleFollowBtn(isFollowed) }}>
-                                                Followed
-                                            </Button>
-                                }
-                                    {/* <FavoriteBorderIcon />
+                        <Grid container className={styles.track_info}>
+                            <Grid item xs={12} md={4} className={styles.track_image}>
+                                {track.trackImages && track.trackImages.length > 0 && (
+                                    <img
+                                        alt=""
+                                        className="w-full h-48"
+                                        height="300px"
+                                        src={`/tracks/image/${track.imagePath}`}
+                                        style={{
+                                            aspectRatio: "9/7",
+                                            objectFit: "cover",
+                                        }}
+                                        width="100%"
+                                    />
+                                )}
+                            </Grid>
+                            <Grid item xs={12} md={8} className={styles.track_title_writer}>
+                                <Grid item className={styles.flexContainer2}>
+                                    <Grid item className={styles.title_writer}>
+                                        <Grid item className={styles.track_title}>
+                                            <Typography variant="h3">제목: {track.title}</Typography>
+                                        </Grid>
+                                        <Grid item className={styles.track_writer}>
+                                            <Typography variant="h5">가수: {track.writer}</Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid item className={styles.play_button}
+                                        onClick={() => addTrackToPlaylist(track)} // div를 클릭할 때마다 호출됨
+                                    >
+                                        <PlayCircleIcon sx={{ width: '200px', height: '200px' }} />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <br></br>
+                        <Grid container>
+                            <Grid item className={styles.innerContainer2}>
+                                <Grid item xs={12} md={12} container className={styles.profileContainer}>
+                                    <Grid item xs={12} md={12} className={styles.user_info}>
+                                        <Link className={styles.linkurl} to={`/Profile/${track.writeId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Avatar alt="Profile" src="/static/images/avatar/1.jpg" sx={{ width: '80px', height: '80px' }} />
+                                            <Typography variant="body1">
+                                                {track.writeId}
+                                            </Typography>
+                                        </Link>
+                                        <div className={styles.like}>
+                                            {
+                                                loginID == track.writeId ?
+                                                    ""
+                                                    :
+                                                    !isFollowed ?
+                                                        //팔로우 안한 상태일때.
+                                                        <Button variant="outlined" startIcon={<PersonIcon />}
+                                                            sx={{
+                                                                width: '100px',
+                                                                height: '30px',
+                                                                color: '#212529',
+                                                                borderColor: '#4CAF50',
+                                                                marginTop: '10px',
+                                                                marginBottom: '10px',
+                                                                marginRight: '10px',
+                                                                '&:hover': {
+                                                                    borderColor: '#4CAF50',
+                                                                    backgroundColor: '#4CAF50',
+                                                                    color: "white"
+                                                                },
+                                                            }}
+                                                            onClick={() => { handleFollowBtn(isFollowed) }}>
+                                                            Follow
+                                                        </Button>
+                                                        :
+                                                        //팔로우 한 상태일때.
+                                                        <Button variant="outlined" startIcon={<PersonIcon />}
+                                                            sx={{
+                                                                width: '120px',
+                                                                height: '30px',
+                                                                color: 'white',
+                                                                borderColor: '#4CAF50',
+                                                                backgroundColor: '#4CAF50',
+                                                                marginTop: '10px',
+                                                                marginBottom: '10px',
+                                                                marginRight: '10px',
+                                                                '&:hover': {
+                                                                    backgroundColor: 'white',
+                                                                    borderColor: '#4CAF50',
+                                                                    color: '#212529',
+                                                                },
+                                                            }}
+                                                            onClick={() => { handleFollowBtn(isFollowed) }}>
+                                                            Followed
+                                                        </Button>
+                                            }
+                                            {/* <FavoriteBorderIcon />
                                     <Typography variant="body1">16.9K</Typography>
                                     <RepeatIcon />
                                     <Typography variant="body1">368</Typography>
                                     <FormatAlignLeftIcon />
                                     <Typography variant="body1">5</Typography> */}
-                                </div>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={12} md={12} className={styles.reply_container}>
-                        {/* <Typography variant="h6" className="mt-4">9 comments</Typography> */}
-                        <Grid item className="mt-2">
-                            <Grid container className="mt-2">
-                                <Grid item xs={12} md={12} className={styles.reply_input}>
-                                    <TextField
-                                        label="댓글을 입력하세요"
-                                        variant="outlined"
-                                        fullWidth
-                                        multiline
-                                        rows={1}
-                                        value={reply.contents}
-                                        onChange={handleReplyChange}
-                                        onKeyDown={handleKeyDown}
-                                    />
-                                    <Button variant="contained" onClick={handlePostReply} sx={{
-                                        height: '56px',
-                                        width: '100px',
-                                        color: '#FFFFFF',
-                                        borderColor: '#000000',
-                                        backgroundColor: '#1e1e1e',
-                                        marginTop: '10px',
-                                        marginBottom: '10px',
-                                        '&:hover': {
-                                            borderColor: '#4CAF50',
-                                            backgroundColor: '#4CAF50',
-                                        },
-                                        marginLeft: '10px',
-
-                                    }}>
-                                        작성하기
-                                    </Button>
+                                        </div>
+                                    </Grid>
                                 </Grid>
                             </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item className={styles.replyoutput}>
-                        {visibleSignList.map((comment, index) => (
-                            <Grid item key={index} className={styles.commentContainer}>
-                                {editMode === comment.seq ? ( // Show input field in edit mode
-                                    <Grid item xs={12} md={12} className={styles.editContainer}>
-                                        <TextField
-                                            name='contents'
-                                            fullWidth
-                                            multiline
-                                            rows={1}
-                                            value={editedReply.contents}
-                                            onChange={changeEditedData}
-                                            size="small"
-                                            sx={{ width: '70%' }}
-                                        />
-                                        <Button
-                                            variant="contained"
-                                            onClick={() => handleUpdateClick(comment.seq)}
-                                            sx={{
+                            <Grid item xs={12} md={12} className={styles.reply_container}>
+                                {/* <Typography variant="h6" className="mt-4">9 comments</Typography> */}
+                                <Grid item className="mt-2">
+                                    <Grid container className="mt-2">
+                                        <Grid item xs={12} md={12} className={styles.reply_input}>
+                                            <TextField
+                                                label="댓글을 입력하세요"
+                                                variant="outlined"
+                                                fullWidth
+                                                multiline
+                                                rows={1}
+                                                value={reply.contents}
+                                                onChange={handleReplyChange}
+                                                onKeyDown={handleKeyDown}
+                                            />
+                                            <Button variant="contained" onClick={handlePostReply} sx={{
+                                                height: '56px',
+                                                width: '100px',
                                                 color: '#FFFFFF',
                                                 borderColor: '#000000',
                                                 backgroundColor: '#1e1e1e',
@@ -603,103 +582,142 @@ const Track_Detail = () => {
                                                     backgroundColor: '#4CAF50',
                                                 },
                                                 marginLeft: '10px',
-                                            }}
-                                        >
-                                            확인
-                                        </Button>
-                                        <Button
-                                            variant="outlined"
-                                            onClick={() => handleCancelEdit()}
-                                            sx={{
-                                                color: '#000000',
-                                                borderColor: '#000000',
-                                                marginTop: '10px',
-                                                marginBottom: '10px',
-                                                '&:hover': {
-                                                    borderColor: '#4CAF50',
-                                                },
-                                                marginLeft: '10px',
-                                            }}
-                                        >
-                                            취소
-                                        </Button>
+
+                                            }}>
+                                                작성하기
+                                            </Button>
+                                        </Grid>
                                     </Grid>
-                                ) : (
-                                    <div className={styles.reply_info}>
-                                        <Link to={`/Profile/${comment.writer}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                            <Typography variant="h6">{comment.writer}</Typography>
-                                        </Link>
-                                        <Typography variant="body1">{comment.contents}</Typography>
-                                        <Typography variant="caption">{formatDate(comment.writeDate)}</Typography>
-                                    </div>
-                                )}
-                                <div className={styles.udContainer}>
-                                    <div className={styles.thumbUp}>
-                                        <div className={styles.thumbUp}
-                                            onClick={(e) => { handleFavorite(comment.seq, replyLike.some(replyLike => replyLike.replySeq === comment.seq), e) }}>
-                                            {replyLike.some(replyLike => replyLike.replySeq === comment.seq) ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
-                                            <div className={styles.count}>{comment.likeCount}</div>
-                                        </div>
-                                    </div>
-                                    <Button
-                                        sx={{
-                                            width: '10px',
-                                            color: '#000000',
-                                            borderColor: '#000000',
-                                        }}
-                                        id="basic-button"
-                                        aria-controls={open ? 'basic-menu' : undefined}
-                                        aria-haspopup="true"
-                                        aria-expanded={open ? 'true' : undefined}
-                                        onClick={(event) => handleClick(event, comment)}
-                                    >
-                                        ⋮
-                                    </Button>
-                                    <ThemeProvider theme={theme}>
-                                        <Menu
-                                            id={`basic-menu-${comment}`}
-                                            anchorEl={anchorEl}
-                                            open={open && selectedSeq === comment}
-                                            onClose={handleClose}
-                                            MenuListProps={{
-                                                'aria-labelledby': `basic-button-${comment}`,
-                                            }}
-                                        >
-                                            {comment.writer === loginID && (
-                                                [
-                                                    <MenuItem key="delete" onClick={() => handleDeleteClick(comment)}>
-                                                        <DeleteOutlineIcon />&nbsp;&nbsp;삭제
-                                                    </MenuItem>,
-                                                    <MenuItem key="edit" onClick={() => handleEditClick(comment.seq, comment)}>
-                                                        <EditIcon />&nbsp;&nbsp;수정
-                                                    </MenuItem>,
-                                                ]
-                                            )}
-                                        </Menu>
-                                    </ThemeProvider>
-                                </div>
+                                </Grid>
                             </Grid>
-                        ))}
+                            <Grid item className={styles.replyoutput}>
+                                {visibleSignList.map((comment, index) => (
+                                    <Grid item key={index} className={styles.commentContainer}>
+                                        {editMode === comment.seq ? ( // Show input field in edit mode
+                                            <Grid item xs={12} md={12} className={styles.editContainer}>
+                                                <TextField
+                                                    name='contents'
+                                                    fullWidth
+                                                    multiline
+                                                    rows={1}
+                                                    value={editedReply.contents}
+                                                    onChange={changeEditedData}
+                                                    size="small"
+                                                    sx={{ width: '70%' }}
+                                                />
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={() => handleUpdateClick(comment.seq)}
+                                                    sx={{
+                                                        color: '#FFFFFF',
+                                                        borderColor: '#000000',
+                                                        backgroundColor: '#1e1e1e',
+                                                        marginTop: '10px',
+                                                        marginBottom: '10px',
+                                                        '&:hover': {
+                                                            borderColor: '#4CAF50',
+                                                            backgroundColor: '#4CAF50',
+                                                        },
+                                                        marginLeft: '10px',
+                                                    }}
+                                                >
+                                                    확인
+                                                </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    onClick={() => handleCancelEdit()}
+                                                    sx={{
+                                                        color: '#000000',
+                                                        borderColor: '#000000',
+                                                        marginTop: '10px',
+                                                        marginBottom: '10px',
+                                                        '&:hover': {
+                                                            borderColor: '#4CAF50',
+                                                        },
+                                                        marginLeft: '10px',
+                                                    }}
+                                                >
+                                                    취소
+                                                </Button>
+                                            </Grid>
+                                        ) : (
+                                            <div className={styles.reply_info}>
+                                                <Link to={`/Profile/${comment.writer}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                    <Typography variant="h6">{comment.writer}</Typography>
+                                                </Link>
+                                                <Typography variant="body1">{comment.contents}</Typography>
+                                                <Typography variant="caption">{formatDate(comment.writeDate)}</Typography>
+                                            </div>
+                                        )}
+                                        <div className={styles.udContainer}>
+                                            <div className={styles.thumbUp}>
+                                                <div className={styles.thumbUp}
+                                                    onClick={(e) => { handleFavorite(comment.seq, replyLike.some(replyLike => replyLike.replySeq === comment.seq), e) }}>
+                                                    {replyLike.some(replyLike => replyLike.replySeq === comment.seq) ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
+                                                    <div className={styles.count}>{comment.likeCount}</div>
+                                                </div>
+                                            </div>
+                                            <Button
+                                                sx={{
+                                                    width: '10px',
+                                                    color: '#000000',
+                                                    borderColor: '#000000',
+                                                }}
+                                                id="basic-button"
+                                                aria-controls={open ? 'basic-menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={open ? 'true' : undefined}
+                                                onClick={(event) => handleClick(event, comment)}
+                                            >
+                                                ⋮
+                                            </Button>
+                                            <ThemeProvider theme={theme}>
+                                                <Menu
+                                                    id={`basic-menu-${comment}`}
+                                                    anchorEl={anchorEl}
+                                                    open={open && selectedSeq === comment}
+                                                    onClose={handleClose}
+                                                    MenuListProps={{
+                                                        'aria-labelledby': `basic-button-${comment}`,
+                                                    }}
+                                                >
+                                                    {comment.writer === loginID && (
+                                                        [
+                                                            <MenuItem key="delete" onClick={() => handleDeleteClick(comment)}>
+                                                                <DeleteOutlineIcon />&nbsp;&nbsp;삭제
+                                                            </MenuItem>,
+                                                            <MenuItem key="edit" onClick={() => handleEditClick(comment.seq, comment)}>
+                                                                <EditIcon />&nbsp;&nbsp;수정
+                                                            </MenuItem>,
+                                                        ]
+                                                    )}
+                                                </Menu>
+                                            </ThemeProvider>
+                                        </div>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                            <Grid item xs={12} md={12} className={styles.pageNation}>
+                                <Pagination
+                                    count={totalPages}
+                                    page={currentPage}
+                                    onChange={onPageChange}
+                                    size="medium"
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        padding: "15px 0",
+                                    }}
+                                    renderItem={(item) => (
+                                        <PaginationItem {...item} sx={{ fontSize: 12 }} />
+                                    )}
+                                />
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} md={12} className={styles.pageNation}>
-                        <Pagination
-                            count={totalPages}
-                            page={currentPage}
-                            onChange={onPageChange}
-                            size="medium"
-                            sx={{
-                                display: "flex",
-                                justifyContent: "center",
-                                padding: "15px 0",
-                            }}
-                            renderItem={(item) => (
-                                <PaginationItem {...item} sx={{ fontSize: 12 }} />
-                            )}
-                        />
-                    </Grid>
-                </Grid>
-            </Grid>
-        </Grid >
+                </Grid >
+            )}
+        </>
     );
 };
 
