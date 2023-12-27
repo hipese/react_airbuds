@@ -47,10 +47,13 @@
 .myreply {
     margin-top: 20px;
     margin-bottom: 100px;
+    height: 500px;
+    overflow: auto;
 }
 
 .commentList {
     margin-top: 10px;
+    padding-right: 10px;
 }
 
 .comment {
