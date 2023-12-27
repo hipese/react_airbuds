@@ -94,7 +94,7 @@ const Playlist = () => {
                     })}
                 </ul>
             </div>
-            <Modal showModal={showModal} closeModal={closeModal} playlist={selectedPlaylist} onPlaylistDeleted={handlePlaylistDeleted} />
+            <Modal showModal={showModal} closeModal={closeModal} playlist={selectedPlaylist} setSelectedPlaylist={setSelectedPlaylist} onPlaylistDeleted={handlePlaylistDeleted} />
         </div>
     );
 }
