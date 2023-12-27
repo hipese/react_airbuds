@@ -1,13 +1,12 @@
 .container {
-    overflow: auto;
-    
+    width: 70%;
 }
 
 .track_info {
     margin-top: 30px;
     display: flex;
     width: 100%;
-    height: 100px;
+    height: 100%;
     align-items: center;
 }
 
@@ -56,8 +55,7 @@
     margin-right: 10px;
 }
 .buttoncontainer{
-    width: 50%;
-    /* display: none;  일단 끄지 마라*/
+    width: 100%;
 }
 
 .track_info:hover .buttoncontainer {
@@ -66,8 +64,8 @@
 .buttonbox{
     width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: end;
+    align-items: end;
 }
 .largeIcon {
     font-size: 100px; /* 크기 변경 */
@@ -77,4 +75,7 @@
 .largeIcon:hover {
     cursor: pointer;
     transform: scale(1.1); /* 마우스 오버 시 약간 확대 */
+}
+.playerBox{
+    
 }

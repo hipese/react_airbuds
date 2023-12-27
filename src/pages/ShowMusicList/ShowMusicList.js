@@ -31,7 +31,11 @@ const ShowMusicList = () => {
     useEffect(() => {
 
         axios.get(`/api/track/searchText/${searchText}`).then(resp => {
-            setSearchTracks(resp.data);
+            const tracksWithImages = resp.data.map((track) => {
+                const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+                return { ...track, imagePath };
+            });
+            setSearchTracks(tracksWithImages);
             setSearch(searchText);
             setLoading(false);
         })
@@ -63,7 +67,7 @@ const ShowMusicList = () => {
                     <Row>
                         {(viewState === 1 && searchTracks && searchTracks.length > 0) && (
                             <Col sm='12'>
-                                <TrackSearchResult searchTracks={searchTracks} setSearchTracks={setSearchTracks} />
+                                <TrackSearchResult searchTracks={searchTracks}/>
                             </Col>
                         )}
                         {(viewState === 1 && searchTracks && searchTracks.length == 0) && (
@@ -84,10 +88,11 @@ const ShowMusicList = () => {
                         {(viewState === 0 && searchTracks && searchAlbums && (searchTracks.length > 0 || searchAlbums.length > 0)) && (
                             <>
                                 <Col sm='12'>
-                                    <TrackSearchResult searchTracks={searchTracks} setSearchTracks={setSearchTracks}/>
-                                </Col>
-                                <Col sm='12'>
                                     <AlbumSearchResult searchAlbums={searchAlbums} />
+                                </Col>
+
+                                <Col sm='12'>
+                                    <TrackSearchResult searchTracks={searchTracks}/>
                                 </Col>
                             </>
                         )}

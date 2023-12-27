@@ -3,8 +3,6 @@ import { useEffect, useContext, useState } from "react";
 import { Avatar, Typography } from "@mui/material";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import styles from "./YourTrackList.module.css"
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import RepeatIcon from '@mui/icons-material/Repeat';
 import {
     AutoPlayContext,
     CurrentTrackContext,
@@ -50,7 +48,7 @@ const YourTrackList = () => {
 
     // 업데이트를 반영하기 위한 함수
     const handleTrackUpdated = () => {
-        axios.get(`/api/track/findById/${loginID}`).then((resp) => {
+        axios.get(`/api/track/LoginTracks`).then((resp) => {
             const tracksWithImages = resp.data.map((track) => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
                 return { ...track, imagePath };
@@ -66,11 +64,7 @@ const YourTrackList = () => {
     };
 
     useEffect(() => {
-        if (!loginID) {
-            return;
-        }
-
-        axios.get(`/api/track/findById/${loginID}`).then((resp) => {
+        axios.get(`/api/track/LoginTracks`).then((resp) => {
             const tracksWithImages = resp.data.map((track) => {
                 const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
                 return { ...track, imagePath };
@@ -134,20 +128,17 @@ const YourTrackList = () => {
 
         if(isDelete){
             axios.delete(`/api/track/${trackId}`).then(resp => {
-
+                axios.get(`/api/track/LoginTracks`).then((resp) => {
+                    const tracksWithImages = resp.data.map((track) => {
+                        const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
+                        return { ...track, imagePath };
+                    });
+                    setTrack(tracksWithImages);
+                });
             }).catch(resp => {
                 console.log("삭제 실패...")
             })
-    
-            axios.get(`/api/track/findById/${loginID}`).then((resp) => {
-                const tracksWithImages = resp.data.map((track) => {
-                    const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
-                    return { ...track, imagePath };
-                });
-                setTrack(tracksWithImages);
-            });
         }
-       
     }
 
 
@@ -174,6 +165,7 @@ const YourTrackList = () => {
                             </div>
                         </div>
                     </Link>
+                    
                     <div className={styles.play_button}
                         onClick={() => addTrackToPlaylist(trackone)} // div를 클릭할 때마다 호출됨
                     >
@@ -201,16 +193,6 @@ const YourTrackList = () => {
                         </div>
                     </div>
 
-                    <div className={styles.like_share}>
-                        <div className={styles.like}>
-                            <FavoriteBorderIcon />
-                            16.9K
-                        </div>
-                        <div className={styles.share}>
-                            <RepeatIcon />
-                            368
-                        </div>
-                    </div>
                 </div>
             ))}
             {selectedTrack && (

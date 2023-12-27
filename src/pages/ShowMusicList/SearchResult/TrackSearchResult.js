@@ -19,14 +19,13 @@ import {
 import { Link, useParams } from "react-router-dom";
 import heart from "../../Mypage/assets/heart.svg";
 
-const TrackSearchResult = ({ searchTracks,setSearchTracks }) => {
+const TrackSearchResult = ({ searchTracks }) => {
 
     console.log(searchTracks);
 
    
 
     const { targetID } = useParams();
-    const [track, setTrack] = useState([]);
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
     const { isPlaying, setIsPlaying } = useContext(PlayingContext);
     const { currentTrack, setCurrentTrack } = useContext(CurrentTrackContext);
@@ -39,16 +38,6 @@ const TrackSearchResult = ({ searchTracks,setSearchTracks }) => {
     const [trackLike, setLike] = useState([]);
     const [trackCount, setTrackCount] = useState([]);
 
-
-    useEffect(()=>{
-        const tracksWithImages = searchTracks.map((track) => {
-            const imagePath = track.trackImages.length > 0 ? track.trackImages[0].imagePath : null;
-            const imagePaths = track.trackImages.map(image => image.imagePath).join(', ');
-            return { ...track, imagePath, imagePaths };
-        });
-        setSearchTracks(tracksWithImages)
-        
-    },[loginID])
 
     const addStreamCount = (trackId, singerId, e) => {
         const formdata = new FormData();
@@ -98,70 +87,14 @@ const TrackSearchResult = ({ searchTracks,setSearchTracks }) => {
         setIsPlaying(true);
     };
 
-    const handleFavorite = (trackId, isLiked, e) => {
-        if (loginID !== "") {
-            if (!isLiked) {
-                const formData = new FormData();
-                formData.append("likeSeq", 0);
-                formData.append("userId", loginID);
-                formData.append("trackId", trackId);
-                axios.post(`/api/like`, formData).then(res => {
-                    setLike([...trackLike, { trackId: trackId, userId: loginID, likeSeq: res.data }]);
-                    setFavorite(isFavorite + 1);
-                    e.target.classList.add(styles.onClickHeart);
-                    e.target.classList.remove(styles.NonClickHeart);
-                }).catch((e) => {
-                    console.log(e);
-                });
-            } else {
-                const deleteData = new FormData();
-                deleteData.append("trackId", trackId);
-                deleteData.append("userId", loginID);
-                axios.post(`/api/like/delete`, deleteData).then(res => {
-                    const newLikeList = trackLike.filter(e => e.trackId !== trackId);
-                    console.log("carousel delete", newLikeList);
-                    setLike(newLikeList);
-                    setFavorite(isFavorite + 1);
-                    e.target.classList.remove(styles.onClickHeart);
-                    e.target.classList.add(styles.NonClickHeart);
-                }).catch((e) => {
-                    console.log(e);
-                });
-            }
-        } else {
-            alert("좋아요는 로그인을 해야 합니다.")
-            return;
-        }
-    }
-
-    const getLikeCount = (trackId) => {
-        const targetCount = trackCount.find(item => item.trackId === trackId);
-        return targetCount ? targetCount.count : 0;
-    };
-
-    const loadingLikes = async () => {
-        axios.get(`/api/like/${loginID}`).then(res => {
-            console.log(res.data);
-            setLike(res.data);
-        }).catch((e) => {
-            console.log(e);
-        });
-
-        axios.get(`/api/track/like_count/${targetID}`).then(res => {
-            setTrackCount(res.data);
-        }).catch((e) => {
-            console.log(e);
-        });
-    }
-
-    useEffect(() => {
-        loadingLikes();
-    }, [isFavorite]);
 
 
 
     return (
         <div className={styles.container}>
+             <Col sm='12' className={styles.titleText}>
+                트랙 목록
+            </Col>
             {searchTracks.length === 0 ? (
                 <None_track_info />
             ) : (
@@ -193,22 +126,6 @@ const TrackSearchResult = ({ searchTracks,setSearchTracks }) => {
                         </div>
                         <div className={styles.track_duration}>
                             {formatDurationFromHHMMSS(track.duration)}
-                        </div>
-                        <div className={styles.like_share}>
-                            <div className={styles.like}>
-                                <img
-                                    src={heart}
-                                    alt=""
-                                    className={
-                                        trackLike.some(trackLike => trackLike.trackId === track.trackId)
-                                            ? styles.onClickHeart : styles.NonClickHeart}
-                                    onClick={(e) => { handleFavorite(track.trackId, trackLike.some(trackLike => trackLike.trackId === track.trackId), e) }} />
-                                {" " + getLikeCount(track.trackId)}
-                            </div>
-                            <div className={styles.share}>
-                                <RepeatIcon />
-                                368
-                            </div>
                         </div>
                     </div>
                 ))
