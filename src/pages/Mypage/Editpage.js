@@ -152,7 +152,7 @@ const Editpage = () => {
         })
         
         if(formValues) {
-            axios.post("/api/member/chagePW", {password : formValues.password, newPassword : formValues.newPassword}).then(resp => {
+            axios.post("/api/member/changePW", {password : formValues.password, newPassword : formValues.newPassword}).then(resp => {
                 console.log(resp);
                 Swal.fire({
                     icon: "success",
@@ -167,8 +167,8 @@ const Editpage = () => {
                 if(err.response.status === 503) {
                     Swal.fire({
                         icon: "error",
-                        title: "비밀번호 변경에 실패했습니다...",
-                        text: "이 현상이 지속된다면 관리자에게 문의해주세요!"
+                        title: "현재 비밀번호가 일치하지 않습니다...",
+                        text: "비밀번호를 다시 확인해주세요!"
                     })
                 } else if(err.response.status === 401) {
                     Swal.fire({
@@ -191,6 +191,7 @@ const Editpage = () => {
             })
         }
     }
+
     const changeProfileHandler = (e) => {
         const newImagePath = URL.createObjectURL(e.target.files[0]);
         const formData = new FormData();
@@ -211,6 +212,57 @@ const Editpage = () => {
                 })
             });
     };
+
+    const userInfoChangeHandler = async () => {
+        const {value : formValues} = await Swal.fire({
+            title: '내 정보 수정',
+            html: `
+            <input type="text" id="name" class="swal2-input" placeholder="이름">
+            <input type="text" id="contact" class="swal2-input" placeholder="연락처" maxlength="11">
+            <input type="date" id="birth" class="swal2-input" placeholder="생년월일">
+          `,
+            confirmButtonText: "수정하기",
+            focusConfirm: false,
+            didOpen: () => {
+                const popup = Swal.getPopup();
+                let contact = popup.querySelector('#contact')
+                contact.addEventListener("input", (e) => {
+                    if (!e.target.value.match(/^[0-9]*$/)) {
+                        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                    }
+                })
+            },
+            preConfirm: () => {
+                const name = document.getElementById("name").value;
+                const contact = document.getElementById("contact").value;
+                const birth = document.getElementById("birth").value;
+                if (name === "" || contact === "" || birth === "") {
+                    Swal.showValidationMessage(`빈칸 없이 입력해주세요.`)
+                }
+                if (contact.length !== 11) {
+                    Swal.showValidationMessage(`연락처 11자리를 다시 확인해주세요.`)
+                }
+                return {name, contact, birth};
+            },
+        })
+        
+        if(formValues) {
+            axios.post("/api/member/changeUserInfo", {name : formValues.name, contact : formValues.contact, birth : formValues.birth}).then(resp => {
+                console.log(resp);
+                Swal.fire({
+                    icon: "success",
+                    title: "적용이 완료되었습니다!",
+                    text: "",
+                })
+            }).catch(err => {
+                Swal.fire({
+                    icon: "error",
+                    title: "내 정보 수정에 실패했습니다...",
+                    text: "이 현상이 지속된다면 관리자에게 문의해주세요!"
+                })
+            })
+        }
+    }
 
 
 
@@ -233,9 +285,10 @@ const Editpage = () => {
                 </Col>
                 <Col xs={12} md={7} className={style.info_container}>
                     <Row className={style.info_textfield_container}>
-                        <h4>{loginID}</h4>
-                        <button className={style.btn_change} style={{marginLeft : 20, width : 100, height : 30}} onClick={IdChangeHandler}>아이디 변경</button>
+                        <Col xs={12} className={style.info_content}><h3 style={{width : "fit-content"}}>{loginID}</h3></Col>
+                        {/* <button className={style.btn_change} style={{marginLeft : 20, width : 100, height : 30}} onClick={IdChangeHandler}>아이디 변경</button> */}
                         {/* <TextField label="ID" helperText="4글자 이상 28글자 이하" className={style.info_header} defaultValue={`${loginID}`}></TextField> */}
+                        <Col xs={12} className={`${style.info_content} ${style.small_text}`}>아이디 변경은 고객문의를 이용해주세요.</Col>
                     </Row>
 
                     <Row className={style.info_textfield_container}>
@@ -244,7 +297,7 @@ const Editpage = () => {
                     </Row>
 
                     <Row className={style.info_textfield_container}>
-                        <button className={`${style.btn_change} ${style.btn_margin}`}>내 정보 수정</button>
+                        <button className={`${style.btn_change} ${style.btn_margin}`} onClick={userInfoChangeHandler}>내 정보 수정</button>
                         {/* <TextField label="비밀번호 확인" helperText="" className={style.info_header} defaultValue={``} type="password"></TextField> */}
                     </Row>
 
