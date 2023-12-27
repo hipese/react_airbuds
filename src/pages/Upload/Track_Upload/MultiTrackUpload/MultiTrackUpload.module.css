@@ -15,7 +15,7 @@
 }
 .uploadDetail{
     width: 50%;
-    height: 800px;
+    height: 700px;
     border: 1px solid black;
     overflow: auto;
 }
@@ -23,10 +23,8 @@
     margin-top: 10px;
 }
 .imageContainer img {
-    max-width: 250px;
-    max-height: 250px;
-    width: 90%;
-    height: 90%;
+    width: 250px;
+    height: 250px;
     object-fit: cover; /* 이미지가 컨테이너에 맞춰 조정됩니다 */
 }
 .imageContainer img:hover {
