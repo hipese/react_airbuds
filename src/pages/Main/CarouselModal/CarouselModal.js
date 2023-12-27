@@ -96,6 +96,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
 
     const handleSubmit = async () => {
         if (!playlistTitle) return alert("플레이리스트 제목을 입력해주세요.");
+        if (playlistTitle.length > 50) return alert("너무 긴 제목은 안돼요. 50자 이내로 입력해주세요.");
 
         const playlistData = {
             playlistPlTitle: playlistTitle,
