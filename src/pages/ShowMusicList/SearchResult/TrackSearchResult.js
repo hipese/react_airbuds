@@ -91,9 +91,7 @@ const TrackSearchResult = ({ searchTracks }) => {
 
     return (
         <div className={styles.container}>
-            {searchTracks.length === 0 ? (
-                <None_track_info />
-            ) : (
+            { (
                 searchTracks.map((track, index) => (
                     <div className={styles.track_info} key={index}>
                         <Link to={`/Detail/${track.trackId}`} className={styles.linkContainer}>
