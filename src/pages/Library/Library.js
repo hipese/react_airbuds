@@ -124,7 +124,7 @@ const Library = () => {
                 <Routes>
                     <Route path="/" element={<Overview />} />
                     <Route path="/likes" element={<Likes />} />
-                    {/* <Route path="/albums" element={<Albums />} /> */}
+                    {/* <Route path="/album" element={<Album />} /> */}
                     <Route path="/following" element={<Following />} /> 
                     <Route path="/history" element={<History />} />
                 </Routes>
