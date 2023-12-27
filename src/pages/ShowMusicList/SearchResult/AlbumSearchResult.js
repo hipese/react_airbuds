@@ -16,7 +16,7 @@ const AlbumSearchResult = ({ searchAlbums }) => {
     return (
         <Row>
             {searchAlbums.map((album, index) => (
-                <Row key={index}>
+                <Row key={index} className={style.container}>
                     <Col sm='12' lg='12' xl='3'>
                         <Row className={style.mainAlbumTitle}>
                             <Col sm="12">

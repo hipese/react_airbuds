@@ -1,0 +1,67 @@
+.container {
+    overflow: auto;
+    height: 500px;
+}
+
+.track_info {
+    margin-top: 30px;
+    display: flex;
+    width: 100%;
+    height: 100px;
+    align-items: center;
+}
+
+.linkContainer {
+    display: flex;
+    text-decoration: none;
+    /* 밑줄 제거 */
+    color: inherit;
+    /* 글자색을 상위 요소의 상속된 색상으로 설정 */
+
+    /* hover 효과 제거 */
+    &:hover {
+        text-decoration: none;
+        color: inherit;
+    }
+}
+
+.track_image {
+    margin-right: 20px;
+}
+
+.track_title {
+    margin-right: 20px;
+}
+
+.play_button {
+    width: 60px;
+    height: 60px;
+    transition: 0.2s;
+}
+
+.play_button:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.like_share {
+    display: flex;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.like {
+    margin-right: 10px;
+}
+
+.onClickHeart {
+    filter: invert(27%) sepia(94%) saturate(7461%) hue-rotate(356deg) brightness(100%) contrast(119%);
+    cursor: pointer;
+}
+
+.NonClickHeart {
+    filter: brightness(50%);
+    cursor: pointer;
+}

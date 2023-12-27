@@ -80,3 +80,7 @@
   .album_margin{
     margin-top: 10px;
   }
+  .container{
+    width: 100%;
+    height: 100%;
+  }

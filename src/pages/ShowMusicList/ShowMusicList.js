@@ -63,7 +63,7 @@ const ShowMusicList = () => {
                     <Row>
                         {(viewState === 1 && searchTracks && searchTracks.length > 0) && (
                             <Col sm='12'>
-                                <TrackSearchResult searchTracks={searchTracks} />
+                                <TrackSearchResult searchTracks={searchTracks} setSearchTracks={setSearchTracks} />
                             </Col>
                         )}
                         {(viewState === 1 && searchTracks && searchTracks.length == 0) && (
@@ -84,7 +84,7 @@ const ShowMusicList = () => {
                         {(viewState === 0 && searchTracks && searchAlbums && (searchTracks.length > 0 || searchAlbums.length > 0)) && (
                             <>
                                 <Col sm='12'>
-                                    <TrackSearchResult searchTracks={searchTracks} />
+                                    <TrackSearchResult searchTracks={searchTracks} setSearchTracks={setSearchTracks}/>
                                 </Col>
                                 <Col sm='12'>
                                     <AlbumSearchResult searchAlbums={searchAlbums} />
