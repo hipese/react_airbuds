@@ -4,9 +4,8 @@ import None_track_info from "../../Components/None_login_info";
 import axios from "axios";
 import { useEffect, useContext, useState } from "react";
 import { Avatar, Typography } from "@mui/material";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import RepeatIcon from '@mui/icons-material/Repeat';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+
 import {
     AutoPlayContext,
     CurrentTrackContext,
@@ -93,7 +92,7 @@ const TrackSearchResult = ({ searchTracks }) => {
     return (
         <div className={styles.container}>
              <Col sm='12' className={styles.titleText}>
-                트랙 목록
+                트랙목록
             </Col>
             {searchTracks.length === 0 ? (
                 <None_track_info />
@@ -119,13 +118,16 @@ const TrackSearchResult = ({ searchTracks }) => {
                                 </div>
                             </div>
                         </Link>
-                        <div className={styles.play_button}
-                            onClick={() => addTrackToPlaylist(track)}
-                        >
-                            <PlayArrowIcon sx={{ width: '60px', height: '60px' }} />
-                        </div>
-                        <div className={styles.track_duration}>
-                            {formatDurationFromHHMMSS(track.duration)}
+                        <div className={styles.track_button}>
+                            <div className={styles.play_button}
+                                onClick={() => addTrackToPlaylist(track)}
+                            >
+                                <PlayCircleIcon sx={{ width: '60px', height: '60px' }} />
+                            </div>
+                            <div className={styles.track_duration}>
+                                {formatDurationFromHHMMSS(track.duration)}
+                            </div>
+                            
                         </div>
                     </div>
                 ))
