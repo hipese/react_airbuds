@@ -40,7 +40,7 @@ const Mytracks = () => {
             console.log(tracksWithImages);
             setTrack(tracksWithImages);
         });
-    }, [loginID]);
+    }, [loginID, targetID]);
 
     const addStreamCount = (trackId, singerId, e) => {
         const formdata = new FormData();
