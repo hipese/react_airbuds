@@ -215,12 +215,6 @@ const History = () => {
     };
 
     const loadingLikes = () => {
-        // axios.get(`/api/like/historyLike/${loginID}`).then(res=>{
-        //     console.log(res.data);
-        //     setMyLikes(res.data);
-        // }).catch((e)=>{
-        //     console.log(e);
-        // });
 
         axios.get(`/api/like/historyLikeCount/${loginID}`).then(res => {
             setMyLikes(res.data);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import OwlCarousel from 'react-owl-carousel';
-import 'owl.carousel/dist/assets/owl.carousel.css';
-import 'owl.carousel/dist/assets/owl.theme.default.css';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import styles from "./Carousel.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -13,21 +13,10 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const Carousel = React.memo(({ trackInfo, trackLike, setLike, setFavorite, isFavorite, trackInfoAll }) => {
-    const carouselRef = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTrack, setSelectedTrack] = useState(null);
     const { loginID, setLoginID } = useContext(LoginContext);
-
-    const goToPrev = () => {
-        if (carouselRef.current) {
-            carouselRef.current.prev();
-        }
-    };
-    const goToNext = () => {
-        if (carouselRef.current) {
-            carouselRef.current.next();
-        }
-    }
+    const sliderRef = useRef(null);
 
     const openModal = (track) => {
         setIsModalOpen(true);
@@ -37,6 +26,18 @@ const Carousel = React.memo(({ trackInfo, trackLike, setLike, setFavorite, isFav
         setIsModalOpen(false);
         setSelectedTrack(null);
     }
+
+    const handlePrev = () => {
+        if (sliderRef.current) {
+            sliderRef.current.slickPrev();
+        }
+    };
+
+    const handleNext = () => {
+        if (sliderRef.current) {
+            sliderRef.current.slickNext();
+        }
+    };
 
     const handleFavorite = (trackId, isLiked, e) => {
         if (loginID !== "") {
@@ -73,26 +74,18 @@ const Carousel = React.memo(({ trackInfo, trackLike, setLike, setFavorite, isFav
         }
     };
 
+    const settings = {
+        dots: false,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        // ... (다른 옵션들)
+    };
+
     return (
         <div className={styles.Carousel}>
-            <OwlCarousel
-                className={styles.OwlCarousel}
-                loop
-                margin={20}
-                nav={false}
-                dots={false}
-                mouseDrag={false}
-                // autoplay
-                // autoplayTimeout={10000}  
-                autoWidth={true}
-                // autoplayHoverPause 
-                responsive={{
-                    768: {
-                        items: 4
-                    },
-                }}
-                ref={carouselRef}
-            >
+            <Slider {...settings} ref={sliderRef}>
                 {trackInfo && trackInfo.map((track, index) => {
                     const trackImage = track.track.trackImages && track.track.trackImages.length > 0
                         ? `/tracks/image/${track.track.trackImages[0].imagePath}`
@@ -145,10 +138,10 @@ const Carousel = React.memo(({ trackInfo, trackLike, setLike, setFavorite, isFav
                     );
                 })}
 
-            </OwlCarousel>
+            </Slider>
             <div className={styles.carouselButton}>
-                <button className={styles.owlPrev} onClick={goToPrev}><FontAwesomeIcon icon={faChevronLeft} /></button>
-                <button className={styles.owlNext} onClick={goToNext}><FontAwesomeIcon icon={faChevronRight} /></button>
+                <button className={styles.owlPrev} onClick={handlePrev}><FontAwesomeIcon icon={faChevronLeft} /></button>
+                <button className={styles.owlNext} onClick={handleNext}><FontAwesomeIcon icon={faChevronRight} /></button>
             </div>
             {isModalOpen && <CarouselModal trackInfo={selectedTrack} onClose={closeModal} trackLike={trackLike} trackInfoAll={trackInfoAll} />}
         </div>
