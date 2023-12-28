@@ -204,10 +204,6 @@ const Main = () => {
                             })}
                         </div>
                     </div>
-                    <div className={styles.carouselTitle}>최근 유행하는 노래</div>
-                    <div className={styles.carousel}>
-                        <OwlCarousel />
-                    </div>
                     {Array.isArray(selectTitle) && selectTitle.filter(tag => [5, 6, 8, 9, 10, 12, 13, 14].includes(tag.tagId)).map((filterTag, index) => (
                         <div key={index}>
                             <div className={styles.carouselTitle}>{filterTag.tagName}</div>
