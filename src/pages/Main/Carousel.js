@@ -74,7 +74,7 @@ const Carousel = React.memo(({ trackInfo, trackLike, setLike, setFavorite, isFav
         }
     };
 
-    const slidesToShow = 4.2;
+    const slidesToShow = 4.3;
     const slideWidth = 100 / slidesToShow;
     const settings = {
         dots: false, 
