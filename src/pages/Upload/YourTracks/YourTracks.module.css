@@ -1,12 +1,20 @@
 .introduction{
-    height: 300px;
+    height: 150px;
 }
 
 .gateText{
     margin-top: 40px;
     font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+.trackListBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .endcol{
     height: 200px;

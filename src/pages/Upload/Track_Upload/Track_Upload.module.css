@@ -1,49 +1,67 @@
-*{box-sizing: border-box;}
-
-.uploadBox{
-    width: 100%;
-    background-color: bisque;
-    border: 1px solid black;
+* {
+    box-sizing: border-box;
 }
 
-.Dropzone{
+.Dropzone {
     width: 50%;
-    height: 50%;
+    height: 100%;
     border: 1px solid black;
+    border-radius: 5px;
     padding: 20px;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.uploadDetail{
+
+.uploadDetail {
     width: 50%;
     border: 1px solid black;
 }
-.imageContainer{
+
+.imageContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 10px;
 }
+
 .imageContainer img {
     max-width: 250px;
     max-height: 250px;
     width: 90%;
     height: 90%;
-    object-fit: cover; /* 이미지가 컨테이너에 맞춰 조정됩니다 */
+    object-fit: cover;
+    /* 이미지가 컨테이너에 맞춰 조정됩니다 */
 }
+
 .imageContainer img:hover {
     cursor: pointer;
 }
-.detail_input{
+
+.detail_input {
     width: 100%;
 }
-.detail_input_tag{
+
+.detail_input_tag {
     width: 80%;
 }
-.chipRow{
+
+.chipRow {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.dropFiles{
-   margin-bottom: 20px;
+
+.dropFiles {
+    margin-bottom: 20px;
+}
+
+.uploadBox {
+    width: 100%;
+    height: 500px;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

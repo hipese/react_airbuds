@@ -25,6 +25,7 @@ import MyAlbumDetail from "../Upload/MyAlbums/MyAlbumDetail/MyAlbumDetail";
 import { LoginContext, RoleContext } from '../../App';
 import Swal from "sweetalert2";
 import ShowMusicList from "../ShowMusicList/ShowMusicList";
+import Myalbums from "../Mypage/Myalbums/Myalbums";
 
 const Groovy = () => {
     const { loginID } = useContext(LoginContext);

@@ -1,6 +1,5 @@
 .container {
-    overflow: auto;
-    
+    width: 80%;
 }
 
 .track_info {
@@ -56,8 +55,7 @@
     margin-right: 10px;
 }
 .buttoncontainer{
-    width: 50%;
-    /* display: none;  일단 끄지 마라*/
+    width: 100%;
 }
 
 .track_info:hover .buttoncontainer {
@@ -66,8 +64,8 @@
 .buttonbox{
     width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: end;
+    align-items: end;
 }
 .largeIcon {
     font-size: 100px; /* 크기 변경 */

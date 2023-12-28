@@ -1,6 +1,6 @@
 import { useContext, useState } from "react"
 import { useDropzone } from 'react-dropzone';
-import { Container, Row,Button } from "reactstrap";
+import { Container, Row, Button } from "reactstrap";
 import styles from "./Track_Upload.module.css"
 import axios from "axios";
 import MultiTrackUpload from "./MultiTrackUpload/MultiTrackUpload";
@@ -10,7 +10,7 @@ import { LoginContext } from "../../../App";
 
 const Track_Upload = () => {
 
-    const loginID=useContext(LoginContext);
+    const loginID = useContext(LoginContext);
 
     // 업로드할 음원 파일을 저장하는 변수
     const [files, setFiles] = useState([]);
@@ -31,18 +31,18 @@ const Track_Upload = () => {
             setTracks(resp.data)
         })
     }
-    
+
 
     const onDrop = (acceptedFiles) => {
         acceptedFiles.forEach(file => {
             const url = URL.createObjectURL(file);
             const audio = new Audio(url);
-    
+
             audio.onloadedmetadata = () => {
                 const duration = audio.duration;
                 const image_path = "/assets/groovy2.png";
                 const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
-    
+
                 const newFile = {
                     file: file,
                     name: fileNameWithoutExtension,
@@ -50,9 +50,9 @@ const Track_Upload = () => {
                     imageFile: null,
                     image_path: image_path,
                     writer: "익명의 제작자",
-                    tags: [] 
+                    tags: []
                 };
-    
+
                 if (acceptedFiles.length === 1) {
                     // Handle single file upload
                     setFiles([newFile]);
@@ -83,23 +83,25 @@ const Track_Upload = () => {
 
     return (
         <Container fluid>
-            <Row className="justify-content-center align-items-center">
+            <Row className={styles.uploadBox}>
                 {files.length === 0 ? (
                     <div className={styles.Dropzone} {...getRootProps()}>
-                        <input {...getInputProps()} style={{ display: 'none' }} />
-                        <div className={styles.dropFiles}>
-                            음악 파일을 드래그 앤 드롭하거나 클릭하여 파일을 선택하세요.
-                        </div>
-                        <div>
-                            <Button color="primary">파일을 선택하세요</Button>
+                        <div className={styles.viewUpload}>
+                            <input {...getInputProps()} style={{ display: 'none' }} />
+                            <div className={styles.dropFiles}>
+                                음악 파일을 드래그 앤 드롭하거나 클릭하여 파일을 선택하세요.
+                            </div>
+                            <div>
+                                <Button color="primary">파일을 선택하세요</Button>
+                            </div>
                         </div>
                     </div>
                 ) : files.length === 1 ? (
                     <SingleTrackUpload files={files} setFiles={setFiles} imageview={imageview} setImageview={setImageview}
-                        selectTag={selectTag} setSelectTag={setSelectTag}  />
+                        selectTag={selectTag} setSelectTag={setSelectTag} />
                 ) :
                     <MultiTrackUpload files={files} setFiles={setFiles} imageview={imageview} setImageview={setImageview}
-                        selectTag={selectTag} setSelectTag={setSelectTag}  />
+                        selectTag={selectTag} setSelectTag={setSelectTag} />
                 }
             </Row>
         </Container>
