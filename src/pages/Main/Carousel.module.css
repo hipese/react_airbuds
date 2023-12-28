@@ -31,11 +31,11 @@
 
 .imgHover:hover {
     border: 1px solid #999999;
-    background: linear-gradient(to top, rgb(0, 0, 0) 0%, white 40%) !important;
+    background: linear-gradient(to top, rgb(150, 150, 150) 0%, white 40%) !important;
 }
 
 .imgHover:hover .trackImg {
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .trackImg {
@@ -51,14 +51,14 @@
 
 .owlPrev {
     position: absolute;
-    top: -180px;
+    top: -160px;
     background-color: white;
     border-radius: 50%;
     border: 1px solid black;
     left: 3px;
     transform: translateY(-50%);
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     cursor: pointer;
     font-size: 15px;
     display: flex;
@@ -68,14 +68,14 @@
 
 .owlNext {
     position: absolute;
-    top: -180px;
+    top: -160px;
     background-color: white;
     border-radius: 50%;
     border: 1px solid black;
     right: 3px;
     transform: translateY(-50%);
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     cursor: pointer;
     font-size: 15px;
     display: flex;

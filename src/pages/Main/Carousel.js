@@ -74,13 +74,21 @@ const Carousel = React.memo(({ trackInfo, trackLike, setLike, setFavorite, isFav
         }
     };
 
+    const slidesToShow = 4.3;
+    const slideWidth = 100 / slidesToShow;
     const settings = {
-        dots: false,
-        infinite: true,
+        dots: false, 
+        infinite: true, 
         speed: 500,
-        slidesToShow: 4,
+        slidesToShow: slidesToShow,
         slidesToScroll: 1,
-        // ... (다른 옵션들)
+        arrows: false,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        pauseOnHover: true,
+        pauseOnFocus: true,
+        swipeToSlide: false,
+        draggable: false,
     };
 
     return (
@@ -96,7 +104,7 @@ const Carousel = React.memo(({ trackInfo, trackLike, setLike, setFavorite, isFav
                     const hoverClass = loginID ? styles.imgHover : styles.nonImageHover;
                     return (
                         <Link to={`/Detail/${track.track.trackId}`} style={{ color: 'inherit' }}>
-                            <div className={styles.item} key={index}>
+                            <div className={styles.item} key={index} style={{ width: `${slideWidth}%` }}>
                                 <div className={hoverClass}>
                                     <img className={styles.trackImg} src={trackImage} alt={`Track ${index + 1} - ${track.track.title}`} />
                                     {loginID && (
