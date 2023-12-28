@@ -87,6 +87,8 @@ const Carousel = React.memo(({ trackInfo, trackLike, setLike, setFavorite, isFav
         autoplaySpeed: 3000,
         pauseOnHover: true,
         pauseOnFocus: true,
+        swipeToSlide: false,
+        draggable: false,
     };
 
     return (
