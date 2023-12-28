@@ -1,91 +1,98 @@
-*{
+* {
     box-sizing: border-box;
 }
 
-.border{
+.border {
     border: 1px solid black;
 }
 
-.borderRad{
+.borderRad {
     border-radius: 10px;
 }
-.borderTB{
+
+.borderTB {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
 }
 
-.boardLine{
+.boardLine {
     height: 40px;
     justify-content: center;
     align-items: center;
 }
 
-.marginT30{
+.marginT30 {
     margin-top: 30px;
 }
 
-.marginT40{
+.marginT40 {
     margin-top: 40px;
 }
 
-.marginT70{
+.marginT70 {
     margin-top: 70px;
 }
 
-.marginB20{
+.marginB20 {
     margin-bottom: 20px;
 }
-.marginB100{
+
+.marginB100 {
     margin-bottom: 100px;
 }
-.margintR30{
+
+.margintR30 {
     margin-right: 30px;
 }
 
-.ma{
+.ma {
     margin: auto;
 }
 
-.pl10{
+.pl10 {
     padding-left: 10px;
 }
-.pad10{
+
+.pad10 {
     padding: 10px;
 }
-.padingT10{
+
+.padingT10 {
     padding-top: 10px;
 }
-.center{
+
+.center {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.vcenter{
+.vcenter {
     display: flex;
     align-items: center;
 }
 
-.hcenter{
+.hcenter {
     display: flex;
     justify-content: center;
 }
 
-.rightAlign{
+.rightAlign {
     display: flex;
     justify-content: right;
     padding-right: 10px;
 }
 
-.wrap{
+.wrap {
     width: 100%;
     height: 100%;
     min-height: 1200px;
 }
+
 /* QnA List CSS */
 
-.container{
-    margin:auto;
+.container {
+    margin: auto;
     width: 100%;
     height: 100%;
     max-width: 1000px;
@@ -93,13 +100,13 @@
     min-width: 300px;
 }
 
-.announceLine{
+.announceLine {
     height: 60px;
     justify-content: center;
     align-items: center;
 }
 
-.announceLine:hover{
+.announceLine:hover {
     background-color: #bbbbbb60;
     transition-duration: 0.4s;
     cursor: pointer;
@@ -107,7 +114,7 @@
 
 /* QnA Contents CSS */
 
-.qnaContents{
+.qnaContents {
     width: 100%;
     height: 100%;
     max-width: 1000px;
@@ -115,7 +122,7 @@
     min-height: 700px;
 }
 
-.qnaDetail{
+.qnaDetail {
     padding: 20px;
     width: 100%;
     height: 100%;
@@ -126,7 +133,7 @@
     word-break: break-all;
 }
 
-.qnaReply{
+.qnaReply {
     width: 100%;
     height: 100%;
     max-width: 750px;
@@ -137,7 +144,7 @@
     margin-bottom: 24px;
 }
 
-.replyContents{
+.replyContents {
     width: 100%;
     height: 100%;
     min-height: 100px;
@@ -145,39 +152,39 @@
     word-break: break-all;
 }
 
-.replyBtnEven{
+.replyBtnEven {
     display: flex;
     justify-content: space-evenly;
 }
 
-.snackpos{
+.snackpos {
     bottom: -650px;
 }
 
-.w100{
+.w100 {
     width: 100%;
 }
 
 /* QnA Write CSS */
 
-.borderWrite{
+.borderWrite {
     border: 1px solid lightgray;
     border-radius: 5px;
 }
 
-.qnaWrite{
+.qnaWrite {
     width: 100%;
     height: 100%;
     max-width: 1000px;
     min-width: 300px;
 }
 
-.qnaTitle{
+.qnaTitle {
     padding: 10px;
     margin: 10px;
 }
 
-.btnEven{
+.btnEven {
     display: flex;
     justify-content: space-evenly;
 }
