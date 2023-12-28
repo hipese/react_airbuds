@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import OwlCarousel from 'react-owl-carousel';
-// import 'owl.carousel/dist/assets/owl.carousel.css';
-// import 'owl.carousel/dist/assets/owl.theme.default.css';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import styles from "./Overview.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -94,25 +94,25 @@ const Overview = () => {
 
   const goToPrev1 = () => {
     if (carouselRef1.current) {
-      carouselRef1.current.prev();
+      carouselRef1.current.slickPrev();
     }
   };
 
   const goToNext1 = () => {
     if (carouselRef1.current) {
-      carouselRef1.current.next();
+      carouselRef1.current.slickNext();
     }
   };
 
   const goToPrev2 = () => {
     if (carouselRef2.current) {
-      carouselRef2.current.prev();
+      carouselRef2.current.slickPrev();
     }
   };
 
   const goToNext2 = () => {
     if (carouselRef2.current) {
-      carouselRef2.current.next();
+      carouselRef2.current.slickNext();
     }
   };
 
@@ -134,26 +134,25 @@ const Overview = () => {
   ));
 
   const addStreamCount = (trackId, singerId, e) => {
-      const formdata = new FormData();
-      const date = new Date().toISOString();
-      formdata.append("trackId",trackId);
-      formdata.append("streamDate",date);
-      formdata.append("streamSinger",singerId);
-      axios.put(`/api/dashboard/addStream`,formdata).then(res=>{
+    const formdata = new FormData();
+    const date = new Date().toISOString();
+    formdata.append("trackId", trackId);
+    formdata.append("streamDate", date);
+    formdata.append("streamSinger", singerId);
+    axios.put(`/api/dashboard/addStream`, formdata).then(res => {
 
-      }).catch((e)=>{
-          console.log(e);
-      });
+    }).catch((e) => {
+      console.log(e);
+    });
   }
 
   // 특정 트랙을 재생 목록에 추가하는 함수
   const addTrackToPlaylist = (track) => {
-    console.log(track);
     axios.post(`/api/cplist`, {
       trackId: track.trackId,
       id: loginID
     }).then(resp => {
-      addStreamCount(track.trackId,track.writeId);
+      addStreamCount(track.trackId, track.writeId);
     })
 
     setAutoPlayAfterSrcChange(true);
@@ -241,25 +240,26 @@ const Overview = () => {
                 <div className={styles.carouselTitle1}>최근에 재생한 노래들</div>
                 <div className={styles.carousel}>
                   <div className={styles.Carousel}>
-                    <OwlCarousel
-                      className={styles.OwlCarousel}
-                      loop
-                      margin={10}
-                      nav={false}
+                    <Slider
+                      className={styles.SlickCarousel}
                       dots={false}
                       autoplay
-                      autoplayTimeout={10000}
-                      autoWidth={true}
-                      autoplayHoverPause
-                      responsive={{
-                        768: {
-                          items: 5
-                        },
-                      }}
+                      autoplaySpeed={10000}
+                      slidesToShow={5}
+                      slidesToScroll={1}
+                      responsive={[
+                        {
+                          breakpoint: 768,
+                          settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+                          }
+                        }
+                      ]}
                       ref={carouselRef1}
                     >
                       {combinedItems}
-                    </OwlCarousel>
+                    </Slider>
                     <div className={styles.carouselButton}>
                       <button className={styles.owlPrev} onClick={goToPrev1}>
                         <FontAwesomeIcon icon={faChevronLeft} />
@@ -277,25 +277,26 @@ const Overview = () => {
                 <div className={styles.carouselTitle1}>좋아요한 노래들</div>
                 <div className={styles.carousel}>
                   <div className={styles.Carousel}>
-                    <OwlCarousel
-                      className={styles.OwlCarousel}
-                      loop
-                      margin={10}
-                      nav={false}
+                    <Slider
+                      className={styles.SlickCarousel}
                       dots={false}
                       autoplay
-                      autoplayTimeout={10000}
-                      autoWidth={true}
-                      autoplayHoverPause
-                      responsive={{
-                        768: {
-                          items: 5
-                        },
-                      }}
+                      autoplaySpeed={10000}
+                      slidesToShow={5}
+                      slidesToScroll={1}
+                      responsive={[
+                        {
+                          breakpoint: 768,
+                          settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+                          }
+                        }
+                      ]}
                       ref={carouselRef2}
                     >
                       {combinedItems2}
-                    </OwlCarousel>
+                    </Slider>
                     <div className={styles.carouselButton}>
                       <button className={styles.owlPrev} onClick={goToPrev2}>
                         <FontAwesomeIcon icon={faChevronLeft} />
