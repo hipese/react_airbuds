@@ -20,8 +20,6 @@ const Myalbums = () => {
     const [loading, setLoading] = useState(true);
     const [albums, setAlbums] = useState([]);
     const { loginID, setLoginID } = useContext(LoginContext);
-
-    console.log(targetID);
     
     useEffect(() => {
         if (!loginID) {
@@ -35,7 +33,7 @@ const Myalbums = () => {
             console.log(e);
         });
 
-    }, [loginID]);
+    }, [loginID, targetID]);
 
     const navigate = useNavigate();
 
