@@ -51,7 +51,6 @@ const Likes = () => {
             });
 
             // 기존 track 배열 업데이트
-            console.log(allTracks);
             setTrack(allTracks);
             setLoading(false);
             if (allTracks.length < 6) {
