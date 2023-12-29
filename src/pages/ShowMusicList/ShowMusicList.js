@@ -44,9 +44,11 @@ const ShowMusicList = () => {
             setSearchAlbums(resp.data);
             setSearch(searchText);
             setLoading(false);
+            console.log(resp.data);
         })
 
     }, [searchText])
+    
 
     return (
         <Row className={style.mainContaier}>

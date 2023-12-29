@@ -56,7 +56,7 @@ const SearchBar = () => {
 
     const InputSearchText = (e) => {
 
-        if (e.target.value.length > 50) {
+        if (e.target.value.length > 40) {
             alert("너무 길다요");
             return;
         }
@@ -86,6 +86,7 @@ const SearchBar = () => {
             alert("특수문자를 제외하고 검색해주세요");
             return;
         }
+        setSearchValue("");
         navigate(`ShowMusicList/${sanitizedText}`);
     };
 
