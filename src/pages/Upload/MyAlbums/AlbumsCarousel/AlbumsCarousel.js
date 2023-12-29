@@ -65,7 +65,7 @@ const Carousel = React.memo(({ myAlbumsInfo}) => {
             >
                 {uniqueAlbums && uniqueAlbums.map((album, index) => {
                     const albumImage = album.coverImagePath
-                        ? `/tracks/image/${album.coverImagePath}`
+                        ? `${album.coverImagePath}`
                         : "http://placehold.it/150x150";
                     const albumWriters = getAlbumWriters(album);
                     const hoverClass = loginID ? styles.imgHover : styles.nonImageHover;

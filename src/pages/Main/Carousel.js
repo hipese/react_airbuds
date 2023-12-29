@@ -96,7 +96,7 @@ const Carousel = React.memo(({ trackInfo, trackLike, setLike, setFavorite, isFav
             <Slider {...settings} ref={sliderRef}>
                 {trackInfo && trackInfo.map((track, index) => {
                     const trackImage = track.track.trackImages && track.track.trackImages.length > 0
-                        ? `/tracks/image/${track.track.trackImages[0].imagePath}`
+                        ? `${track.track.trackImages[0].imagePath}`
                         : "http://placehold.it/150x150";
                     //setLikeState(trackLike.some(trackLike => trackLike.trackId === track.track.trackId));
                     //settingLike(track.track.trackId);

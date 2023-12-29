@@ -19,3 +19,14 @@
 .endcol{
     height: 200px;
 }
+.button_custom {
+    background-color: #45a049;
+    color: azure;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;  
+}
+
+.button_custom:hover {
+    background-color: #45a049;
+    color: azure;
+    transform: scale(1.05);
+}

@@ -50,7 +50,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
     const [trackTags, setTrackTags] = useState([]);
     const [titleImage, setTitleImage] = useState();
 
-    const [imageView, setImageView] = useState("/tracks/image/" + albumUpdate.coverImagePath);
+    const [imageView, setImageView] = useState(albumUpdate.coverImagePath);
     const [prevImage, setPrevImage] = useState(albumUpdate.coverImagePath);
     const [files, setFiles] = useState([]);
 
@@ -77,10 +77,6 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     const handleUpdate = () => {
         const formData = new FormData();
-        // 보내야할 데이터들 
-        console.log(albumUpdate)
-        console.log(trackTags)
-        console.log(titleImage);
 
         if (files && files.length > 0) {
             files.forEach((fileData, index) => {

@@ -82,7 +82,7 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
                         <ul className={styles.loveul}>
                             {artist.map((e,i) => {
                             const trackImage = e.profile_image && e.profile_image > 0
-                            ? `/tracks/image/${e.profile_image}`
+                            ? `${e.profile_image}`
                             : "http://placehold.it/150x150";
                             return (
                                 <div key={i} onClick={() => {handleMoveToProfile(e.singer)}}>
@@ -121,7 +121,7 @@ const RightSide = ({trackLike,trackInfoByTag}) => {
                     <ul className={styles.loveul}>
                         {onlyLike.map((e,i) => {
                         const trackImage = e.track.trackImages && e.track.trackImages.length > 0
-                        ? `/tracks/image/${e.track.trackImages[0].imagePath}`
+                        ? `${e.track.trackImages[0].imagePath}`
                         : "http://placehold.it/150x150";
                         return (
                             <div onClick={()=>{

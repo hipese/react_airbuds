@@ -64,14 +64,14 @@ const Playlist = () => {
                                                 <img 
                                                     key={imgIndex} 
                                                     className={styles.playlistImg}
-                                                    src={`/tracks/image/${track.playlistImagePath}`} 
+                                                    src={`${track.playlistImagePath}`} 
                                                     alt={track.playlistTitle || '플레이리스트 이미지'} 
                                                 />
                                             ))
                                         ) : (
                                             <img 
                                                 className={styles.playlistImg}
-                                                src={`/tracks/image/${images[0].playlistImagePath}`} 
+                                                src={`${images[0].playlistImagePath}`} 
                                                 alt={images[0].playlistTitle || '플레이리스트 이미지'} 
                                             />
                                         )

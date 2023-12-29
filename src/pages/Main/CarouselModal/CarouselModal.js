@@ -217,7 +217,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
                                         <li key={index} className={styles.playlist}>
                                             <div className={styles.playlistiwt}>
                                                 <div className={styles.playlistImg}>
-                                                    <img src={`/tracks/image/${track.playlistImagePath}`} alt={track.playlistTitle} />
+                                                    <img src={`${track.playlistImagePath}`} alt={track.playlistTitle} />
                                                 </div>
                                                 <div className={styles.playlistWriterModal}>{track.playlistWriter}</div>
                                                 <span>-</span>
@@ -246,7 +246,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
                                 return (
                                     <li key={index} className={styles.likeMusicLi}>
                                         <div className={styles.likeMusicImg}>
-                                            <img src={`/tracks/image/${like.trackImages[0].imagePath}`} alt={like.title} />
+                                            <img src={`${like.trackImages[0].imagePath}`} alt={like.title} />
                                         </div>
                                         <div className={styles.likeWriterAndTitle}>
                                             <div className={styles.likeMusicWriter}>{like.writer}</div>
@@ -271,7 +271,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
                                         <li key={index} className={styles.playlist}>
                                             <div className={styles.playlistiwt}>
                                                 <div className={styles.playlistImg}>
-                                                    <img src={`/tracks/image/${track.playlistImagePath}`} alt={track.playlistTitle} />
+                                                    <img src={`${track.playlistImagePath}`} alt={track.playlistTitle} />
                                                 </div>
                                                 <div className={styles.playlistWriterModal}>{track.playlistWriter}</div>
                                                 <span>-</span>
@@ -291,7 +291,7 @@ const CarouselModal = ({ onClose, trackInfo, trackLike, trackInfoAll }) => {
                                     <li key={index} className={styles.playlistAddedLi}>
                                         <div className={styles.playlistAddedImg}>
                                             {hasTracks && list.playlistTracks[0].playlistImagePath ? (
-                                                <img src={`/tracks/image/${list.playlistTracks[0].playlistImagePath}`} alt={list.playlistPlTitle} />
+                                                <img src={`${list.playlistTracks[0].playlistImagePath}`} alt={list.playlistPlTitle} />
                                             ) : null}
                                         </div>
                                         <div className={styles.playlistAddedWriterAndTitle}>

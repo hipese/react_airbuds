@@ -33,7 +33,7 @@ const BottomMusic = () => {
             resp.data.forEach((trackItem, outerIndex) => {
                 trackItem.tracks.forEach((innerTrack, innerIndex) => {
                     const imagePath = innerTrack.trackImages.length > 0 ? innerTrack.trackImages[0].imagePath : null;
-                    const newTrackPath = "/tracks/" + innerTrack.filePath;
+                    const newTrackPath = innerTrack.filePath;
                     updatedAudioFiles.push(newTrackPath);
                     allTracks.push({ ...innerTrack, imagePath });
                 });
@@ -157,12 +157,15 @@ const BottomMusic = () => {
         handleNextTrack();
     };
 
+
+    console.log(audioFiles);
+
     return (
         <div className={styles.container}>
             <Link to={`/detail/${track_info.trackId}`}>
                 <div className={styles.imageContainer}>
                     <img
-                        src={track_info.imagePath ? `/tracks/image/${track_info.imagePath}` : '/assets/groovy2.png'}
+                        src={track_info.imagePath ? `${track_info.imagePath}` : '/assets/groovy2.png'}
                         alt="Description of the image"
                         className={styles.image}
                     />

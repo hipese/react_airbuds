@@ -24,7 +24,7 @@ const AlbumSearchResult = ({ searchAlbums }) => {
                             <Col sm="12">
                             <a href={`/Album/Detail/${album.albumId}`} onClick={() => handleAlbumDtail(album.albumId, album)}>
                                 <div className={style.album_image}>
-                                    <img src={`/tracks/image/${album.coverImagePath}`} alt={album.title} style={{ width: '150px', height: '150px' }} />
+                                    <img src={`${album.coverImagePath}`} alt={album.title} style={{ width: '150px', height: '150px' }} />
                                 </div>
                             </a>
                             </Col>
@@ -42,7 +42,7 @@ const AlbumSearchResult = ({ searchAlbums }) => {
                            <Row key={trackIndex} className={style.track}>
                                 <Col sm="12" md="1" className={style.trackCol}>
                                     <img
-                                        src={`/tracks/image/${track.trackImages?.[0]?.imagePath}`}
+                                        src={`${track.trackImages?.[0]?.imagePath}`}
                                         alt=""
                                         style={{ width: '40px', height: '40px', marginBottom: '10px',marginTop: '10px' }}
                                     />

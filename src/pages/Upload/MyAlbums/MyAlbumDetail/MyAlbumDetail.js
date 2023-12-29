@@ -104,7 +104,7 @@ const MyAlbumDetail = () => {
 
         })
 
-        const newAudioFiles = track.map(track => `/tracks/${track.filePath}`);
+        const newAudioFiles = track.map(track => `${track.filePath}`);
 
         console.log(newAudioFiles);
         setAutoPlayAfterSrcChange(true);
@@ -169,7 +169,7 @@ const MyAlbumDetail = () => {
                             <Row className={style.mainAlbumTitle}>
                                 <Col sm='12'>
                                     <div className={style.album_image}>
-                                        <img src={`/tracks/image/${albumUpdate.coverImagePath}`} alt={albumUpdate.title} />
+                                        <img src={`${albumUpdate.coverImagePath}`} alt={albumUpdate.title} />
                                     </div>
                                 </Col>
                                 <Col sm='12' className={style.album_image}>
@@ -201,7 +201,7 @@ const MyAlbumDetail = () => {
                             {albumUpdate.tracks.map((track, index) => (
                                 <div key={index} className={style.track}>
                                     <Col sm='12' md='1' className={style.trackCol}>
-                                        <img src={`/tracks/image/${track.trackImages[0].imagePath}`} alt="" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
+                                        <img src={`${track.trackImages[0].imagePath}`} alt="" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
                                     </Col>
                                     <Col sm='12' md='5'>
                                         {track.title}
