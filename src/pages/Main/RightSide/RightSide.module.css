@@ -1,6 +1,7 @@
 .positionFixed {
     position: fixed;
     min-width: 400px;
+    max-width: 400px;
 }
 
 .followArtist {
@@ -99,11 +100,15 @@
 }
 
 .loveSinger {
+    width: 300px;
     font-size: 0.8rem;
     font-weight: 500;
     margin-left: 10px;
     margin-top: 5px;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .lovePersonIcon {
@@ -121,4 +126,8 @@
     margin-left: 5px;
     float: left;
     cursor: pointer;
+    width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
