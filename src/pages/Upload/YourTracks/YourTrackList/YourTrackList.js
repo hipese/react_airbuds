@@ -21,12 +21,12 @@ import UpdateModal from "../UpdateModal/UpdateModal";
 import Modal from '@mui/material/Modal';
 import NoTrackInfo from "../../NoMusic/NoTrackInfo";
 import { Button } from "reactstrap";
-
+import { Row, Col } from 'react-bootstrap';
 
 
 const YourTrackList = () => {
 
-    const navigator=useNavigate();
+    const navigator = useNavigate();
 
     const [track, setTrack] = useState([]);
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
@@ -146,7 +146,7 @@ const YourTrackList = () => {
         }
     }
 
-    const handleAddTrack=()=>{
+    const handleAddTrack = () => {
         navigator("/Upload");
     }
 
@@ -156,47 +156,44 @@ const YourTrackList = () => {
         <div className={styles.container}>
             {track.length === 0 && <NoTrackInfo text={text} />}
             {track.map((track, index) => (
-                <div className={styles.track_info} key={index}>
-                    <Link to={`/Detail/${track.trackId}`} className={styles.linkContainer}>
-                        <div className={styles.track_image}>
-                            <Avatar
-                                alt="Remy Sharp"
-                                src={`${track.imagePath}`}
-                                sx={{ width: '80px', height: '80px' }}
-                            />
-                        </div>
-                        <div className={styles.track_title}>
-                            <div>
-                                <Typography variant="h5" gutterBottom>
-                                    {track.title}
-                                </Typography>
+                <Row key={index} className={styles.track_info}>
+                    <Col xs={12} md={8}>
+                        <Link to={`/Detail/${track.trackId}`} className={styles.linkContainer}>
+                            <div className={styles.track_image}>
+                                <Avatar
+                                    alt="Remy Sharp"
+                                    src={`${track.imagePath}`}
+                                    sx={{ width: '80px', height: '80px' }}
+                                />
                             </div>
-                            <div>
-                                {track.writer}
+                            <div className={styles.track_title}>
+                                <div>
+                                    <Typography variant="h5" gutterBottom>
+                                        {track.title}
+                                    </Typography>
+                                </div>
+                                <div>
+                                    {track.writer}
+                                </div>
                             </div>
-                        </div>
-                    </Link>
-                    <div className={styles.track_button}>
-                        <div className={styles.play_button}
-                            onClick={() => addTrackToPlaylist(track)}
-                        >
+                        </Link>
+                    </Col>
+                    <Col xs={12} md={2} className={styles.track_button}>
+                        <div className={styles.play_button} onClick={() => addTrackToPlaylist(track)}>
                             <PlayCircleIcon sx={{ width: '60px', height: '60px' }} />
                         </div>
                         <div className={styles.track_duration}>
                             {formatDurationFromHHMMSS(track.duration)}
                         </div>
-                    </div>
-
-                    <div className={styles.buttoncontainer}>
+                    </Col>
+                    <Col xs={12} md={2} className={styles.buttoncontainer}>
                         <div className={styles.buttonbox}>
                             <div>
                                 <ShareIcon className={styles.largeIcon} />
                             </div>
-
                             <div>
                                 <MoreHorizIcon className={styles.largeIcon} />
                             </div>
-
                             <div>
                                 <EditIcon className={styles.largeIcon} onClick={(event) => handleEditClick(event, track)} />
                             </div>
@@ -204,13 +201,8 @@ const YourTrackList = () => {
                                 <DeleteIcon className={styles.largeIcon} onClick={() => handleDelete(track.trackId)} />
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <Button onClick={handleAddTrack} className={styles.button_custom}>다른 음원 업로드</Button>
-                    </div>
-
-                </div>
-
+                    </Col>
+                </Row>
             ))}
             {selectedTrack && (
                 <Modal
@@ -228,6 +220,9 @@ const YourTrackList = () => {
                     />
                 </Modal>
             )}
+            <div className={styles.endbtn}>
+                <Button onClick={handleAddTrack} className={styles.button_custom}>다른 음원 업로드</Button>
+            </div>
         </div>
     );
 };
