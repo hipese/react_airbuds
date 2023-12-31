@@ -6,25 +6,22 @@
     border: 1px solid black;
 }
 
-.Dropzone{
-    width: 50%;
-    height: 50%;
-    border: 1px solid black;
-    padding: 20px;
-    text-align: center;
-}
 .uploadDetail{
-    width: 50%;
-    height: 700px;
+    width: 70%;
+    min-width: 300px; 
+    background-color: whitesmoke;
+    border-radius: 8px;
     border: 1px solid black;
+    height: 700px;
     overflow: auto;
 }
 .imageContainer{
     margin-top: 10px;
 }
 .imageContainer img {
-    width: 250px;
-    height: 250px;
+    width: 250px !important;
+    height: 250px !important;
+    border-radius: 8px;
     object-fit: cover; /* 이미지가 컨테이너에 맞춰 조정됩니다 */
 }
 .imageContainer img:hover {
@@ -43,4 +40,23 @@
 }
 .detail_input_filename{
     width: 90%;
+}
+.Button{
+    background-color: #4CAF50;
+    color: white;
+    border: #45a049;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.Button:hover{
+    background-color: #45a049;
+    transform: scale(1.1);
+}
+.titleText{
+    font-size: 20px;
+    font-weight: bold;
+}
+.endButtonBox{
+    display: flex;
+    justify-content: end;
+    margin-left: 5px;
 }

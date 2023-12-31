@@ -41,7 +41,7 @@ const AlbumTagList = ({onSelectTag}) => {
 
 
     return (
-        <FormControl sx={{ m: 1, minWidth: 120 , height: '50px'}}>
+        <FormControl sx={{ m: 1, minWidth: 120 , height: '35px',backgroundColor:'white',marginLeft: '-0.5px'}}>
             <InputLabel 
             htmlFor="grouped-native-select"
             sx={{ 

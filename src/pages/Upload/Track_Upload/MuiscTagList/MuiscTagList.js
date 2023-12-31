@@ -43,7 +43,7 @@ const MusicTagList = ({ onSelectTag }) => {
 
 
     return (
-        <FormControl sx={{ m: 1, minWidth: 120, height: '35px', marginLeft: '-0.5px',backgroundColor:'white',padding:'0px' }}>
+        <FormControl sx={{ m: 1, minWidth: 120, height: '35px', marginLeft: '-0.5px', marginTop: '-0.5px',backgroundColor:'white',padding:'0px' }}>
             <InputLabel
                 htmlFor="grouped-native-select"
                 sx={{
