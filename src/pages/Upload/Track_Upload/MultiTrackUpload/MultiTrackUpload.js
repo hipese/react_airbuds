@@ -536,7 +536,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                         </Col>
                         {files.map((file, index) => (
                             <Fragment key={index}>
-                                <Col  lg='12' xl='2' style={{ marginBottom: '10px' }}>
+                                <Col  lg='12' xl='1' style={{ marginBottom: '10px' }}>
                                     <Input
                                         className={style.detail_input_filename}
                                         type="text"
@@ -544,15 +544,17 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                         value={order[index] || index + 1}
                                         onChange={(e) => handleTrackOrderChange(index, e.target.value)}
                                         readOnly="true"
+                                        style={{ width: '40px', height: '40px',marginLeft:'15px'}}
                                     />
                                 </Col>
-                                <Col  lg='12' xl='5' style={{ marginBottom: '10px' }}>
+                                <Col  lg='12' xl='6' style={{ marginBottom: '10px' }}>
                                     <Input
                                         className={style.detail_input_filename}
                                         type="text"
                                         placeholder="제목을 입력하세요"
                                         value={file.name || ''} // 각 파일의 이름 사용
                                         onChange={(e) => handleFileNameChange(index, e.target.value)}
+                                        style={{ width: '100%', height: '40px'}}
                                     />
                                 </Col>
                                 <Col sm="12"  lg='12' xl='3' style={{ marginBottom: '10px' }}>
