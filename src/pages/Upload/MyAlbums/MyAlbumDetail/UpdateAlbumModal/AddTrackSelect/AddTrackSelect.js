@@ -88,7 +88,7 @@ const AddTrackSelect = ({ handleClose, setAlbumUpdate, albumId }) => {
                         <Row key={track.trackId} className={style.contents}>
                             <Col sm='3'>
                                 {track.trackImages.length > 0 && (
-                                    <img src={`/tracks/image/${track.trackImages[0].imagePath}`} alt="" className={style.image} />
+                                    <img src={`${track.trackImages[0].imagePath}`} alt="" className={style.image} />
                                 )}
                             </Col>
                             <Col sm='9'>

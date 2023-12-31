@@ -166,7 +166,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
 
         })
 
-        const newAudioFiles = track.map(track => `/tracks/${track.playlistFilePath}`);
+        const newAudioFiles = track.map(track => `${track.playlistFilePath}`);
 
         setAutoPlayAfterSrcChange(true);
 
@@ -191,14 +191,14 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
                                     <img
                                         key={imgIndex}
                                         className={styles.modalImg}
-                                        src={`/tracks/image/${track.playlistImagePath}`}
+                                        src={`${track.playlistImagePath}`}
                                         alt={track.playlistTitle || '플레이리스트 이미지'}
                                     />
                                 ))
                             ) : (
                                 <img
                                     className={styles.modalImg}
-                                    src={`/tracks/image/${images[0].playlistImagePath}`}
+                                    src={`${images[0].playlistImagePath}`}
                                     alt={images[0].playlistTitle || '플레이리스트 이미지'}
                                 />
                             )
@@ -287,7 +287,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
                         {formattedTracks.map((track, index) => (
                             <li className={styles.modalTrack} key={index}>
                                 <div className={styles.modalTrackImg}>
-                                    <img src={`/tracks/image/${track.playlistImagePath}`} alt="track" />
+                                    <img src={`${track.playlistImagePath}`} alt="track" />
                                 </div>
                                 <div className={styles.modalTrackInfo}>
                                     <div className={styles.modalTrackTitle}>{track.playlistTitle}</div>

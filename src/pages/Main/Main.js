@@ -169,7 +169,7 @@ const Main = () => {
         setTracks((prevTracks) => [track, ...prevTracks]);
 
         // 현재 트랙을 중지하고 새 트랙을 재생 목록에 추가하고 재생 시작
-        setAudioFiles((prevAudioFiles) => [`/tracks/${filePath}`, ...prevAudioFiles]);
+        setAudioFiles((prevAudioFiles) => [`${filePath}`, ...prevAudioFiles]);
         setCurrentTrack(0);
         setIsPlaying(true);
     };
@@ -185,7 +185,7 @@ const Main = () => {
                 <div className={styles.leftSide}>
                     <div className={styles.RecentTitle}>최신 업로드</div>
                     <div className={styles.RecentMusicBox}>
-                        <img className={styles.RecentImg} src={`/tracks/image/${selectImage}`} alt={`/tracks/image/${selectImage}`} />
+                        <img className={styles.RecentImg} src={`${selectImage}`} alt={`${selectImage}`} />
                         <div className={styles.RecentMusic}>
                             {recentMusic.map((music, index) => {
                                 return (

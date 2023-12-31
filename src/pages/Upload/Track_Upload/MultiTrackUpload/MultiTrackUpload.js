@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, Fragment, useContext } from "react"
 import { Row, Col, Input, Button } from "reactstrap";
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -19,15 +18,24 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { LoginContext } from "../../../../App";
 import AlbumTagList from "../AlbumTagList/AlbumTagList";
-
+import { Box, CircularProgress } from '@mui/material';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Asia/Seoul");
 
+const LoadingSpinner = () => (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+        <CircularProgress color="inherit" />
+    </Box>
+);
+
+
 const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag, setSelectTag }) => {
 
     const loginID = useContext(LoginContext);
+    const [loading, setLoading] = useState(false);
+
 
     const [trackSelectTag, setTrackSelectTag] = useState([]);
 
@@ -114,19 +122,23 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         }
     };
 
-  
+
 
     // 데이터베이스에 음원정보를 저장하고 파일을 업로드 하는 장소
     const handleSave = () => {
 
-        if(albumTitle==null){
+        setLoading(true);
+
+        if (albumTitle == null) {
             alert("사진을 선택해주세요");
+            setLoading(false);
             return;
         }
 
 
-        if(playListType==null){
+        if (playListType == null) {
             alert("앨범태그를 선택해주세요.");
+            setLoading(false);
             return;
         }
 
@@ -153,8 +165,9 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
         formData.append("titleImage", titleImage);
         formData.append('order', order);
         selectTag.forEach(tag => {
-            if(tag==null){
+            if (tag == null) {
                 alert("각각의 트랙에 테그를 선택해주세요");
+                setLoading(false);
                 return;
             }
             formData.append('albumselectTag', tag.id);
@@ -165,13 +178,15 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
 
 
-        if(titleImage==null){
+        if (titleImage == null) {
             const isSelect = alert("앨범이미지를 선택해주세요.");
+            setLoading(false);
             return;
         }
 
         if (playListType === "") {
             const isSelect = alert("재생목록유형을 선택해주세요");
+            setLoading(false);
             return;
         }
         else if (playListType === "앨범") {
@@ -187,7 +202,10 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
             }).catch(resp => {
                 console.log("실패")
-            })
+            }).finally(() => {
+                // 로딩 상태 해제
+                setLoading(false);
+            });
         }
         else {
             axios.post("/api/track/multiUpload", formData, {
@@ -201,7 +219,10 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
             }).catch(resp => {
                 console.log("실패")
-            })
+            }).finally(() => {
+                // 로딩 상태 해제
+                setLoading(false);
+            });
         }
 
     }
@@ -219,18 +240,18 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
     const handleAlbumTitleChange = (e) => {
 
-        if (e.target.value && e.target.value.length > 30) {
-            alert("30자 이하로 입력해주세요.");
+        if (e.target.value && e.target.value.length > 100) {
+            alert("100자 이하로 입력해주세요.");
             return;
         }
-    
+
         setAlbumTitle(e.target.value);
     };
 
     const handleFileNameChange = (index, newName) => {
 
-        if (newName && newName.length > 30) {
-            alert("30자 이하로 입력해주세요.");
+        if (newName && newName.length > 50) {
+            alert("50자 이하로 입력해주세요.");
             return;
         }
 
@@ -379,192 +400,198 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
 
     return (
         <div className={style.uploadDetail}>
-            <Row style={{ marginBottom: '20px', width: '100%', marginLeft: '0px', marginRight: '0px' }}>
-                <Col sm='12' md='4' style={{ marginBottom: '20px' }}>
-                    {files[0].image_path === "/assets/groovy2.png" ? <div className={style.imageContainer}>
-                        <img src={files[0].image_path} onClick={handleClickImage} />
-                        <input
-                            type="file"
-                            ref={hiddenFileInput}
-                            onChange={handleImageChange}
-                            style={{ display: 'none' }}
-                            accept="image/*"
-                        />
-                        <Button onClick={handleClickImage}>이미지변경</Button>
-                    </div> : <div className={style.imageContainer}>
-                        <img src={imageview} onClick={handleClickImage} />
-                        <input
-                            type="file"
-                            ref={hiddenFileInput}
-                            onChange={handleImageChange}
-                            style={{ display: 'none' }}
-                            accept="image/*"
-                        />
-                        <Button onClick={handleClickImage}>이미지변경</Button>
-                    </div>}
+            {loading && <LoadingSpinner />}
+            {!loading && (
+                <div>
+                    <Row style={{ marginBottom: '20px', width: '100%', marginLeft: '0px', marginRight: '0px' }}>
+                        <Col sm='12' md='4' style={{ marginBottom: '20px' }}>
+                            {files[0].image_path === "/assets/groovy2.png" ? <div className={style.imageContainer}>
+                                <img src={files[0].image_path} onClick={handleClickImage} />
+                                <input
+                                    type="file"
+                                    ref={hiddenFileInput}
+                                    onChange={handleImageChange}
+                                    style={{ display: 'none' }}
+                                    accept="image/*"
+                                />
+                                <Button onClick={handleClickImage}>이미지변경</Button>
+                            </div> : <div className={style.imageContainer}>
+                                <img src={imageview} onClick={handleClickImage} />
+                                <input
+                                    type="file"
+                                    ref={hiddenFileInput}
+                                    onChange={handleImageChange}
+                                    style={{ display: 'none' }}
+                                    accept="image/*"
+                                />
+                                <Button onClick={handleClickImage}>이미지변경</Button>
+                            </div>}
 
-                </Col>
-                <Col sm='12' md='8' style={{ padding: '0' }}>
-                    <Row style={{ marginBottom: '20px', width: '100%' }}>
-                        {playListType !== '싱글' && playListType !== null && playListType !== '' && (
-                            <>
-                                <Col sm='12' style={{ marginBottom: '20px' }}>앨범제목</Col>
-                                <Col sm='12' style={{ marginBottom: '20px' }}>
+                        </Col>
+                        <Col sm='12' md='8' style={{ padding: '0' }}>
+                            <Row style={{ marginBottom: '20px', width: '100%' }}>
+                                {playListType !== '싱글' && playListType !== null && playListType !== '' && (
+                                    <>
+                                        <Col sm='12' style={{ marginBottom: '20px' }}>앨범제목</Col>
+                                        <Col sm='12' style={{ marginBottom: '20px' }}>
+                                            <Input
+                                                placeholder="앨범 제목을 입력하세요"
+                                                className={style.detail_input}
+                                                type="text"
+                                                value={albumTitle}
+                                                onChange={handleAlbumTitleChange}
+                                            />
+                                        </Col>
+                                    </>
+                                )}
+                                <Col sm='12' md='6' style={{ marginBottom: '10px' }}>
+                                    <Row style={{ marginBottom: '10px' }}>
+                                        <Col sm='12' style={{ marginBottom: '10px' }}> 재생목록유형</Col>
+                                        <Col sm='12' style={{ marginBottom: '10px' }}>
+                                            <Box sx={{ minWidth: 120 }}>
+                                                <FormControl fullWidth sx={{
+                                                    top: '8px', // 상단 위치 조절
+                                                }}>
+                                                    <InputLabel id="demo-simple-select-label" >재생목록유형</InputLabel>
+                                                    <Select
+                                                        labelId="demo-simple-select-label"
+                                                        id="demo-simple-select"
+                                                        value={playListType}
+                                                        label="재생목록유형"
+                                                        onChange={handleChange}
+                                                    >
+                                                        <MenuItem value={"앨범"}>앨범</MenuItem>
+                                                        <MenuItem value={"싱글"}>싱글</MenuItem>
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Col>
+                                    </Row>
+                                </Col>
+
+                                <Col sm='12' md='6' style={{ marginBottom: '10px' }}>
+                                    <Row>
+                                        <Col sm='12' style={{ marginBottom: '10px' }}>출시일자</Col>
+                                        <Col sm='12' style={{ marginBottom: '10px' }}>
+                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                <DemoContainer components={['DatePicker']}>
+                                                    <DatePicker
+                                                        label="출시일자선택"
+                                                        defaultValue={dayjs(currentDatePicker)}
+                                                        value={selectedDate}
+                                                        onChange={handleReleaseDateChange}
+                                                    />
+                                                </DemoContainer>
+                                            </LocalizationProvider>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                                {
+                                    playListType === "앨범" && (
+                                        <Fragment>
+                                            <Col sm='12' style={{ marginBottom: '10px' }}>AlbumTag</Col>
+                                            <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
+                                                <AlbumTagList onSelectTag={handleTagSelection} />
+                                            </Col>
+                                            <Col sm='12' md='8' style={{ marginBottom: '10px' }}>
+                                                <Row className={style.chipRow}>
+                                                    <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                                        {selectTag.map((tag, index) => (
+                                                            <Chip
+                                                                key={index}
+                                                                label={tag.name}
+                                                                onDelete={() => handleTagDelete(tag)}
+                                                            />
+                                                        ))}
+                                                    </Stack>
+                                                </Row>
+                                            </Col>
+                                        </Fragment>
+                                    )
+                                }
+                            </Row>
+                        </Col>
+                    </Row>
+                    <hr />
+                    <Row style={{ marginBottom: '10px' }}>
+                        <Col sm="2" style={{ marginBottom: '10px' }}>
+                            트랙순서
+                        </Col>
+                        <Col sm="10" style={{ marginBottom: '10px' }}>
+                            트랙제목
+                        </Col>
+                        {files.map((file, index) => (
+                            <Fragment key={index}>
+                                <Col sm="2" style={{ marginBottom: '10px' }}>
                                     <Input
-                                        placeholder="앨범 제목을 입력하세요"
-                                        className={style.detail_input}
+                                        className={style.detail_input_filename}
                                         type="text"
-                                        value={albumTitle}
-                                        onChange={handleAlbumTitleChange}
+                                        placeholder="순서를 입력하세요"
+                                        value={order[index] || index + 1}
+                                        onChange={(e) => handleTrackOrderChange(index, e.target.value)}
+                                        readOnly="true"
                                     />
                                 </Col>
-                            </>
-                        )}
-                        <Col sm='12' md='6' style={{ marginBottom: '10px' }}>
-                            <Row style={{ marginBottom: '10px' }}>
-                                <Col sm='12' style={{ marginBottom: '10px' }}> 재생목록유형</Col>
-                                <Col sm='12' style={{ marginBottom: '10px' }}>
-                                    <Box sx={{ minWidth: 120 }}>
-                                        <FormControl fullWidth sx={{
-                                            top: '8px', // 상단 위치 조절
-                                        }}>
-                                            <InputLabel id="demo-simple-select-label" >재생목록유형</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={playListType}
-                                                label="재생목록유형"
-                                                onChange={handleChange}
-                                            >
-                                                <MenuItem value={"앨범"}>앨범</MenuItem>
-                                                <MenuItem value={"싱글"}>싱글</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Box>
+                                <Col sm="5" style={{ marginBottom: '10px' }}>
+                                    <Input
+                                        className={style.detail_input_filename}
+                                        type="text"
+                                        placeholder="제목을 입력하세요"
+                                        value={file.name || ''} // 각 파일의 이름 사용
+                                        onChange={(e) => handleFileNameChange(index, e.target.value)}
+                                    />
                                 </Col>
-                            </Row>
-                        </Col>
-
-                        <Col sm='12' md='6' style={{ marginBottom: '10px' }}>
-                            <Row>
-                                <Col sm='12' style={{ marginBottom: '10px' }}>출시일자</Col>
-                                <Col sm='12' style={{ marginBottom: '10px' }}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DemoContainer components={['DatePicker']}>
-                                            <DatePicker
-                                                label="출시일자선택"
-                                                defaultValue={dayjs(currentDatePicker)}
-                                                value={selectedDate}
-                                                onChange={handleReleaseDateChange}
-                                            />
-                                        </DemoContainer>
-                                    </LocalizationProvider>
+                                <Col sm="12" md="3" style={{ marginBottom: '10px' }}>
+                                    <MusicTagList onSelectTag={(tag) => handleTrackTagSelection(index, tag)} />
                                 </Col>
-                            </Row>
-                        </Col>
-                        {
-                            playListType === "앨범" && (
-                                <Fragment>
-                                    <Col sm='12' style={{ marginBottom: '10px' }}>AlbumTag</Col>
-                                    <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
-                                        <AlbumTagList onSelectTag={handleTagSelection} />
-                                    </Col>
-                                    <Col sm='12' md='8' style={{ marginBottom: '10px' }}>
+                                <Col sm="12" md="2" style={{ marginBottom: '10px' }}>
+                                    <Button onClick={() => handleFileDelete(index)}>삭제</Button>
+                                </Col>
+                                <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
+                                    {trackSelectTag[index] && trackSelectTag[index].length > 0 && (
                                         <Row className={style.chipRow}>
                                             <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                                                {selectTag.map((tag, index) => (
+                                                {trackSelectTag[index].map((tag, tagIndex) => (
                                                     <Chip
-                                                        key={index}
-                                                        label={tag.name}
-                                                        onDelete={() => handleTagDelete(tag)}
+                                                        key={tagIndex}
+                                                        label={tag.tagName}
+                                                        onDelete={() => handleTrackTagDelete(index, tag)}
                                                     />
                                                 ))}
                                             </Stack>
                                         </Row>
-                                    </Col>
-                                </Fragment>
-                            )
-                        }
+                                    )}
+                                </Col>
+                                <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
+                                    <Input
+                                        className={style.detail_input}
+                                        type="text"
+                                        placeholder="제작자를 입력하세요"
+                                        value={file.writer}
+                                        onChange={(e) => handleWriterChange(index, e.target.value)}
+                                    />
+                                    <hr />
+                                </Col>
+                            </Fragment>
+                        ))}
                     </Row>
-                </Col>
-            </Row>
-            <hr />
-            <Row style={{ marginBottom: '10px' }}>
-                <Col sm="2" style={{ marginBottom: '10px' }}>
-                    트랙순서
-                </Col>
-                <Col sm="10" style={{ marginBottom: '10px' }}>
-                    트랙제목
-                </Col>
-                {files.map((file, index) => (
-                    <Fragment key={index}>
-                        <Col sm="2" style={{ marginBottom: '10px' }}>
-                            <Input
-                                className={style.detail_input_filename}
-                                type="text"
-                                placeholder="순서를 입력하세요"
-                                value={order[index] || index + 1}
-                                onChange={(e) => handleTrackOrderChange(index, e.target.value)}
-                                readOnly="true"
-                            />
-                        </Col>
-                        <Col sm="5" style={{ marginBottom: '10px' }}>
-                            <Input
-                                className={style.detail_input_filename}
-                                type="text"
-                                placeholder="제목을 입력하세요"
-                                value={file.name || ''} // 각 파일의 이름 사용
-                                onChange={(e) => handleFileNameChange(index, e.target.value)}
-                            />
-                        </Col>
-                        <Col sm="12" md="3" style={{ marginBottom: '10px' }}>
-                            <MusicTagList onSelectTag={(tag) => handleTrackTagSelection(index, tag)} />
-                        </Col>
-                        <Col sm="12" md="2" style={{ marginBottom: '10px' }}>
-                            <Button onClick={() => handleFileDelete(index)}>삭제</Button>
-                        </Col>
-                        <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
-                            {trackSelectTag[index] && trackSelectTag[index].length > 0 && (
-                                <Row className={style.chipRow}>
-                                    <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                                        {trackSelectTag[index].map((tag, tagIndex) => (
-                                            <Chip
-                                                key={tagIndex}
-                                                label={tag.tagName}
-                                                onDelete={() => handleTrackTagDelete(index, tag)}
-                                            />
-                                        ))}
-                                    </Stack>
-                                </Row>
-                            )}
-                        </Col>
-                        <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
-                            <Input
-                                className={style.detail_input}
-                                type="text"
-                                placeholder="제작자를 입력하세요"
-                                value={file.writer}
-                                onChange={(e) => handleWriterChange(index, e.target.value)}
-                            />
-                            <hr />
-                        </Col>
-                    </Fragment>
-                ))}
-            </Row>
-            <Col sm="12">
-                <input
-                    type="file"
-                    ref={hiddenAudioInput}
-                    onChange={handleAudioFileChange}
-                    style={{ display: 'none' }}
-                    accept="audio/*"
-                />
-                <Button onClick={handleAddTrackClick}>다른 트렉 추가하기</Button></Col>
-            <hr />
-            <Col>
-                <Button color="primary" onClick={handleCancle}>취소</Button>
-                <Button color="primary" onClick={handleSave}>저장하기</Button>
-            </Col>
+                    <Col sm="12">
+                        <input
+                            type="file"
+                            ref={hiddenAudioInput}
+                            onChange={handleAudioFileChange}
+                            style={{ display: 'none' }}
+                            accept="audio/*"
+                        />
+                        <Button onClick={handleAddTrackClick}>다른 트렉 추가하기</Button></Col>
+                    <hr />
+                    <Col>
+                        <Button color="primary" onClick={handleCancle}>취소</Button>
+                        <Button color="primary" onClick={handleSave}>저장하기</Button>
+                    </Col>
+                </div>
+            )}
+
         </div>
     );
 

@@ -45,7 +45,7 @@ const TestMusicList = () => {
                     {track.title}
                     <br />
                     <img
-                        src={track.imagePath ? `/tracks/image/${track.imagePath}` : '/assets/groovy2.png'}
+                        src={track.imagePath ? `${track.imagePath}` : '/assets/groovy2.png'}
                         alt={track.title}
                     />
                     <br />

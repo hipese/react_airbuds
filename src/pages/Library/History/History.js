@@ -174,7 +174,7 @@ const History = () => {
         setTracks((prevTracks) => [track, ...prevTracks]);
 
         // 현재 트랙을 중지하고 새 트랙을 재생 목록에 추가하고 재생 시작
-        setAudioFiles((prevAudioFiles) => [`/tracks/${filePath}`, ...prevAudioFiles]);
+        setAudioFiles((prevAudioFiles) => [`${filePath}`, ...prevAudioFiles]);
         setCurrentTrack(0);
         setIsPlaying(true);
     };
@@ -253,7 +253,7 @@ const History = () => {
                                         <div className={styles.track_image}>
                                             <Avatar
                                                 alt="Remy Sharp"
-                                                src={`/tracks/image/${track.imagePath}`}
+                                                src={`${track.imagePath}`}
                                                 sx={{ width: '80px', height: '80px' }}
                                             />
                                         </div>

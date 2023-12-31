@@ -171,7 +171,7 @@ const Overview = () => {
     setTracks((prevTracks) => [track, ...prevTracks]);
 
     // 현재 트랙을 중지하고 새 트랙을 재생 목록에 추가하고 재생 시작
-    setAudioFiles((prevAudioFiles) => [`/tracks/${filePath}`, ...prevAudioFiles]);
+    setAudioFiles((prevAudioFiles) => [`${filePath}`, ...prevAudioFiles]);
     setCurrentTrack(0);
     setIsPlaying(true);
   };
@@ -181,7 +181,7 @@ const Overview = () => {
       <div className={styles.item} key={index}>
         <div>
           <Link to={`/Detail/${track.trackId}`}>
-            <img src={`/tracks/image/${track.imagePath}`} alt={`Image ${index + 1}`} />
+            <img src={`${track.imagePath}`} alt={`Image ${index + 1}`} />
             <div className={styles.carouselTitle}>{track.title}</div>
             <div className={styles.carouselSinger}>
               {track.writer}
@@ -206,7 +206,7 @@ const Overview = () => {
       <div className={styles.item} key={index}>
         <div>
           <Link to={`/Detail/${track.trackId}`}>
-            <img src={`/tracks/image/${track.imagePath}`} alt={`Image ${index + 1}`} />
+            <img src={`${track.imagePath}`} alt={`Image ${index + 1}`} />
             <div className={styles.carouselTitle}>{track.title}</div>
             <div className={styles.carouselSinger}>
               {track.writer}

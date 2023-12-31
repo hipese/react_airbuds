@@ -24,7 +24,7 @@ const YourTracks = () => {
                 <Col sm="12" className={styles.trackListBox}>
                      <YourTrackList />
                 </Col>
-                <Col sm="12" className={styles.endcol}><Button onClick={handleAddTrack}>다른 음원 업로드</Button></Col>
+               
             </Row>
 
         </div>

@@ -10,6 +10,7 @@ import AddPrevAlbum from "./AddPrevAlbum/AddPrevAlbum";
 import Modal from '@mui/material/Modal';
 import { useNavigate } from "react-router";
 import AlbumSearchResult from "../../ShowMusicList/SearchResult/AlbumSearchResult";
+import NoTrackInfo from "../NoMusic/NoTrackInfo";
 
 const MyAlbums = () => {
 
@@ -22,9 +23,9 @@ const MyAlbums = () => {
     const [loading, setLoading] = useState(true);
 
     const [searchAlbums, setSearchAlbums] = useState([]);
-    const [createAlbum,setCreateAlbum]= useState([]);
+    const [createAlbum, setCreateAlbum] = useState([]);
 
-    const navigator=useNavigate();
+    const navigator = useNavigate();
 
     useEffect(() => {
         axios.get(`/api/album/findByLogin`).then(resp => {
@@ -35,11 +36,12 @@ const MyAlbums = () => {
 
     }, [loginID]);
 
+    const [text, setText] = useState("앨범");
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => {
 
-        axios.post("/api/album/emptyAlbum").then(resp=>{
+        axios.post("/api/album/emptyAlbum").then(resp => {
             console.log(resp.data)
             setCreateAlbum(resp.data)
         })
@@ -49,7 +51,7 @@ const MyAlbums = () => {
 
     const handleCancle = () => {
         setOpen(false);
-        
+
     };
 
     const handleModalClose = (event, reason) => {
@@ -89,29 +91,22 @@ const MyAlbums = () => {
 
                     <div className={styles.carouselTitle}>내 앨범목록</div>
                     <div className={styles.carousel}>
-                        
-                        <AlbumSearchResult searchAlbums={searchAlbums}/>
+                        {searchAlbums.length === 0 ? (
+                            <NoTrackInfo text={text}/>
+                        ) : (
+                            <AlbumSearchResult searchAlbums={searchAlbums} />
+                        )}
+
                     </div>
 
 
                     <div className={styles.leftBottom}>
-                        <Button className={styles.button_custom} onClick={handleAddAlbum}>
-                            <PlaylistAddIcon className={styles.icon_custom} />
-                            앨범 생성하기
-                        </Button>
-                        {/* 기존 앨범에 있는거 추가하는 기능(시간이 없어서 일단 미완성으로 ㄱ) */}
-                        {/* <Modal
-                            open={open}
-                            onClose={handleModalClose}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <AddPrevAlbum
-                                 createAlbum={createAlbum}
-                                 setCreateAlbum={setCreateAlbum}
-                                 onClose={handleCancle}
-                            />
-                        </Modal> */}
+                        {!(searchAlbums.length === 0) ? (
+                            <Button className={styles.button_custom} onClick={handleAddAlbum}>
+                                <PlaylistAddIcon/>
+                                앨범 생성하기
+                            </Button>
+                        ) : null}
                     </div>
                 </div>
 

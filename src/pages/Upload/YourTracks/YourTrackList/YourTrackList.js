@@ -12,18 +12,22 @@ import {
     TrackContext,
     TrackInfoContext,
 } from "../../../../App";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ShareIcon from '@mui/icons-material/Share';
 import UpdateModal from "../UpdateModal/UpdateModal";
 import Modal from '@mui/material/Modal';
+import NoTrackInfo from "../../NoMusic/NoTrackInfo";
+import { Button } from "reactstrap";
 
 
 
 const YourTrackList = () => {
-    const { } = useParams();
+
+    const navigator=useNavigate();
+
     const [track, setTrack] = useState([]);
     const { audioFiles, setAudioFiles } = useContext(MusicContext);
     const { isPlaying, setIsPlaying } = useContext(PlayingContext);
@@ -36,6 +40,7 @@ const YourTrackList = () => {
 
     const [selectedTrack, setSelectedTrack] = useState(null);
 
+    const [text, setText] = useState("트랙");
 
     // 모달을 관리하는 부분
     const [open, setOpen] = useState(false);
@@ -116,7 +121,7 @@ const YourTrackList = () => {
         }));
 
         // 현재 트랙을 중지하고 새 트랙을 재생 목록에 추가하고 재생 시작
-        setAudioFiles((prevAudioFiles) => [`/tracks/${filePath}`, ...prevAudioFiles]);
+        setAudioFiles((prevAudioFiles) => [`${filePath}`, ...prevAudioFiles]);
         setCurrentTrack(0);
         setIsPlaying(true);
     };
@@ -141,16 +146,22 @@ const YourTrackList = () => {
         }
     }
 
+    const handleAddTrack=()=>{
+        navigator("/Upload");
+    }
+
+    console.log(track);
 
     return (
         <div className={styles.container}>
+            {track.length === 0 && <NoTrackInfo text={text} />}
             {track.map((track, index) => (
                 <div className={styles.track_info} key={index}>
                     <Link to={`/Detail/${track.trackId}`} className={styles.linkContainer}>
                         <div className={styles.track_image}>
                             <Avatar
                                 alt="Remy Sharp"
-                                src={`/tracks/image/${track.imagePath}`}
+                                src={`${track.imagePath}`}
                                 sx={{ width: '80px', height: '80px' }}
                             />
                         </div>
@@ -194,6 +205,10 @@ const YourTrackList = () => {
                             </div>
                         </div>
                     </div>
+                    <div>
+                        <Button onClick={handleAddTrack} className={styles.button_custom}>다른 음원 업로드</Button>
+                    </div>
+
                 </div>
 
             ))}

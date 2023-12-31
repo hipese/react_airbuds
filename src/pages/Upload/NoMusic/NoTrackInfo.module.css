@@ -1,0 +1,26 @@
+
+.none_track{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.plsupload{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 20px;
+}
+.button {
+    background-color: #45a049;
+    color: azure;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;  /* Added transition for a smooth effect */
+}
+
+.button:hover {
+    background-color: #45a049;
+    color: azure;
+    transform: scale(1.1);
+}

@@ -133,7 +133,7 @@ const Track_Detail = () => {
         setTracks((prevTracks) => [track, ...prevTracks]);
 
         // 현재 트랙을 중지하고 새 트랙을 재생 목록에 추가하고 재생 시작
-        setAudioFiles((prevAudioFiles) => [`/tracks/${filePath}`, ...prevAudioFiles]);
+        setAudioFiles((prevAudioFiles) => [`${filePath}`, ...prevAudioFiles]);
         setCurrentTrack(0);
         setIsPlaying(true);
     };
@@ -459,7 +459,7 @@ const Track_Detail = () => {
                                         alt=""
                                         className="w-full h-48"
                                         height="300px"
-                                        src={`/tracks/image/${track.imagePath}`}
+                                        src={`${track.imagePath}`}
                                         style={{
                                             aspectRatio: "9/7",
                                             objectFit: "cover",
