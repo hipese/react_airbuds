@@ -16,16 +16,17 @@ const ModalStyle = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 800,
-    bgcolor: 'background.paper',
+    bgcolor: 'whitesmoke',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    borderradius: "8px"
 };
 
 
 const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClose }, ref) => {
 
-// 안에서 모달 또 띄우기
+    // 안에서 모달 또 띄우기
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -34,9 +35,9 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
 
     const handleClose = () => {
 
-        const iscancle=window.confirm("창을 닫으시겠습니까?")
+        const iscancle = window.confirm("창을 닫으시겠습니까?")
 
-        if(!iscancle){
+        if (!iscancle) {
             return;
         }
 
@@ -401,7 +402,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                         style={{ display: 'none' }}
                         accept="image/*"
                     />
-                    <Button onClick={handleClickImage}>이미지변경</Button>
+                    <Button onClick={handleClickImage} className={styles.Button}>이미지변경</Button>
                 </Col>
                 <Col sx='12' md='8'>
                     <Row>
@@ -460,7 +461,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                             />
                         </Col>
                         <Col sm="12" md="5" style={{ marginBottom: '10px' }}>
-                            <Button onClick={() => handleFileDelete(index)}>삭제</Button>
+                            <Button onClick={() => handleFileDelete(index)} className={styles.Button}>삭제</Button>
                         </Col>
 
                         <Col sm="12" md="12" style={{ marginBottom: '10px' }}>
@@ -480,11 +481,11 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                     <Fragment key={index}>
                         <Col sm="12" md="2" style={{ marginBottom: '10px' }}>
                             <Input
-                                className={styles.detail_input_filename}
                                 type="text"
                                 placeholder="순서를 입력하세요"
                                 value={index + albumUpdate.tracks.length}
                                 readOnly={true}
+                                style={{ width: '20px', height: '40px',marginLeft:'15px'}}
                             />
                         </Col>
                         <Col sm="15" md="5" style={{ marginBottom: '10px' }}>
@@ -497,7 +498,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                             />
                         </Col>
                         <Col sm="12" md="2" style={{ marginBottom: '10px' }}>
-                            <Button onClick={() => handleAddFileDelete(index)}>삭제</Button>
+                            <Button onClick={() => handleAddFileDelete(index)} className={styles.Button}>삭제</Button>
                         </Col>
                         <Col sm="12" md="3" style={{ marginBottom: '10px' }}>
                             <MusicTagList onSelectTag={(tag) => handleTrackTagSelection(index, tag)} />
@@ -530,7 +531,6 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                             />
                             <hr />
                         </Col>
-
                     </Fragment>
                 ))}
             </Row>
@@ -543,26 +543,29 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                         style={{ display: 'none' }}
                         accept="audio/*"
                     />
-                    <Button onClick={handleAddTrackClick}>다른 트렉 추가하기</Button>
+                    <Button onClick={handleAddTrackClick} className={styles.Button}>다른 트렉 추가하기</Button>
                 </Col>
                 <Col sm="6">
-                    <Button onClick={handleClickOpen}>기존 트랙에서 선택</Button>
+                    <Button onClick={handleClickOpen} className={styles.Button}>기존 트랙에서 선택</Button>
                     <Dialog
                         open={open}
                         onClose={handleClose}
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
                     >
-                        <AddTrackSelect  handleClose={handleClose} setAlbumUpdate={setAlbumUpdate} albumId={albumUpdate.albumId} />
+                        <AddTrackSelect handleClose={handleClose} setAlbumUpdate={setAlbumUpdate} albumId={albumUpdate.albumId} />
                     </Dialog>
+                    
                 </Col>
             </Row>
-
-            <Col>
-                <hr />
-                <Button onClick={handleCancle}>Close</Button>
-                <Button color="primary" onClick={handleUpdate}>수정하기</Button>
-            </Col>
+            <hr />
+            <Row>
+                <Col className={styles.endButtonBox}>
+                    <hr />
+                    <Button color="primary" onClick={handleUpdate} className={styles.Button} style={{ marginRight:'10px' }}>수정하기</Button>
+                    <Button onClick={handleCancle} className={styles.Button}>수정취소</Button>
+                </Col>
+            </Row>
         </Box>
     );
 });

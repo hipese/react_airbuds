@@ -41,7 +41,7 @@ const MyAlbumDetail = () => {
             setIsEditAlbum(resp.data);
         })
 
-    }, [loginID])
+    }, [albumUpdate,loginID])
 
     const handleCancle = () => {
         setOpen(false);
@@ -127,10 +127,6 @@ const MyAlbumDetail = () => {
                             돌아가기
                         </Button>
                         <Button className={style.button_custom}>
-                            <ShareIcon className={style.icon_custom} />
-                            Share
-                        </Button>
-                        <Button className={style.button_custom}>
                             <ContentCopyIcon className={style.icon_custom} />
                             Copy Link
                         </Button>
@@ -164,7 +160,7 @@ const MyAlbumDetail = () => {
                     <hr />
                 </Col>
                 <Col sm='12'>
-                    <Row>
+                    <Row className={style.albuminfo}>
                         <Col sm='12' lg='12' xl='3'>
                             <Row className={style.mainAlbumTitle}>
                                 <Col sm='12'>
@@ -179,7 +175,7 @@ const MyAlbumDetail = () => {
                                     {albumWriters}
                                 </Col>
                                 <div className={style.play_button} >
-                                    <PlayCircleIcon sx={{ width: '200px', height: '200px' }} onClick={() => addTrackToPlaylist(albumUpdate.tracks)} />
+                                    <PlayCircleIcon sx={{ width: '100px', height: '100px' }} onClick={() => addTrackToPlaylist(albumUpdate.tracks)} />
                                 </div>
                             </Row>
                         </Col>

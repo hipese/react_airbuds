@@ -99,6 +99,7 @@
   
   .container{
     width: 98%;
+    height: 250px;
     margin-left: 20px;
     background-color: whitesmoke;
     border: 1px solid #ccc;

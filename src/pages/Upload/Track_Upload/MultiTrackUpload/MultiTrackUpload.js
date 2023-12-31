@@ -600,7 +600,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
                                 style={{ display: 'none' }}
                                 accept="audio/*"
                             />
-                            <Button onClick={handleAddTrackClick} className={style.Button}>다른 트렉 추가하기</Button></Col>
+                            <Button onClick={handleAddTrackClick} className={style.Button} style={{ marginLeft: '12px' }}>다른 트렉 추가하기</Button></Col>
                         <Col sm='12' md='7' lg='7' xl='7'  className={style.endButtonBox}>
 
                             <Button color="primary" onClick={handleSave} className={style.Button}>저장하기</Button>

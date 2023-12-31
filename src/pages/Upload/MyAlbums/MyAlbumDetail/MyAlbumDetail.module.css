@@ -1,9 +1,12 @@
 .album_detail_container {
     display: flex;
     align-items: center;
+    justify-content: center;
+    
   }
   
   .album_image{
+    font-size: 20px;
     margin-top: 20px;
     display: flex;
     justify-content: center;
@@ -73,8 +76,8 @@
   }
 
   .play_button {
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     color: #4CAF50;
     cursor: pointer;
     transition: 0.2s;
@@ -86,4 +89,11 @@
     transform: scale(1.2);
     /* hover 시 확대 효과 */
     color: #FF4081;
+}
+
+.albuminfo{
+  min-width: 300px; 
+  background-color: whitesmoke;
+  border-radius: 8px;
+  border: 1px solid black;
 }

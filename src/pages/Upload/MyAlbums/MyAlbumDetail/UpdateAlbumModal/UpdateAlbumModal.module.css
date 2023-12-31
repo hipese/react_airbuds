@@ -9,3 +9,18 @@
     height: 600px;
     overflow: auto;
   }
+  .Button{
+    background-color: #4CAF50;
+    color: white;
+    border: #45a049;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.Button:hover{
+    background-color: #45a049;
+    transform: scale(1.1);
+}
+.endButtonBox{
+  display: flex;
+  justify-content: end;
+  margin-left: 5px;
+}

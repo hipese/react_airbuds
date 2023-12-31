@@ -44,7 +44,7 @@
 .Button{
     background-color: #4CAF50;
     color: white;
-    border: #45a049;
+    border: #45a049;    
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 .Button:hover{
