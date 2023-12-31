@@ -225,33 +225,40 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
             {!loading && (
                 <div>
                     <Row style={{ marginBottom: '10px', width: '100%', marginLeft: '0px', marginRight: '0px' }}>
-                        <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
-                            {files[0].image_path === "/assets/groovy2.png" ? <div className={singlestyle.imageContainer}>
-                                <img src={files[0].image_path} onClick={handleClickImage} />
-                                <input
-                                    type="file"
-                                    ref={hiddenFileInput}
-                                    onChange={handleImageChange}
-                                    style={{ display: 'none' }}
-                                    accept="image/*"
-                                />
-                                <Button onClick={handleClickImage}>이미지변경</Button>
-                            </div> : <div className={singlestyle.imageContainer}>
-                                <img src={imageview} onClick={handleClickImage} />
-                                <input
-                                    type="file"
-                                    ref={hiddenFileInput}
-                                    onChange={handleImageChange}
-                                    style={{ display: 'none' }}
-                                    accept="image/*"
-                                />
-                                <Button onClick={handleClickImage}>이미지변경</Button>
-                            </div>}
+                        <Col sm='12' lg='12' xl='4' style={{ marginBottom: '10px' }}>
+                            {files[0].image_path === "/assets/groovy2.png" ?
+                                <div className={singlestyle.imageContainer}>
+                                    <img src={files[0].image_path} onClick={handleClickImage} />
+                                    <input
+                                        type="file"
+                                        ref={hiddenFileInput}
+                                        onChange={handleImageChange}
+                                        style={{ display: 'none' }}
+                                        accept="image/*"
+                                    />
+                                    <div>
+                                        <Button onClick={handleClickImage} className={singlestyle.Button} style={{ marginTop: '10px' }}>이미지변경</Button>
+                                    </div>
+                                </div> : <div className={singlestyle.imageContainer}>
+                                    <img src={imageview} onClick={handleClickImage} />
+                                    <input
+                                        type="file"
+                                        ref={hiddenFileInput}
+                                        onChange={handleImageChange}
+                                        style={{ display: 'none' }}
+                                        accept="image/*"
+                                    />
+                                    <div>
+                                        <Button onClick={handleClickImage} className={singlestyle.Button} style={{ marginTop: '10px' }}>이미지변경</Button>
+                                    </div>
+                                </div>}
 
                         </Col>
-                        <Col sm='12' md='8' style={{ marginBottom: '10px', padding: '0' }}>
+                        <Col sm='12' lg='12' xl='8' style={{ marginBottom: '10px', padding: '0' }}>
                             <Row style={{ marginBottom: '10px', width: '100%' }}>
-                                <Col sm='12' style={{ marginBottom: '10px' }}>제목</Col>
+                                <Col sm='12' style={{ marginBottom: '10px' }} className={singlestyle.titleText}>
+                                    제목
+                                </Col>
                                 <Col sm='12' style={{ marginBottom: '10px' }}>
                                     <Input
                                         placeholder="제목을 입력하세요"
@@ -261,24 +268,34 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
                                         onChange={(e) => handleFileNameChange(0, e.target.value)} // 변경 이벤트 처리
                                     />
                                 </Col>
-                                <Col sm='12 ' style={{ marginBottom: '10px' }}>tag </Col>
-                                <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
+                                <Col sm='12 ' style={{ marginBottom: '10px' }} className={singlestyle.titleText}>
+                                    테그선택
+                                </Col>
+                                <Col sm='12' lg='12' xl='4' style={{ marginBottom: '10px' }}>
                                     <MusicTagList onSelectTag={handleTagSelection} />
                                 </Col>
-                                <Col sm='12' md='8' style={{ marginBottom: '10px' }}>
+                                <Col sm='12' lg='12' xl='8' style={{ marginBottom: '10px' }}>
                                     <Row className={singlestyle.chipRow}>
-                                        <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                                            {selectTag.map((tag, index) => (
-                                                <Chip
-                                                    key={index}
-                                                    label={tag.name}
-                                                    onDelete={() => handleTagDelete(tag)}
-                                                />
-                                            ))}
-                                        </Stack>
+                                        {selectTag.length > 0 ? (
+                                            <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                                {selectTag.map((tag, index) => (
+                                                    <Chip
+                                                        key={index}
+                                                        label={tag.name}
+                                                        onDelete={() => handleTagDelete(tag)}
+                                                    />
+                                                ))}
+                                            </Stack>
+                                        ) : (
+                                            <div style={{ textAlign: 'center', marginTop: '10px'}} className={singlestyle.titleText}>
+                                                테그를 선택해주세요
+                                            </div>
+                                        )}
                                     </Row>
                                 </Col>
-                                <Col sm='12' style={{ marginBottom: '10px' }}>writer</Col>
+                                <Col sm='12' style={{ marginBottom: '10px' }} className={singlestyle.titleText}>
+                                    작성자
+                                </Col>
                                 <Col sm='12' style={{ marginBottom: '10px' }}>
                                     <Input
                                         className={singlestyle.detail_input}
@@ -291,8 +308,8 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
                             </Row>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col sm='4' style={{ marginBottom: '10px' }}>
+                    <Row style={{ marginBottom: '10px', width: '100%', marginLeft: '0px', marginRight: '0px' }}>
+                        <Col sm='12' md='4' lg='4' xl='4' style={{ marginBottom: '10px' }}>
                             <input
                                 type="file"
                                 ref={hiddenAudioInput}
@@ -300,18 +317,13 @@ const SingleTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag
                                 style={{ display: 'none' }}
                                 accept="audio/*"
                             />
-                            <Button color="primary" onClick={handleAddTrackClick} style={{ marginLeft: '15px' }}>파일추가</Button>
+                            <Button color="primary" onClick={handleAddTrackClick} className={singlestyle.Button}>파일추가</Button>
                         </Col>
-                        <Col sm='8' style={{ marginBottom: '10px' }}>
-                            <Row>
-                                <Col sm='8'>
+                        <Col sm='12' md='7' lg='7' xl='7' style={{ marginBottom: '10px' }} className={singlestyle.endButtonBox}>
 
-                                </Col>
-                                <Col sm='4'>
-                                    <Button color="primary" onClick={handleSave}>저장하기</Button>
-                                    <Button color="primary" onClick={handleCancle} style={{ marginLeft: '10px' }}>취소</Button>
-                                </Col>
-                            </Row>
+                            <Button color="primary" onClick={handleSave} className={singlestyle.Button}>저장하기</Button>
+                            <Button color="primary" onClick={handleCancle} style={{ marginLeft: '10px' }} className={singlestyle.Button}>취소</Button>
+
                         </Col>
                     </Row>
 

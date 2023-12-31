@@ -6,9 +6,9 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import axios from "axios";
 
-const MusicTagList = ({onSelectTag}) => {
+const MusicTagList = ({ onSelectTag }) => {
 
-    
+
     const [tagList, setTagList] = useState([]);
 
     useEffect(() => {
@@ -43,15 +43,19 @@ const MusicTagList = ({onSelectTag}) => {
 
 
     return (
-        <FormControl sx={{ m: 1, minWidth: 120 , height: '50px'}}>
-            <InputLabel 
-            htmlFor="grouped-native-select"
-            sx={{ 
-                top: '-10px', // 상단 위치 조절
-               
-            }}>SelectTag</InputLabel>
-            
-            <Select native defaultValue="" id="grouped-native-select" label="Grouping"  sx={{ height: '35px' } }  onChange={handleSelectChange} >
+        <FormControl sx={{ m: 1, minWidth: 120, height: '35px', marginLeft: '-0.5px',backgroundColor:'white',padding:'0px' }}>
+            <InputLabel
+                htmlFor="grouped-native-select"
+                sx={{
+                    top: '-10px', // 상단 위치 조절
+
+                }}>SelectTag</InputLabel>
+
+            <Select native defaultValue="" id="grouped-native-select" label="Grouping" sx={{
+                height: '35px', '&:focus': {
+                    backgroundColor: 'white',
+                },
+            }} onChange={handleSelectChange} >
                 <option aria-label="None" value="" />
                 {Object.keys(groupedTags).map((group) => (
                     <optgroup key={group} label={group}>

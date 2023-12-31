@@ -92,7 +92,7 @@ const Track_Upload = () => {
                                 음악 파일을 드래그 앤 드롭하거나 클릭하여 파일을 선택하세요.
                             </div>
                             <div>
-                                <Button color="primary">파일을 선택하세요</Button>
+                                <Button color="primary" className={styles.Button} >파일을 선택하세요</Button>
                             </div>
                         </div>
                     </div>
