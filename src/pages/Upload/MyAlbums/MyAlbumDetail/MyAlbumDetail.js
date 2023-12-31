@@ -41,7 +41,7 @@ const MyAlbumDetail = () => {
             setIsEditAlbum(resp.data);
         })
 
-    }, [albumUpdate,loginID])
+    }, [albumUpdate, loginID])
 
     const handleCancle = () => {
         setOpen(false);
@@ -197,7 +197,9 @@ const MyAlbumDetail = () => {
                             {albumUpdate.tracks.map((track, index) => (
                                 <div key={index} className={style.track}>
                                     <Col sm='12' md='1' className={style.trackCol}>
-                                        <img src={`${track.trackImages[0].imagePath}`} alt="" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
+                                        {track.trackImages && track.trackImages[0] && (
+                                            <img src={`${track.trackImages[0].imagePath}`} alt="" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
+                                        )}
                                     </Col>
                                     <Col sm='12' md='5'>
                                         {track.title}

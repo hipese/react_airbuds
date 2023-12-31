@@ -485,7 +485,7 @@ const UpdateAlbumModal = React.forwardRef(({ albumUpdate, setAlbumUpdate, onClos
                                 placeholder="순서를 입력하세요"
                                 value={index + albumUpdate.tracks.length}
                                 readOnly={true}
-                                style={{ width: '20px', height: '40px',marginLeft:'15px'}}
+                            
                             />
                         </Col>
                         <Col sm="15" md="5" style={{ marginBottom: '10px' }}>

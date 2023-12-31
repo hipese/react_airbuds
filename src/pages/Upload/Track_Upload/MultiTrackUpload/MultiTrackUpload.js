@@ -222,6 +222,7 @@ const MultiTrackUpload = ({ files, setFiles, imageview, setImageview, selectTag,
             }).finally(() => {
                 // 로딩 상태 해제
                 setLoading(false);
+                alert("업로드 성공!")
             });
         }
 
