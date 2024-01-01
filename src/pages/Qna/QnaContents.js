@@ -76,9 +76,6 @@ const QnaContents = () => {
     }
 
     useEffect(()=>{
-        
-
-
         axios.get(`/api/qna/contents/${seq}`).then(res=>{
             if(res.data.qnaPublic == 0){
                 if(loginID == res.data.qnaWriter || userRole == "ROLE_MANAGER"){
@@ -106,8 +103,6 @@ const QnaContents = () => {
         }).catch((e)=>{
             console.log(e);
         });
-
-        
     },[]);
 
     useEffect(()=>{
