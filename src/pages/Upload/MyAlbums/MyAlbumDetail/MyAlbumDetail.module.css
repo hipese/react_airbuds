@@ -13,8 +13,10 @@
     align-items: center;
   }
   .album_image img {
-   
-    max-width: 250px; /* 이미지 최대 크기 설정 */
+    width: 250px !important;
+    height: 250px !important;
+    border-radius: 8px;
+    object-fit: cover; /* 이미지가 컨테이너에 맞춰 조정됩니다 */
   }
   
   .album_writers {

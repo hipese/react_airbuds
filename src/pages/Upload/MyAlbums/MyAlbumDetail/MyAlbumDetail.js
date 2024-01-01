@@ -198,7 +198,7 @@ const MyAlbumDetail = () => {
                                 <div key={index} className={style.track}>
                                     <Col sm='12' md='1' className={style.trackCol}>
                                         {track.trackImages && track.trackImages[0] && (
-                                            <img src={`${track.trackImages[0].imagePath}`} alt="" style={{ width: '200px', height: '200px', marginBottom: '10px' }} />
+                                            <img src={`${track.trackImages[0].imagePath}`} alt="" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
                                         )}
                                     </Col>
                                     <Col sm='12' md='5'>
