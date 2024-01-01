@@ -144,6 +144,31 @@ const QnaContents = () => {
         setOpen(false);
     };
 
+    const downloadFile = (file) => {
+        axios
+            .get(`/api/qna/download/${file.sysName}`, {
+                responseType: 'blob',
+            })
+            .then((response) => {
+                const blob = new Blob([response.data]);
+                const url = window.URL.createObjectURL(blob);
+
+                // Create an anchor element for downloading the file
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.oriName;
+                document.body.appendChild(a);
+                a.click();
+
+                // Clean up by removing the anchor element and releasing the URL
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+            .catch((error) => {
+                console.error('File download error:', error);
+            });
+    };
+
     return(
         <div className={`${style.wrap}`}>
             <div className={`${style.qnaContents} ${style.ma}`}>
@@ -184,8 +209,8 @@ const QnaContents = () => {
                                 {files != null || files != undefined || files.length <= 0 
                                 ? files.map((e,i)=>{
                                     return(
-                                        <div key={i}>
-                                            <a href={``}>{e.oriName}</a> 
+                                        <div key={i} onClick={() => downloadFile(e)} style={{ cursor: "pointer" }}>
+                                            {e.oriName}
                                             <br/>
                                         </div>
                                     )
