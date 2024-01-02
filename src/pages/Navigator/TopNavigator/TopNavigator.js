@@ -10,8 +10,6 @@ import React from "react";
 import Swal from "sweetalert2";
 import "@sweetalert2/themes/bootstrap-4";
 import axios from "axios";
-import Dropdown from "react-bootstrap/Dropdown";
-import { DropdownDivider } from "react-bootstrap";
 import SearchBar from "./SearchBar/SearchBar";
 
 const TopNavigator = () => {
@@ -397,62 +395,53 @@ const TopNavigator = () => {
 
     return (
         <Container className={`${styles.container} ${styles.containerFluid}`} fluid>
-            <Row>
-                <Col className={styles.header_left}>
-                    <Row>
-                        <Col>
-                            <Link className={styles.linksvg} to="/"><div onClick={() => handleLinkClick('home')}><SVGComponent /></div></Link>
-                        </Col>
-                        <Col>
-                            <Link className={styles.linkurl} to="/"><div className={activeLink === 'home' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('home')}>홈</div></Link>
-                        </Col>
-                        <Col>
-                            <Link className={styles.linkurl} to="/Announce"><div className={activeLink === 'Announce' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('announce')}>공지사항</div></Link>
-                        </Col>
-                        <Col>
-                            <Link className={styles.linkurl} to="/Library"><div className={activeLink === 'Library' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Library')}>라이브러리</div></Link>
-                        </Col>
-                    </Row>
-                </Col>
-                <Col className={styles.header_center}>
-                    <Row>
-                        <SearchBar />
-                    </Row>
-                </Col>
-                <Col className={styles.header_right}>
-                    <Row>
-                        {
-                            loginID ?
-                                <>
-                                    <Col>
-                                        <Link className={styles.linkurl} to="/Playlist"><div className={activeLink === 'Playlist' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Playlist')}>플레이리스트</div></Link>
-                                    </Col>
-                                    <Col>
-                                        <Link className={styles.linkurl} to="/Upload"><div className={activeLink === 'Upload' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Upload')}>업로드</div></Link>
-                                    </Col>
-                                    <Col>
-                                        <Link className={styles.linkurl} to={`/Profile/${loginID}`}><div>프로필</div></Link>
-                                    </Col>
-                                    <Col>
-                                        <Link className={styles.linkurl} to={`/qna`}><div>Q&A</div></Link>
-                                    </Col>
-                                    <Col>
-                                        <div className={styles.linkurl} onClick={handleLogoutClick}><div className={activeLink === 'logout' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('logoutt')}>로그아웃</div></div>
-                                    </Col>
-                                </>
-                                :
-                                <>
-                                    <Col>
-                                        <div className={styles.linkurl} onClick={handleLoginClick}><div className={activeLink === 'login' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('login')}>로그인</div></div>
-                                    </Col>
-                                    <Col>
-                                        <Link className={styles.linkurl} to="/Register"><div className={activeLink === 'Register' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Register')}>회원가입</div></Link>
-                                    </Col>
-                                </>
-                        }
-                    </Row>
-                </Col>
-            </Row>
+            <div className={styles.header_left}>
+                <div>
+                    <Link className={styles.linksvg} to="/"><div onClick={() => handleLinkClick('home')}><SVGComponent /></div></Link>
+                </div>
+                <div className={styles.maxWidth}>
+                    <Link className={styles.linkurl} to="/"><div className={activeLink === 'home' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('home')}>홈</div></Link>
+                </div>
+                <div className={styles.maxWidth}>
+                    <Link className={styles.linkurl} to="/Announce"><div className={activeLink === 'Announce' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('announce')}>공지사항</div></Link>
+                </div>
+                <div className={styles.maxWidth}>
+                    <Link className={styles.linkurl} to="/Library"><div className={activeLink === 'Library' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Library')}>라이브러리</div></Link>
+                </div>
+            </div>
+            <div className={styles.header_center}>
+                <SearchBar />
+            </div>
+                <div className={styles.header_right}>
+                    {loginID ?
+                        <>
+                            <div className={styles.maxWidth}>
+                                <Link className={styles.linkurl} to="/Playlist"><div className={activeLink === 'Playlist' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Playlist')}>플레이리스트</div></Link>
+                            </div>
+                            <div className={styles.maxWidth}>
+                                <Link className={styles.linkurl} to="/Upload"><div className={activeLink === 'Upload' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Upload')}>업로드</div></Link>
+                            </div>
+                            <div className={styles.maxWidth}>
+                                <Link className={styles.linkurl} to={`/Profile/${loginID}`}><div className={activeLink === 'Profile' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('Profile')}>프로필</div></Link>
+                            </div>
+                            <div className={styles.maxWidth}>
+                                <Link className={styles.linkurl} to={`/qna`}><div className={activeLink === 'qna' ? styles.activeLink : styles.linkurl} onClick={() => handleLinkClick('qna')}>Q&A</div></Link>
+                            </div>
+                            <div>
+                                <Link className={styles.linkurl} to="/" onClick={handleLogoutClick}><div onClick={() => handleLinkClick('logoutt')}>로그아웃</div></Link>
+                            </div>
+                        </>
+                        :
+                        <>
+                            <div>
+                                <div className={styles.linkurl} onClick={handleLoginClick}><div className={styles.linkurlNoLogin} onClick={() => handleLinkClick('login')}>로그인</div></div>
+                            </div>
+                            <div>
+                                <Link className={styles.linkurl} to="/Register"><div className={activeLink === 'Register' ? styles.activeLink : styles.linkurlNoLogin} onClick={() => handleLinkClick('Register')}>회원가입</div></Link>
+                            </div>
+                        </>
+                    }
+                </div>
         </Container>
     );
 }

@@ -1,14 +1,12 @@
-
 .search {
     max-width: 500px;
-    min-width: 300px;
+    min-width: 400px;
     height: 35px;
     background-color: rgb(220, 220, 220);
     padding: 0px;
     border-radius: 5px;
     position: relative;
-    margin: auto;
-    margin-top: 7.5px;
+    margin-top: -2px;
 }
 
 .searchbar {

@@ -3,11 +3,10 @@
     height: 100%;
     color: rgb(220, 220, 220);
     font-size: 17px;
-    display: block;
+    display: flex;
+    align-items: center;
     margin: 0 auto;
-    padding: 0;
     overflow: hidden;
-    line-height: 50px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: 500;
     text-align: center;
@@ -17,6 +16,10 @@
 @media screen and (max-width: 768px) {
     .containerFluid {
         max-width: 100%;
+    }
+
+    .maxWidth {
+        display: none;
     }
 }
 
@@ -88,10 +91,19 @@
     width: 100%;
 }
 
+.linkurlNoLogin {
+    color: rgb(220, 220, 220);
+    text-decoration: none;
+    position: relative;
+    width: 200px !important;
+}
+
 .activeLink {
     background-color: black;
     text-decoration: none;
     color: #2ECC71;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
 }
 
 .linkurl:hover {
@@ -100,7 +112,76 @@
     cursor: pointer;
 }
 
+.linkurlNoLogin:hover {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    cursor: pointer;
+}
+
 .linkurl:hover div {
     background-color: black;
     text-decoration: none;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.linkurlNoLogin:hover div {
+    background-color: black;
+    text-decoration: none;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.header_left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    list-style: none;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.header_left div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    width: 120px;
+    height: 100%;
+    margin-left: 10px;
+}
+
+.header_center {
+    width: 100%;
+    float: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    margin: 0 30px 0 30px;
+    padding: 0;
+}
+
+.header_right {
+    display: flex;
+    float: right;
+    list-style: none;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.header_right div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    width: 120px;
+    height: 100%;
+    margin-right: 10px;
 }

@@ -96,7 +96,7 @@ const Main = () => {
     useEffect(() => {
         if (Array.isArray(selectTitle)) {
             selectTitle.forEach(tag => {
-                if ([5, 6, 8, 9, 10, 12, 13].includes(tag.tagId)) {
+                if ([4, 5, 6, 8, 9, 10, 12, 13].includes(tag.tagId)) {
                     axios.get("/api/trackTag", { params: { tag: tag.tagId } })
                         .then((res) => {
                             setTrackInfoByTag(prevState => ({
@@ -197,14 +197,13 @@ const Main = () => {
                                         </div>
                                         <div className={styles.Listen}>
                                             <div className={styles.play} onClick={() => addTrackToPlaylist(music)}></div>
-                                            <div className={styles.listenPerson}>{music.viewCount}명</div>
                                         </div>
                                     </div>
                                 );
                             })}
                         </div>
                     </div>
-                    {Array.isArray(selectTitle) && selectTitle.filter(tag => [5, 6, 8, 9, 10, 12, 13].includes(tag.tagId)).map((filterTag, index) => (
+                    {Array.isArray(selectTitle) && selectTitle.filter(tag => [4, 5, 6, 8, 9, 10, 12, 13].includes(tag.tagId)).map((filterTag, index) => (
                         <div key={index}>
                             <div className={styles.carouselTitle}>{filterTag.tagName}</div>
                             <div className={styles.carousel}>

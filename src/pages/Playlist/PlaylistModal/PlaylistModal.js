@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styles from './PlaylistModal.module.css';
 import axios from 'axios';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import shuffle from '../assets/shuffle.svg'
 import { AutoPlayContext, CurrentTrackContext, LoginContext, MusicContext, PlayingContext, TrackContext, TrackInfoContext } from '../../../App';
 
 const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelectedPlaylist }) => {
@@ -177,7 +177,67 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
 
         // Update the state with the new array of tracks
         setTracks((prevTracks) => [...newTracks, ...prevTracks]);
+        closeModal();
     };
+
+    const addTrackToPlaylistRandom = (track) => {
+        const shuffledTracks = shuffleArray(track); // Shuffle the tracks array
+
+        const newTracks = shuffledTracks.map((track) => {
+            setAutoPlayAfterSrcChange(true);
+
+            // Extract relevant information from the track object and create a new structure
+            const newTrack = {
+                trackId: track.playlistTrackId,
+                filePath: track.playlistFilePath,
+                imagePath: track.playlistImagePath,
+                title: track.playlistTitle,
+                writer: track.playlistWriter,
+            };
+
+            return newTrack;
+        });
+
+        const { playlistTrackId, playlistFilePath, playlistImagePath, playlistTitle, playlistWriter } = shuffledTracks[0];
+        setTrack_info({
+            trackId: playlistTrackId,
+            filePath: playlistFilePath,
+            imagePath: playlistImagePath,
+            title: playlistTitle,
+            writer: playlistWriter,
+        });
+
+        axios.post(`/api/cplist`, {
+            trackId: playlistTrackId,
+            id: loginID
+        }).then(resp => {
+            // Handle response if needed
+        });
+
+        const newAudioFiles = shuffledTracks.map(track => `${track.playlistFilePath}`);
+
+        setAutoPlayAfterSrcChange(true);
+
+        // 현재 트랙을 중지하고 새 트랙을 재생 목록에 추가하고 재생 시작
+        setAudioFiles((prevAudioFiles) => [...newAudioFiles, ...prevAudioFiles]);
+        setCurrentTrack(0);
+        setIsPlaying(true);
+
+        // Update the state with the new array of tracks
+        setTracks((prevTracks) => [...newTracks, ...prevTracks]);
+        closeModal();
+    };
+
+    // Function to shuffle an array
+    const shuffleArray = (array) => {
+        const shuffledArray = [...array];
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        }
+        return shuffledArray;
+    };
+    
 
     return (
         <div className={styles.modal} onClick={closeModal}>
@@ -235,7 +295,11 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
                                 </>
                             )}
                         </div>
+                        <div className={styles.shuffle} onClick={() => addTrackToPlaylistRandom(playlist.playlistTracks)}>
+                            <img src={shuffle} alt="" width={"20px"} height={"20px"} />셔플
+                        </div>
                         <div className={styles.modalButtons}>
+                            <button className={styles.playbutton} onClick={() => addTrackToPlaylist(playlist.playlistTracks)}>재생</button>
                             {isEditMode ? (
                                 <>
                                     <button
@@ -278,9 +342,7 @@ const Modal = ({ showModal, closeModal, playlist, onPlaylistDeleted, setSelected
                             )}
                         </div>
                     </div>
-                    <div className={styles.play_button} onClick={() => addTrackToPlaylist(playlist.playlistTracks)} >
-                        <PlayCircleIcon sx={{ width: '200px', height: '200px' }} />
-                    </div>
+                    
                 </div>
                 <div className={styles.modalBody}>
                     <ul className={styles.modalTrackList}>
