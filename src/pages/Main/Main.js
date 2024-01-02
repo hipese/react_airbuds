@@ -197,7 +197,6 @@ const Main = () => {
                                         </div>
                                         <div className={styles.Listen}>
                                             <div className={styles.play} onClick={() => addTrackToPlaylist(music)}></div>
-                                            <div className={styles.listenPerson}>{music.viewCount}명</div>
                                         </div>
                                     </div>
                                 );
