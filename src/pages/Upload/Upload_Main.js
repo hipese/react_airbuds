@@ -83,7 +83,7 @@ export default function Upload_Main() {
               },
             }}
           />
-          <Tab label="앨범" component={Link} to="myAlbums" {...a11yProps(2)}
+          <Tab label="내앨범" component={Link} to="myAlbums" {...a11yProps(2)}
             sx={{
               '&.Mui-selected': {
                 color: '#4CAF50',

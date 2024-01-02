@@ -21,10 +21,9 @@
     margin-top: 10px;
 }
 .imageContainer img {
-    max-width: 200px;
-    max-height: 200px;
-    width: 90%;
-    height: 90%;
+    width: 250px !important;
+    height: 250px !important;
+    border-radius: 8px;
     object-fit: cover; /* 이미지가 컨테이너에 맞춰 조정됩니다 */
 }
 .imageContainer img:hover {
@@ -40,4 +39,61 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+
+/* 모달 테스트 */
+.modalContainer {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+  }
+  
+  .modalContent {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .Button{
+    background-color: #4CAF50;
+    color: white;
+    border: #45a049;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.Button:hover{
+    background-color: #45a049;
+    transform: scale(1.1);
+}
+.titleText{
+    font-size: 20px;
+    font-weight: bold;
+}
+.endButtonBox{
+    display: flex;
+    justify-content: end;
+    margin-left: 5px;
 }

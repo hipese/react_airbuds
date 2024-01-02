@@ -1,4 +1,4 @@
-import {  useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import MusicTagList from '../../Track_Upload/MuiscTagList/MuiscTagList';
 import { Button, Col, Input, Row } from 'reactstrap';
@@ -14,15 +14,16 @@ const Modalstyle = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 1000,
-  bgcolor: 'background.paper',
+  bgcolor: 'whitesmoke',
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  borderradius: '8px',
 };
 
 const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose }) => {
 
-  
+
   console.log(selectedTrack);
   const [previmagePath, setPrevImagePath] = useState({});
   const [imageview, setImageview] = useState({});
@@ -36,22 +37,22 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
   const handleClickImage = () => {
     hiddenFileInput.current.click();
   };
- 
+
 
   useEffect(() => {
     // props로 전달된 트랙 정보를 로컬 상태에 설정
-      axios.get(`/api/trackTag/selectTagById/${selectedTrack.trackId}`).then(resp => {
-        const transformedData = resp.data.map(item => ({
-          id: item.musicTags.tagId,
-          name: item.musicTags.tagName
-        }));
+    axios.get(`/api/trackTag/selectTagById/${selectedTrack.trackId}`).then(resp => {
+      const transformedData = resp.data.map(item => ({
+        id: item.musicTags.tagId,
+        name: item.musicTags.tagName
+      }));
 
-        setSelectTag(transformedData);
-      });
+      setSelectTag(transformedData);
+    });
 
-      setPrevImagePath(selectedTrack.imagePath);
-      setImageview(selectedTrack.imagePath)
-    
+    setPrevImagePath(selectedTrack.imagePath);
+    setImageview(selectedTrack.imagePath)
+
   }, []);
 
 
@@ -67,7 +68,7 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
     formData.append('writer', selectedTrack.writer);
     formData.append('imagePath', selectedTrack.imagePath);
     formData.append('previmagePath', previmagePath);
-    
+
     // 이미지 파일이 변경되었는지 확인
     if (selectedTrack.imageFile) {
       formData.append('imagefile', selectedTrack.imageFile);
@@ -76,12 +77,12 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
     }
 
     // 태그 정보를 formData에 추가
-    
+
     selectTag.forEach(tag => {
       formData.append('tags', tag.id);
     });
 
-    if(selectTag.length<=0){
+    if (selectTag.length <= 0) {
       alert("태그를 하나라도 선택해주세요");
       return;
     }
@@ -93,7 +94,7 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
     }).then(resp => {
       console.log(resp);
       onTrackUpdated();
-      onClose(); 
+      onClose();
     })
 
   }
@@ -105,7 +106,7 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
     }
     setSelectedTrack({});
     setSelectTag([]);
-    onClose(); 
+    onClose();
   }
 
   const handleImageChange = (e) => {
@@ -133,7 +134,7 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
     if (e.target.value && e.target.value.length > 30) {
       alert("제목은 30자 이하로 입력해주세요.");
       return;
-  }
+    }
 
     setSelectedTrack(prev => ({ ...prev, title: e.target.value }));
   };
@@ -143,7 +144,7 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
     if (e.target.value && e.target.value.length > 30) {
       alert("제작자는 20자 이하로 입력해주세요.");
       return;
-  }
+    }
 
     setSelectedTrack(prev => ({ ...prev, writer: e.target.value }));
   };
@@ -177,7 +178,10 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
               style={{ display: 'none' }}
               accept="image/*"
             />
-            <Button onClick={handleClickImage}>이미지변경</Button>
+            <div>
+              <Button onClick={handleClickImage} className={singlestyle.Button} style={{ marginTop: '10px' }}>이미지변경</Button>
+            </div>
+
           </div> : <div className={singlestyle.imageContainer}>
             <img src={imageview} onClick={handleClickImage} />
             <input
@@ -187,13 +191,16 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
               style={{ display: 'none' }}
               accept="image/*"
             />
-            <Button onClick={handleClickImage}>이미지변경</Button>
+            <div>
+              <Button onClick={handleClickImage} className={singlestyle.Button} style={{ marginTop: '10px' }}>이미지변경</Button>
+            </div>
+
           </div>}
 
         </Col>
         <Col sm='12' md='8' style={{ marginBottom: '10px', padding: '0' }}>
           <Row style={{ marginBottom: '10px', width: '100%' }}>
-            <Col sm='12' style={{ marginBottom: '10px' }}>제목</Col>
+            <Col sm='12' style={{ marginBottom: '10px' }} className={singlestyle.titleText}>제목</Col>
             <Col sm='12' style={{ marginBottom: '10px' }}>
               <Input
                 placeholder="제목을 입력하세요"
@@ -203,24 +210,32 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
                 onChange={handleTitleChange} // 이벤트 핸들러 연결
               />
             </Col>
-            <Col sm='12 ' style={{ marginBottom: '10px' }}>tag </Col>
+            <Col sm='12 ' style={{ marginBottom: '20px' }} className={singlestyle.titleText}>테그선택 </Col>
             <Col sm='12' md='4' style={{ marginBottom: '10px' }}>
               <MusicTagList onSelectTag={handleTagSelection} />
             </Col>
             <Col sm='12' md='8' style={{ marginBottom: '10px' }}>
               <Row className={singlestyle.chipRow}>
                 <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
-                  {selectTag.map((tag, index) => (
-                    <Chip
-                      key={index}
-                      label={tag.name}
-                      onDelete={() => handleTagDelete(tag)}
-                    />
-                  ))}
+                  {selectTag.length > 0 ? (
+                    <Stack direction="row" spacing={1} style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                      {selectTag.map((tag, index) => (
+                        <Chip
+                          key={index}
+                          label={tag.name}
+                          onDelete={() => handleTagDelete(tag)}
+                        />
+                      ))}
+                    </Stack>
+                  ) : (
+                    <div style={{ textAlign: 'center', marginTop: '10px' }} className={singlestyle.titleText}>
+                      테그를 선택해주세요
+                    </div>
+                  )}
                 </Stack>
               </Row>
             </Col>
-            <Col sm='12' style={{ marginBottom: '10px' }}>writer</Col>
+            <Col sm='12' style={{ marginBottom: '10px' }} className={singlestyle.titleText}>작성자</Col>
             <Col sm='12' style={{ marginBottom: '10px' }}>
               <Input
                 className={singlestyle.detail_input}
@@ -234,9 +249,9 @@ const UpdateModal = ({ selectedTrack, setSelectedTrack, onTrackUpdated, onClose 
         </Col>
       </Row>
       <Row>
-        <Col sm='12' style={{ marginBottom: '10px' }}>
-          <Button color="primary" onClick={handleCancle}>취소</Button>
-          <Button color="primary" onClick={handleupdate}>수정하기</Button>
+        <Col sm='12' style={{ marginBottom: '10px' }} className={singlestyle.endButtonBox}>
+          <Button color="primary" onClick={handleupdate} className={singlestyle.Button} style={{ marginRight: '10px' }}>수정하기</Button>
+          <Button color="primary" onClick={handleCancle} className={singlestyle.Button}>취소</Button>
         </Col>
       </Row>
     </Box>

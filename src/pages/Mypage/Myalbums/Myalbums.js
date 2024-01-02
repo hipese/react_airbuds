@@ -22,10 +22,6 @@ const Myalbums = () => {
     const { loginID, setLoginID } = useContext(LoginContext);
     
     useEffect(() => {
-        if (!loginID) {
-            setLoading(false);
-            return;
-        }
         axios.get(`/api/album/profileAlbum/${targetID}`,).then(resp => {
             setAlbums(resp.data);
             setLoading(false);
@@ -41,6 +37,8 @@ const Myalbums = () => {
         navigate(`/Album/Detail/${albumId}`, { state: { albumData } });
     };
 
+    console.log(targetID);
+    console.log(albums);
 
     return (
         <Row>
@@ -49,12 +47,8 @@ const Myalbums = () => {
                     <div className={style.loadingContainer}>
                         <LoadingSpinner />
                     </div>
-                ) : (
-                    loginID ? (
-                        albums.length === 0 ? (
-                            <div className={style.noneLogin}>
+                ) : (    albums.length === 0 ? (
                             <None_track_info />
-                        </div>
                         ):(
                             <Row className={style.realContainer}>
                             {albums.map((album, index) => (
@@ -106,11 +100,6 @@ const Myalbums = () => {
                             ))}
                         </Row>
                         )
-                    ) : (
-                        <div className={style.noneLogin}>
-                            <None_track_info />
-                        </div>
-                    )
                 )}
             </Col>
         </Row>

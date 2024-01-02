@@ -41,7 +41,7 @@ const MyAlbumDetail = () => {
             setIsEditAlbum(resp.data);
         })
 
-    }, [loginID])
+    }, [albumUpdate, loginID])
 
     const handleCancle = () => {
         setOpen(false);
@@ -127,10 +127,6 @@ const MyAlbumDetail = () => {
                             돌아가기
                         </Button>
                         <Button className={style.button_custom}>
-                            <ShareIcon className={style.icon_custom} />
-                            Share
-                        </Button>
-                        <Button className={style.button_custom}>
                             <ContentCopyIcon className={style.icon_custom} />
                             Copy Link
                         </Button>
@@ -164,7 +160,7 @@ const MyAlbumDetail = () => {
                     <hr />
                 </Col>
                 <Col sm='12'>
-                    <Row>
+                    <Row className={style.albuminfo}>
                         <Col sm='12' lg='12' xl='3'>
                             <Row className={style.mainAlbumTitle}>
                                 <Col sm='12'>
@@ -179,7 +175,7 @@ const MyAlbumDetail = () => {
                                     {albumWriters}
                                 </Col>
                                 <div className={style.play_button} >
-                                    <PlayCircleIcon sx={{ width: '200px', height: '200px' }} onClick={() => addTrackToPlaylist(albumUpdate.tracks)} />
+                                    <PlayCircleIcon sx={{ width: '100px', height: '100px' }} onClick={() => addTrackToPlaylist(albumUpdate.tracks)} />
                                 </div>
                             </Row>
                         </Col>
@@ -201,7 +197,9 @@ const MyAlbumDetail = () => {
                             {albumUpdate.tracks.map((track, index) => (
                                 <div key={index} className={style.track}>
                                     <Col sm='12' md='1' className={style.trackCol}>
-                                        <img src={`${track.trackImages[0].imagePath}`} alt="" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
+                                        {track.trackImages && track.trackImages[0] && (
+                                            <img src={`${track.trackImages[0].imagePath}`} alt="" style={{ width: '50px', height: '50px', marginBottom: '10px' }} />
+                                        )}
                                     </Col>
                                     <Col sm='12' md='5'>
                                         {track.title}

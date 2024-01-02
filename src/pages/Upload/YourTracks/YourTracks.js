@@ -24,7 +24,6 @@ const YourTracks = () => {
                 <Col sm="12" className={styles.trackListBox}>
                      <YourTrackList />
                 </Col>
-               
             </Row>
 
         </div>

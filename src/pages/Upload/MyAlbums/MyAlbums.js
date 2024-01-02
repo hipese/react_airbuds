@@ -12,6 +12,14 @@ import { useNavigate } from "react-router";
 import AlbumSearchResult from "../../ShowMusicList/SearchResult/AlbumSearchResult";
 import NoTrackInfo from "../NoMusic/NoTrackInfo";
 
+
+// 로딩바
+const LoadingSpinner = () => (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+        <CircularProgress color="inherit" />
+    </Box>
+);
+
 const MyAlbums = () => {
 
 
@@ -28,6 +36,7 @@ const MyAlbums = () => {
     const navigator = useNavigate();
 
     useEffect(() => {
+
         axios.get(`/api/album/findByLogin`).then(resp => {
             console.log(resp.data)
             setSearchAlbums(resp.data);
@@ -90,24 +99,29 @@ const MyAlbums = () => {
                 <div className={styles.leftSide}>
 
                     <div className={styles.carouselTitle}>내 앨범목록</div>
-                    <div className={styles.carousel}>
-                        {searchAlbums.length === 0 ? (
-                            <NoTrackInfo text={text}/>
-                        ) : (
-                            <AlbumSearchResult searchAlbums={searchAlbums} />
-                        )}
+                    {loading ? (
+                        <LoadingSpinner />
+                    ) : (
+                        <>
+                            <div className={styles.carousel}>
+                                {searchAlbums.length === 0 ? (
+                                    <NoTrackInfo text={text} />
+                                ) : (
+                                    <AlbumSearchResult searchAlbums={searchAlbums} />
+                                )}
+                            </div>
 
-                    </div>
+                            <div className={styles.leftBottom}>
+                                {!(searchAlbums.length === 0) ? (
+                                    <Button className={styles.button_custom} onClick={handleAddAlbum}>
+                                        <PlaylistAddIcon />
+                                        앨범 생성하기
+                                    </Button>
+                                ) : null}
+                            </div>
+                        </>
+                    )}
 
-
-                    <div className={styles.leftBottom}>
-                        {!(searchAlbums.length === 0) ? (
-                            <Button className={styles.button_custom} onClick={handleAddAlbum}>
-                                <PlaylistAddIcon/>
-                                앨범 생성하기
-                            </Button>
-                        ) : null}
-                    </div>
                 </div>
 
             </div>

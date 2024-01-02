@@ -6,7 +6,8 @@
     width: 50%;
     height: 100%;
     border: 1px solid black;
-    border-radius: 5px;
+    background-color: whitesmoke;
+    border-radius: 8px;
     padding: 20px;
     text-align: center;
     display: flex;
@@ -19,33 +20,6 @@
     border: 1px solid black;
 }
 
-.imageContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.imageContainer img {
-    max-width: 250px;
-    max-height: 250px;
-    width: 90%;
-    height: 90%;
-    object-fit: cover;
-    /* 이미지가 컨테이너에 맞춰 조정됩니다 */
-}
-
-.imageContainer img:hover {
-    cursor: pointer;
-}
-
-.detail_input {
-    width: 100%;
-}
-
-.detail_input_tag {
-    width: 80%;
-}
 
 .chipRow {
     display: flex;
@@ -54,6 +28,8 @@
 }
 
 .dropFiles {
+    font-size: 25px;
+    font-weight: bold;
     margin-bottom: 20px;
 }
 
@@ -64,4 +40,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.Button{
+    background-color: #4CAF50;
+    color: white;
+    border: #45a049;    
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.Button:hover{
+    background-color: #45a049;
+    transform: scale(1.1);
 }
