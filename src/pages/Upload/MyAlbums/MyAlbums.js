@@ -96,9 +96,11 @@ const MyAlbums = () => {
     return (
         <div className={styles.container}>
             <div className={styles.contentContainer}>
+            <hr />
                 <div className={styles.leftSide}>
 
                     <div className={styles.carouselTitle}>내 앨범목록</div>
+                  
                     {loading ? (
                         <LoadingSpinner />
                     ) : (
